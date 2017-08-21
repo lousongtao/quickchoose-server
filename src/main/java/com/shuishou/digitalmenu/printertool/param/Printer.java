@@ -80,12 +80,6 @@ public class Printer implements Printable {
 			PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, hs);
 			if (printService.length > 0) {
 				PrintService ps = printService[0];
-				ps.addPrintServiceAttributeListener(new PrintServiceAttributeListener(){
-
-					@Override
-					public void attributeUpdate(PrintServiceAttributeEvent psae) {
-						System.out.println(psae.getAttributes());
-					}});
 				pj.setPrintService(ps);
 			}
 			
