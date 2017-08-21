@@ -1,0 +1,246 @@
+{
+    "type": "Ext.app.Controller",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "MainController"
+    },
+    "designerId": "1c9d2a65-3336-4437-94fe-830cffc16a00",
+    "cn": [
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#mainView #btnAccount",
+                "designer|targetType": "Ext.button.Button",
+                "fn": "onAccountButtonClick",
+                "implHandler": [
+                    "var contentPanel = this.getContentPanel();\r",
+                    "var accountPanel = Ext.create('digitalmenu.view.AccountListContainer');\r",
+                    "var grid = accountPanel.down('#accountListGrid');\r",
+                    "\r",
+                    "grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');\r",
+                    "grid.store.proxy.extraParams.sessionId = Ext.util.Cookies.get('sessionId');\r",
+                    "grid.store.load();\r",
+                    "\r",
+                    "contentPanel.removeAll();\r",
+                    "accountPanel.region = 'center';\r",
+                    "contentPanel.add(accountPanel);\r",
+                    ""
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "57ec4939-5d10-4e9e-a2e9-cfaca393af9d"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#mainView #btnIndent",
+                "designer|targetType": "Ext.button.Button",
+                "fn": "onIndentButtonClick",
+                "implHandler": [
+                    "var contentPanel = this.getContentPanel();\r",
+                    "var indentPanel = Ext.create('digitalmenu.view.IndentContainer');\r",
+                    "var grid = indentPanel.down('#accountListGrid');\r",
+                    "var cbRefreshTime = indentPanel.down('#cbRefreshTime');\r",
+                    "\r",
+                    "contentPanel.removeAll();\r",
+                    "indentPanel.region = 'center';\r",
+                    "cbRefreshTime.setValue(5);\r",
+                    "contentPanel.add(indentPanel);\r",
+                    ""
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "64302cd5-b833-47f5-bc0a-ea19629f3542"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#mainView #logQueryMenuItem",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onLogQueryMenuitemClick",
+                "implHandler": [
+                    "var contentPanel = this.getContentPanel();\r",
+                    "var panel = Ext.create('digitalmenu.view.LogListContainer');\r",
+                    "var grid = panel.down('#logListGrid');\r",
+                    "\r",
+                    "contentPanel.removeAll();\r",
+                    "panel.region = 'center';\r",
+                    "contentPanel.add(panel);\r",
+                    ""
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "406c7472-6f61-4ed0-b551-84802d59110d"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "contentPanel",
+                "selector": "#mainView #contentPanel"
+            },
+            "designerId": "9a6b69c8-7f6e-47f5-9f00-cb0f0b036c24"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#mainView #menuitem_maintain_confirmcode",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemChangeConfirmCodeClick",
+                "implHandler": [
+                    "var p = Ext.create('digitalmenu.view.ChangeConfirmCodeForm');\r",
+                    "\r",
+                    "var tfoldcode = p.down('#tfOldCode');\r",
+                    "\r",
+                    "//var setoldcode = function(){\r",
+                    "    Ext.Ajax.request({\r",
+                    "        url: 'common/getconfirmcode',\r",
+                    "        success : function(resp){\r",
+                    "            var result = Ext.decode(resp.responseText);\r",
+                    "            if(result.result ==='ok'){\r",
+                    "                tfoldcode.setValue(result.confirmCode);\r",
+                    "            }\r",
+                    "        }\r",
+                    "    });\r",
+                    "//};\r",
+                    "\r",
+                    "var win = Ext.create('Ext.window.Window',{\r",
+                    "    height: 153,\r",
+                    "    width: 280,\r",
+                    "\theader: false,\r",
+                    "\tmodal: true,\r",
+                    "    border: false,\r",
+                    "\titems:[ p ]\r",
+                    "});\r",
+                    "\r",
+                    "//win.show(null, setoldcode);\r",
+                    "win.show();"
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "ea4aefb0-70f6-4c25-9de3-024946a6e822"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#mainView #menuitem_maintain_menu",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemMaintainMenuClick",
+                "implHandler": [
+                    "var contentPanel = this.getContentPanel();\r",
+                    "var menuPanel = Ext.create('digitalmenu.view.MenuContainer');\r",
+                    "var treePanel = menuPanel.down('treepanel');\r",
+                    "\r",
+                    "menuPanel.down('#cbCategory1ID').store.load();\r",
+                    "menuPanel.down('#cbCategory2ID').store.load();\r",
+                    "\r",
+                    "contentPanel.removeAll();\r",
+                    "menuPanel.region = 'center';\r",
+                    "\r",
+                    "contentPanel.add(menuPanel);"
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "26724060-f1e7-4019-aa60-01c511706ca1"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#mainView #menuitem_maintain_desk",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemMaintainDeskClick",
+                "implHandler": [
+                    "var contentPanel = this.getContentPanel();\r",
+                    "var deskPanel = Ext.create('digitalmenu.view.DeskListContainer');\r",
+                    "var grid = deskPanel.down('#deskListGrid');\r",
+                    "\r",
+                    "grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');\r",
+                    "grid.store.proxy.extraParams.sessionId = Ext.util.Cookies.get('sessionId');\r",
+                    "grid.store.load();\r",
+                    "grid.store.sort('name','ASC');\r",
+                    "\r",
+                    "contentPanel.removeAll();\r",
+                    "deskPanel.region = 'center';\r",
+                    "contentPanel.add(deskPanel);\r",
+                    ""
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "fb550f92-6e76-4d66-aed1-56d93a559643"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#mainView #menuitem_maintain_printer",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemMaintainPrinter",
+                "implHandler": [
+                    "var contentPanel = this.getContentPanel();\r",
+                    "var printerPanel = Ext.create('digitalmenu.view.PrinterListContainer');\r",
+                    "var grid = printerPanel.down('#printerListGrid');\r",
+                    "\r",
+                    "grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');\r",
+                    "grid.store.proxy.extraParams.sessionId = Ext.util.Cookies.get('sessionId');\r",
+                    "grid.store.load();\r",
+                    "\r",
+                    "contentPanel.removeAll();\r",
+                    "printerPanel.region = 'center';\r",
+                    "contentPanel.add(printerPanel);\r",
+                    ""
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "db3e03e3-40dc-4e12-bffc-0cb3f25f2d4e"
+        }
+    ]
+}

@@ -1,0 +1,364 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "PrinterListContainer",
+        "height": null,
+        "itemId": "printerListContainer",
+        "layout": "border",
+        "minHeight": null,
+        "padding": 5,
+        "width": null
+    },
+    "designerId": "b85a050b-136a-4a84-989c-72fb48155a02",
+    "cn": [
+        {
+            "type": "Ext.grid.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "columnLines": true,
+                "frame": true,
+                "itemId": "printerListGrid",
+                "layout|region": "center",
+                "margin": "5 0 0 0",
+                "store": "PrinterListStore",
+                "title": "Printer List"
+            },
+            "designerId": "c7d604ee-2b39-4104-84ff-44fb9370058a",
+            "cn": [
+                {
+                    "type": "Ext.grid.View",
+                    "reference": {
+                        "name": "viewConfig",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "frame": false,
+                        "itemId": "printerListGridView"
+                    },
+                    "designerId": "ac28f720-7222-4d48-95ca-bd728194966c"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "id",
+                        "draggable": false,
+                        "frame": false,
+                        "menuDisabled": true,
+                        "text": "ID"
+                    },
+                    "designerId": "245820f9-2cfd-42dc-b773-b247643f065d"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "name",
+                        "draggable": false,
+                        "menuDisabled": true,
+                        "sortable": true,
+                        "text": "Name",
+                        "width": 150
+                    },
+                    "designerId": "80a43da7-35cf-484e-b0da-8f19b8db4654"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "printerName",
+                        "draggable": false,
+                        "menuDisabled": true,
+                        "sortable": true,
+                        "text": "Printer Name",
+                        "width": 150
+                    },
+                    "designerId": "9f9173cb-f7fd-4ac9-9fb9-a1e87c71bd1d"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "copy",
+                        "draggable": false,
+                        "menuDisabled": true,
+                        "sortable": true,
+                        "text": "Copy",
+                        "width": 150
+                    },
+                    "designerId": "21ca8d5a-e570-4f47-820f-f00437e54fee"
+                },
+                {
+                    "type": "Ext.grid.column.Template",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "printStyle",
+                        "draggable": false,
+                        "itemId": "printStyle",
+                        "menuDisabled": true,
+                        "sortable": true,
+                        "text": "Print Style",
+                        "width": 150
+                    },
+                    "designerId": "c09c54d4-b7b5-44ac-a22d-c8920bd5b08c",
+                    "cn": [
+                        {
+                            "type": "Ext.XTemplate",
+                            "reference": {
+                                "name": "tpl",
+                                "type": "object"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "tpl",
+                                "implHandler": [
+                                    "<tpl if='printStyle == 0'>Print Together\r",
+                                    "<tpl elseif='printStyle == 1'>Print Separately\r",
+                                    "</tpl>"
+                                ]
+                            },
+                            "designerId": "d629ed21-1ff2-4291-8a54-2f3d81d0a656"
+                        }
+                    ]
+                },
+                {
+                    "type": "Ext.grid.column.Action",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "designerId": "48eabe0b-8a6a-46e9-b0a1-a9bb84a9b9fe",
+                    "cn": [
+                        {
+                            "type": "actioncolumnitem",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "Delete",
+                                "icon": "images/icon_delete.png",
+                                "tooltip": "delete desk"
+                            },
+                            "designerId": "307c88c7-0f67-4599-9bcb-d5d8c825c720",
+                            "cn": [
+                                {
+                                    "type": "fixedfunction",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|params": [
+                                            "view",
+                                            "rowIndex",
+                                            "colIndex",
+                                            "item",
+                                            "e",
+                                            "record",
+                                            "row"
+                                        ],
+                                        "fn": "handler",
+                                        "implHandler": [
+                                            "Ext.MessageBox.confirm(\r",
+                                            "\"Confirm\",\r",
+                                            "    \"Do you want to delete printer : \" + record.data.name + \"?\",\r",
+                                            "function(btnId) {\r",
+                                            "  if (btnId != 'yes')\r",
+                                            "      return;\r",
+                                            "\r",
+                                            "  var values = {\r",
+                                            "    userId: Ext.util.Cookies.get(\"userId\"),\r",
+                                            "    sessionId: Ext.util.Cookies.get(\"sessionId\"),\r",
+                                            "    id: record.data.id\r",
+                                            "  };\r",
+                                            "\r",
+                                            "  var successCallback = function(resp, ops) {\r",
+                                            "    var result = Ext.decode(resp.responseText);\r",
+                                            "\r",
+                                            "    if (result.result == 'ok') {\r",
+                                            "      Ext.Msg.alert(\"Done\",\"Delete printer successfully\");\r",
+                                            "      view.store.load();\r",
+                                            "    } else if (result.result == 'invalid_session') {\r",
+                                            "      digitalmenu.getApplication().onSessionExpired();\r",
+                                            "    } else {\r",
+                                            "      Ext.Msg.alert(\"Failed to delete\", result.result);\r",
+                                            "    }\r",
+                                            "  };\r",
+                                            "\r",
+                                            "  var failureCallback = function(resp, ops) {\r",
+                                            "    Ext.Msg.alert(\"Failed to delete\", resp);\r",
+                                            "  };\r",
+                                            "\r",
+                                            "  Ext.Ajax.request({\r",
+                                            "    url: \"common/deleteprinter\",\r",
+                                            "    params: values,\r",
+                                            "    success: successCallback,\r",
+                                            "    failure: failureCallback\r",
+                                            "  });\r",
+                                            "});"
+                                        ]
+                                    },
+                                    "designerId": "890f585a-156b-416a-9c20-ce7779129a61"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Ext.form.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "bodyPadding": 10,
+                "height": 200,
+                "layout": "auto",
+                "layout|region": "south",
+                "margin": null,
+                "title": ""
+            },
+            "designerId": "d8ee2ab5-43dc-49ff-ad84-f3929b07a041",
+            "cn": [
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "allowBlank": false,
+                        "fieldLabel": "Name",
+                        "itemId": "tfName",
+                        "name": "name",
+                        "width": 400
+                    },
+                    "designerId": "b6127d88-a67b-4257-9916-d31d303364fb"
+                },
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "allowBlank": false,
+                        "fieldLabel": "Printer Name",
+                        "itemId": "tfPrinterName",
+                        "name": "printerName",
+                        "width": 400
+                    },
+                    "designerId": "329b683a-beed-419c-b885-bb81cc1279fe"
+                },
+                {
+                    "type": "Ext.form.field.Number",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "Copy",
+                        "itemId": "nfCopy",
+                        "name": "copy",
+                        "value": [
+                            "1"
+                        ],
+                        "width": 400
+                    },
+                    "designerId": "c3f242ac-f190-44cc-9081-81a17d338b60"
+                },
+                {
+                    "type": "Ext.form.field.ComboBox",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "displayField": "name",
+                        "editable": false,
+                        "fieldLabel": "Print Style",
+                        "itemId": "cbPrintStyle",
+                        "name": "printStyle",
+                        "store": "PrinteStyleLocalStore",
+                        "value": [
+                            "1"
+                        ],
+                        "valueField": "id",
+                        "width": 400
+                    },
+                    "designerId": "9b43586a-1d2e-47b0-8c02-f940c6718076"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "itemId": "btnAdd",
+                        "margin": 10,
+                        "text": "Add",
+                        "width": 100
+                    },
+                    "designerId": "30088907-ad81-4a98-abed-c5892f767f2f"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "itemId": "btnCancel",
+                        "text": "Cancel",
+                        "width": 100
+                    },
+                    "designerId": "8d90342b-ce63-4f76-b3ef-47a218786478"
+                }
+            ]
+        }
+    ]
+}

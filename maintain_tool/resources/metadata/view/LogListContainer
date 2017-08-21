@@ -1,0 +1,281 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "LogListContainer",
+        "height": 466,
+        "itemId": "logListContainer",
+        "layout": "border",
+        "padding": 5,
+        "width": 843
+    },
+    "designerId": "6ba268d2-76b3-4824-b1a7-9a7e5e5fb02a",
+    "cn": [
+        {
+            "type": "Ext.form.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "bodyPadding": 10,
+                "height": 91,
+                "itemId": "queryForm",
+                "layout": "column",
+                "layout|region": "north",
+                "margin": 5,
+                "title": null
+            },
+            "designerId": "f7d5a79d-4590-40a7-b6fc-55ae0014c36c",
+            "cn": [
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "Message",
+                        "itemId": "txtMsg",
+                        "name": "message",
+                        "width": 539
+                    },
+                    "designerId": "021a7722-70f4-4df1-9c10-0370eca6277d"
+                },
+                {
+                    "type": "Ext.form.field.ComboBox",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "displayField": "name",
+                        "fieldLabel": "Type",
+                        "itemId": "cbType",
+                        "name": "type",
+                        "store": "LogTypeLocalStore",
+                        "valueField": "id"
+                    },
+                    "designerId": "56e1b721-f4cb-4819-a90f-a87659be3e99"
+                },
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "User",
+                        "itemId": "txtUsername",
+                        "name": "username"
+                    },
+                    "designerId": "031f3cf6-8f18-49c5-b1d9-da1c02b77be9"
+                },
+                {
+                    "type": "Ext.form.field.Date",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "Start Time",
+                        "itemId": "startTime",
+                        "name": "startTime"
+                    },
+                    "designerId": "172b20bf-2f95-46f7-a7d4-09e9a6b99fd5"
+                },
+                {
+                    "type": "Ext.form.field.Date",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "End Time",
+                        "itemId": "endTime",
+                        "name": "endTime"
+                    },
+                    "designerId": "7333fbc3-d895-45f3-9932-720ab75ba3a5"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "formBind": true,
+                        "itemId": "btnQuery",
+                        "text": "Query"
+                    },
+                    "designerId": "beef4d67-ed4f-4628-ae0f-d39477a0f9fe",
+                    "cn": [
+                        {
+                            "type": "fixedfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "button",
+                                    "e"
+                                ],
+                                "fn": "handler",
+                                "implHandler": [
+                                    "var form = button.up('form');\r",
+                                    "grid = form.up('container').down('grid');\r",
+                                    "values = form.getValues();\r",
+                                    "\r",
+                                    "grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');\r",
+                                    "grid.store.proxy.extraParams.sessionId = Ext.util.Cookies.get('sessionId');\r",
+                                    "grid.store.proxy.extraParams.message = values.message;\r",
+                                    "grid.store.proxy.extraParams.type = values.type;\r",
+                                    "grid.store.proxy.extraParams.username = values.username;\r",
+                                    "grid.store.proxy.extraParams.beginTime = values.startTime;\r",
+                                    "grid.store.proxy.extraParams.endTime = values.endTime;\r",
+                                    "\r",
+                                    "grid.store.load();"
+                                ]
+                            },
+                            "designerId": "33297659-2c92-4865-a858-1969c4be757e"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "columnLines": true,
+                "itemId": "logListGrid",
+                "layout|region": "center",
+                "margin": 5,
+                "store": "LogListStore",
+                "title": null
+            },
+            "designerId": "3fd64dae-f801-4217-b00f-596bf689d38a",
+            "cn": [
+                {
+                    "type": "Ext.grid.column.Number",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "id",
+                        "format": "0",
+                        "itemId": "id",
+                        "text": "ID",
+                        "width": 80
+                    },
+                    "designerId": "a0b91f55-7848-480b-8d69-212b52335e65"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "username",
+                        "itemId": "username",
+                        "text": "User"
+                    },
+                    "designerId": "d25f3cdd-7e58-4584-bccc-df3a69f366a5"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "type",
+                        "itemId": "type",
+                        "text": "Type",
+                        "width": 150
+                    },
+                    "designerId": "5d84f939-22c8-4d64-b0b9-e57d109afba8"
+                },
+                {
+                    "type": "Ext.grid.column.Date",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "time",
+                        "defaultWidth": 150,
+                        "format": "y-M-d H:i:s",
+                        "itemId": "time",
+                        "text": "Time",
+                        "width": 150
+                    },
+                    "designerId": "82bd7022-8d3b-4c6f-9f9b-c5c627aa7af7"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "message",
+                        "defaultWidth": 500,
+                        "itemId": "message",
+                        "text": "Message",
+                        "width": 500
+                    },
+                    "designerId": "22b6dc5a-3c13-4eb3-a471-02e40089364c"
+                },
+                {
+                    "type": "Ext.grid.View",
+                    "reference": {
+                        "name": "viewConfig",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "designerId": "00fe7b6d-8fa6-431c-907c-a6bdc115a00a"
+                },
+                {
+                    "type": "Ext.toolbar.Paging",
+                    "reference": {
+                        "name": "dockedItems",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "displayInfo": true,
+                        "dock": "bottom",
+                        "store": "LogListStore",
+                        "width": 360
+                    },
+                    "designerId": "63cfeb9b-640f-4ed1-a416-0ba0648b537f"
+                }
+            ]
+        }
+    ]
+}

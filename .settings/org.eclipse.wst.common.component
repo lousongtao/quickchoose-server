@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="com.shuishou.digitalmenu">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/maintain_tool/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/classes"/>
+        <wb-resource deploy-path="/" source-path="/configs"/>
+        <dependent-module archiveName="barcode4j-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/digitalmenu/mylib/barcode4j-2.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jfinal-2.1-bin-with-src.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/digitalmenu/mylib/jfinal-2.1-bin-with-src.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="java-output-path" value="/com.shuishou.digitalmenu/target/classes"/>
+        <property name="context-root" value="digitalmenu"/>
+    </wb-module>
+</project-modules>

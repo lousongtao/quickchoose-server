@@ -1,0 +1,113 @@
+{
+	"header": [
+		{
+			"text": "餐    厅：{$restaurantname}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "桌    号：{$desk}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "单据日期：{$time}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "单据编号：{$sequence}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "--------------------------------",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		}
+	],
+	"goods": [
+		{
+			"name": "名称",
+			"width": 16,
+			"variable": "name"
+		},
+		{
+			"name": "数量",
+			"width": 6,
+			"variable": "amount"
+		},
+		{
+			"name": "单价",
+			"width": 6,
+			"variable": "price"
+		},
+		{
+			"name": "金额",
+			"width": 8,
+			"variable": "totalPrice"
+		},
+		{
+			"name": "备注",
+			"width": 8,
+			"variable": "requirement"
+		}
+	],
+	"msg": [
+		{
+			"text": "",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "                     总价:  {$totalPrice}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "--------------------------------",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		}
+	]	
+}

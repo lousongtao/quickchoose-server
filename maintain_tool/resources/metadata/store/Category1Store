@@ -1,0 +1,94 @@
+{
+    "type": "directstore",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "Category1Store",
+        "storeId": "Category1Store"
+    },
+    "designerId": "a39c2e4d-cda3-4985-956e-4fba7b8ba1ee",
+    "cn": [
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "id",
+                "type": "string"
+            },
+            "designerId": "696e818a-3864-4c35-9b2f-121ab3e98435"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "chineseName",
+                "type": "string"
+            },
+            "designerId": "40845162-dcb1-4982-9514-e54bcbeaf35a"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "sequence",
+                "type": "int"
+            },
+            "designerId": "14b3b852-9893-4bfd-a781-a02d63183fcf"
+        },
+        {
+            "type": "Ext.util.Sorter",
+            "reference": {
+                "name": "sorters",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "property": "sequence"
+            },
+            "designerId": "0cc1283d-f170-45a6-9875-f37156e4649f"
+        },
+        {
+            "type": "Ext.data.proxy.Ajax",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "limitParam": "undefined",
+                "pageParam": "undefined",
+                "url": "menu/queryallcategory1"
+            },
+            "designerId": "389dd029-3850-430d-8c27-9a5eee41b6a7",
+            "cn": [
+                {
+                    "type": "Ext.data.reader.Json",
+                    "reference": {
+                        "name": "reader",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "root": "categories"
+                    },
+                    "designerId": "de75b2ac-ddf3-4776-b151-ab5fa72c3c82"
+                }
+            ]
+        }
+    ]
+}

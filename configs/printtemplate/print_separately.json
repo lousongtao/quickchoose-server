@@ -1,0 +1,69 @@
+{
+	"header": [
+		{
+			"text": "桌    号：{$desk}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "单据日期：{$time}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "单据编号：{$sequence}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "菜    名：{$dishname}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "数    量：{$amount}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "备    注：{$requirement}",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "     ",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		},
+		{
+			"text": "--------------------------------",
+			"size": 9,
+			"bold": false,
+			"align": 0,
+			"line": true,
+			"type": 0
+		}
+	]
+	
+}

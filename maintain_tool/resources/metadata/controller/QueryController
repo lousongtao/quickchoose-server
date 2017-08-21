@@ -1,0 +1,40 @@
+{
+    "type": "Ext.app.Controller",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "QueryController"
+    },
+    "designerId": "d2d0314b-f2ef-4721-8d5f-8235e15d360d",
+    "cn": [
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "logListContainer",
+                "selector": "#logListContainer"
+            },
+            "designerId": "d5166f3c-72cb-4765-a96e-811a36ed5a44"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "mainView",
+                "selector": "#mainView"
+            },
+            "designerId": "fac31522-14a1-4c4d-bd6a-38d7501b13c6"
+        }
+    ]
+}

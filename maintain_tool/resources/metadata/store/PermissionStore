@@ -1,0 +1,83 @@
+{
+    "type": "directstore",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "PermissionStore",
+        "storeId": "PermissionStore"
+    },
+    "designerId": "9527dad7-a47a-4698-b59b-711bf911f669",
+    "cn": [
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "id",
+                "type": "int"
+            },
+            "designerId": "c9f28b0f-dc45-40f4-8372-6c07f8524594"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "name",
+                "type": "string"
+            },
+            "designerId": "a34602c3-ac8f-4ac4-8dbb-56e8428f078b"
+        },
+        {
+            "type": "Ext.data.proxy.Ajax",
+            "reference": {
+                "name": "proxy",
+                "type": "object"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "extraParams": null,
+                "limitParam": "undefined",
+                "pageParam": "undefined",
+                "url": "account/querypermission"
+            },
+            "designerId": "0d24a6ff-d27d-41ba-aeb5-9fda3f1ea684",
+            "cn": [
+                {
+                    "type": "Ext.data.reader.Json",
+                    "reference": {
+                        "name": "reader",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "root": "permissions"
+                    },
+                    "designerId": "f4578955-19dd-4d61-88b3-227b9dd18aed"
+                }
+            ]
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "choosed",
+                "type": "boolean"
+            },
+            "designerId": "67f521b6-1eb5-4052-b54f-91f10c66731e"
+        }
+    ]
+}

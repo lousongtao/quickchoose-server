@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<!-- Auto Generated with Sencha Architect -->
+<!-- Modifications to this file will be overwritten. -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>load picture using AJAX</title>
+    <script src="extjs/ext-all-dev.js"></script>
+    <script src="extjs/ext-theme-neptune.js"></script>
+    <link rel="stylesheet" href="extjs/resources/ext-theme-neptune/ext-theme-neptune-all.css">
+    <script type="text/javascript">
+		
+		Ext.onReady(function(){			
+			var fileup = Ext.create('Ext.form.field.File',{
+				renderTo : Ext.getBody(),
+				name: 'photoName',
+				fieldLabel: 'photoName',
+				labelWidth: 100,
+				msgTarget: 'side',
+				allowBlank: false,
+				anchor: '100%',
+				buttonText: 'Select Photo...'
+			});
+			var btn2 = Ext.create('Ext.Button', {
+				text: 'load file',
+				renderTo : Ext.getBody(),
+				handler: function(){
+					var values = {
+						photoName: fileup.getValue()
+					};
+					Ext.Ajax.request({
+					    url: "menu/add_dish2",
+					    params : values
+					});
+				}
+			});
+		});
+	</script>
+</head>
+<body></body>
+</html>

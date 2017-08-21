@@ -1,0 +1,237 @@
+{
+    "type": "Ext.form.Panel",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "bodyPadding": 10,
+        "designer|userClassName": "AddUpdateAccountForm",
+        "frame": true,
+        "height": 526,
+        "itemId": "addUpdateAccountForm",
+        "layout": null,
+        "margin": 5,
+        "title": null,
+        "width": 438
+    },
+    "designerId": "76ff2ebd-b645-45bf-88e9-5dcda079be06",
+    "cn": [
+        {
+            "type": "Ext.panel.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "title": null
+            },
+            "designerId": "d19770ad-017e-4114-ad41-11b39a5f7645",
+            "cn": [
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "User Name",
+                        "itemId": "usernameTxt",
+                        "labelWidth": 150,
+                        "maxLength": 32,
+                        "minLength": 4,
+                        "name": "username",
+                        "width": 400
+                    },
+                    "designerId": "3130756a-71c8-4c8f-8e6a-020fa36b6e46"
+                },
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "Password",
+                        "inputType": "password",
+                        "itemId": "passwordTxt",
+                        "labelWidth": 150,
+                        "maxLength": 64,
+                        "minLength": 4,
+                        "name": "password",
+                        "width": 400
+                    },
+                    "designerId": "4b799d48-2a34-4a89-8ae7-540228a5d9ea"
+                },
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "Confirm Password",
+                        "inputType": "password",
+                        "itemId": "passwordAgainTxt",
+                        "labelWidth": 150,
+                        "maxLength": 64,
+                        "minLength": 4,
+                        "name": "passwordAgain",
+                        "width": 400
+                    },
+                    "designerId": "e70643f4-9151-417e-a8f6-a983c8797e8e"
+                },
+                {
+                    "type": "Ext.form.field.Number",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|displayName": "id",
+                        "fieldLabel": "Label",
+                        "hidden": true,
+                        "itemId": "id",
+                        "name": "id"
+                    },
+                    "designerId": "3fac7701-3ddf-4047-81dd-de3922e81cf9"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "height": 300,
+                "hideHeaders": true,
+                "itemId": "permissionGrid",
+                "store": "PermissionStore",
+                "title": "Permission",
+                "width": 300
+            },
+            "designerId": "04f70ba8-f006-4309-add9-dca67776584a",
+            "cn": [
+                {
+                    "type": "Ext.grid.View",
+                    "reference": {
+                        "name": "viewConfig",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "designerId": "aa6e894e-680e-471c-8a6e-66d38fb245b9"
+                },
+                {
+                    "type": "Ext.grid.column.Number",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "id",
+                        "hidden": true,
+                        "text": null
+                    },
+                    "designerId": "33c8baec-46af-498e-9b38-d1563da14e66"
+                },
+                {
+                    "type": "Ext.grid.column.CheckColumn",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "choosed",
+                        "text": null,
+                        "width": 50
+                    },
+                    "designerId": "bf2c6fc5-1719-4d59-ad78-89aeba1ef5f9"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "name",
+                        "text": null,
+                        "width": 250
+                    },
+                    "designerId": "9ce8ffdb-6a02-405d-8069-65bc182e9548"
+                }
+            ]
+        },
+        {
+            "type": "Ext.panel.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "title": null
+            },
+            "designerId": "a9d73f4d-3fa6-4726-bd6e-140c3cbc288e",
+            "cn": [
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "itemId": "btnSaveForAdd",
+                        "margin": 5,
+                        "text": "Save",
+                        "width": 120
+                    },
+                    "designerId": "461e3126-29a8-4599-9fb9-c5f5ec7adb57"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "itemId": "btnSaveForUpdate",
+                        "margin": 5,
+                        "text": "Save",
+                        "width": 120
+                    },
+                    "designerId": "34e42536-6442-451e-aea0-8dd43e612730"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "itemId": "btnCancel",
+                        "margin": 5,
+                        "text": "Cancel",
+                        "width": 120
+                    },
+                    "designerId": "e837de9e-e62b-4b28-b703-37fcd8d05fbb"
+                }
+            ]
+        }
+    ]
+}

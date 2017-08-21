@@ -1,0 +1,132 @@
+{
+    "type": "Ext.container.Viewport",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "container|align": "middle",
+        "container|pack": "center",
+        "designer|initialView": true,
+        "designer|userClassName": "LoginView",
+        "itemId": "loginView",
+        "layout": "hbox"
+    },
+    "designerId": "80a5388b-05c3-4558-9c78-d780a243e468",
+    "cn": [
+        {
+            "type": "Ext.form.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "bodyPadding": 10,
+                "draggable": true,
+                "frame": true,
+                "height": 200,
+                "itemId": "loginForm",
+                "title": "Login - Digital Menu",
+                "width": 300
+            },
+            "designerId": "31f0256d-f7b0-4486-9a45-121d26de9d4a",
+            "cn": [
+                {
+                    "type": "Ext.container.Container",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 20
+                    },
+                    "designerId": "637b6f4c-4969-471d-98f5-e8c3020a8cc3"
+                },
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "allowBlank": false,
+                        "allowOnlyWhitespace": false,
+                        "emptyText": null,
+                        "fieldLabel": "User Name ",
+                        "itemId": "usernameText",
+                        "layout|anchor": "100%",
+                        "maxLength": 32,
+                        "minLength": 4,
+                        "name": "username",
+                        "value": [
+                            "admin"
+                        ]
+                    },
+                    "designerId": "e419b7e7-230a-4ed6-9039-e7a08a259717"
+                },
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "allowBlank": false,
+                        "allowOnlyWhitespace": false,
+                        "emptyText": null,
+                        "enableKeyEvents": true,
+                        "fieldLabel": "Password ",
+                        "inputType": "password",
+                        "itemId": "passwordText",
+                        "layout|anchor": "100%",
+                        "maxLength": 16,
+                        "minLength": 4,
+                        "name": "password",
+                        "value": [
+                            "admin"
+                        ]
+                    },
+                    "designerId": "08c40095-1c27-48ba-8f9e-f984acb9601e"
+                },
+                {
+                    "type": "Ext.container.Container",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "container|align": "middle",
+                        "container|pack": "end",
+                        "height": 65,
+                        "layout": "hbox"
+                    },
+                    "designerId": "de6668f1-627d-45fc-ada1-c3ab29e256ce",
+                    "cn": [
+                        {
+                            "type": "Ext.button.Button",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "formBind": true,
+                                "height": 30,
+                                "itemId": "loginBtn",
+                                "text": "LOGIN",
+                                "width": 100
+                            },
+                            "designerId": "f4739ed2-1311-4aa4-a519-0ba2230fcf54"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

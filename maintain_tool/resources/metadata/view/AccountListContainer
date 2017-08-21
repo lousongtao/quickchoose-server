@@ -1,0 +1,338 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "AccountListContainer",
+        "height": null,
+        "itemId": "accountListContainer",
+        "layout": "border",
+        "minHeight": null,
+        "padding": 5,
+        "width": null
+    },
+    "designerId": "40e9b984-b9b6-4425-8bb0-90b301f30573",
+    "cn": [
+        {
+            "type": "Ext.panel.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "height": null,
+                "layout|region": "north",
+                "title": null
+            },
+            "designerId": "ce64dba3-ddae-48a4-a7d2-841542a0dea5",
+            "cn": [
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": null,
+                        "itemId": "btnAdd",
+                        "margin": 5,
+                        "text": "Add Account"
+                    },
+                    "designerId": "2159ee29-2a17-4959-b1be-82cdc43eeb17"
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "columnLines": true,
+                "frame": true,
+                "itemId": "accountListGrid",
+                "layout|region": "center",
+                "margin": "5 0 0 0",
+                "store": "AccountListStore",
+                "title": "Account List"
+            },
+            "designerId": "610c6e8a-f173-43fe-9fb5-ae9c305dd790",
+            "cn": [
+                {
+                    "type": "Ext.grid.View",
+                    "reference": {
+                        "name": "viewConfig",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "frame": false,
+                        "itemId": "accountListGridView"
+                    },
+                    "designerId": "4e5bf776-65e8-425d-b947-190490bc3af3"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "id",
+                        "draggable": false,
+                        "frame": false,
+                        "menuDisabled": true,
+                        "text": "ID"
+                    },
+                    "designerId": "d1c619b5-a347-4cb1-9be2-0a363ad801af"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "username",
+                        "draggable": false,
+                        "menuDisabled": true,
+                        "text": "Name",
+                        "width": 150
+                    },
+                    "designerId": "adb30141-f313-4608-ba0a-7ed02bb80f82"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "permission",
+                        "draggable": false,
+                        "menuDisabled": true,
+                        "text": "Permission",
+                        "width": 300
+                    },
+                    "designerId": "e06290f0-aa0a-41ee-b00d-4981ba398889"
+                },
+                {
+                    "type": "Ext.grid.column.Action",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "designerId": "99cbdee6-0e51-4678-be83-525191189567",
+                    "cn": [
+                        {
+                            "type": "actioncolumnitem",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "UpdateUser",
+                                "icon": "images/icon_updateuser.png",
+                                "tooltip": "update user"
+                            },
+                            "designerId": "a06e781a-f71e-49aa-b66f-1c57e9956e9b",
+                            "cn": [
+                                {
+                                    "type": "fixedfunction",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|params": [
+                                            "view",
+                                            "rowIndex",
+                                            "colIndex",
+                                            "item",
+                                            "e",
+                                            "record",
+                                            "row"
+                                        ],
+                                        "fn": "handler",
+                                        "implHandler": [
+                                            "var p = Ext.create('digitalmenu.view.AddUpdateAccountForm',{\r",
+                                            "    title: 'Update User'\r",
+                                            "});\r",
+                                            "\r",
+                                            "//hide one save button & password components\r",
+                                            "p.down('#btnSaveForAdd').hidden = true;\r",
+                                            "p.down('#btnSaveForUpdate').hidden = false;\r",
+                                            "p.down('#passwordTxt').hidden = true;\r",
+                                            "p.down('#passwordAgainTxt').hidden = true;\r",
+                                            "\r",
+                                            "//set data\r",
+                                            "p.down('#usernameTxt').setValue(record.data.username);\r",
+                                            "p.down('#id').setValue(record.data.id);\r",
+                                            "\r",
+                                            "var permissionGrid = p.down('#permissionGrid');\r",
+                                            "permissionGrid.store.load(function(records, operation, success){\r",
+                                            "    var permissions = record.data.permission.split(\";\");\r",
+                                            "    for(var i = 0; i<permissions.length; i++){\r",
+                                            "        var permission = permissions[i];\r",
+                                            "        for (var j =0; j<permissionGrid.store.getCount(); j++){\r",
+                                            "            if (permission === permissionGrid.store.getAt(j).get('name')){\r",
+                                            "                permissionGrid.store.getAt(j).set('choosed', true);\r",
+                                            "            }\r",
+                                            "        }\r",
+                                            "    }\r",
+                                            "});\r",
+                                            "\r",
+                                            "//open panel in a window\r",
+                                            "var win = Ext.create('Ext.window.Window',{\r",
+                                            "    height: 550,\r",
+                                            "    width: 460,\r",
+                                            "\theader: false,\r",
+                                            "\tmodal: true,\r",
+                                            "    border: false,\r",
+                                            "\titems:[\r",
+                                            "        p\r",
+                                            "\t]\r",
+                                            "});\r",
+                                            "\r",
+                                            "win.show();"
+                                        ]
+                                    },
+                                    "designerId": "adabd08c-e622-464a-8c06-76a653ab9dcc"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "actioncolumnitem",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "ChangePassword",
+                                "icon": "images/icon_change_password.png",
+                                "tooltip": "change password"
+                            },
+                            "designerId": "1e93cc4b-7420-4d53-9fcf-c80b44db1d19",
+                            "cn": [
+                                {
+                                    "type": "fixedfunction",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|params": [
+                                            "view",
+                                            "rowIndex",
+                                            "colIndex",
+                                            "item",
+                                            "e",
+                                            "record",
+                                            "row"
+                                        ],
+                                        "fn": "handler",
+                                        "implHandler": [
+                                            ""
+                                        ]
+                                    },
+                                    "designerId": "1d400601-28d7-4119-8408-c8799f6df757"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "actioncolumnitem",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|displayName": "DeleteUser",
+                                "icon": "images/icon_delete.png",
+                                "tooltip": "delete user"
+                            },
+                            "designerId": "045e6046-ec8b-4fea-8c37-b826bb873514",
+                            "cn": [
+                                {
+                                    "type": "fixedfunction",
+                                    "reference": {
+                                        "name": "items",
+                                        "type": "array"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|params": [
+                                            "view",
+                                            "rowIndex",
+                                            "colIndex",
+                                            "item",
+                                            "e",
+                                            "record",
+                                            "row"
+                                        ],
+                                        "fn": "handler",
+                                        "implHandler": [
+                                            "Ext.MessageBox.confirm(\r",
+                                            "\"确认\",\r",
+                                            "\"您确认要删除账号“\" + record.data.username + \"”吗？\",\r",
+                                            "function(btnId) {\r",
+                                            "  if (btnId != 'yes')\r",
+                                            "      return;\r",
+                                            "\r",
+                                            "  var values = {\r",
+                                            "    userId: Ext.util.Cookies.get(\"userId\"),\r",
+                                            "    sessionId: Ext.util.Cookies.get(\"sessionId\"),\r",
+                                            "    id: record.data.id\r",
+                                            "  };\r",
+                                            "\r",
+                                            "  var successCallback = function(resp, ops) {\r",
+                                            "    var result = Ext.decode(resp.responseText);\r",
+                                            "\r",
+                                            "    if (result.result == 'ok') {\r",
+                                            "      Ext.Msg.alert(\"删除账号成功\", result.result);\r",
+                                            "      view.store.load();\r",
+                                            "    } else if (result.result == 'invalid_session') {\r",
+                                            "      digitalmenu.getApplication().onSessionExpired();\r",
+                                            "    } else {\r",
+                                            "      Ext.Msg.alert(\"删除账号失败\", result.result);\r",
+                                            "    }\r",
+                                            "  };\r",
+                                            "\r",
+                                            "  var failureCallback = function(resp, ops) {\r",
+                                            "    Ext.Msg.alert(\"删除账号失败\", resp);\r",
+                                            "  };\r",
+                                            "\r",
+                                            "  Ext.Ajax.request({\r",
+                                            "    url: \"account/remove\",\r",
+                                            "    params: values,\r",
+                                            "    success: successCallback,\r",
+                                            "    failure: failureCallback\r",
+                                            "  });\r",
+                                            "});"
+                                        ]
+                                    },
+                                    "designerId": "c4e07c3e-dbf4-465e-86ee-6f6ac09ca70d"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
