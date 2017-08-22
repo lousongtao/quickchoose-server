@@ -22,6 +22,7 @@ import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.GetPermissionResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.views.GridResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Controller
@@ -114,16 +115,17 @@ public class AccountController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/change_password", method = { RequestMethod.POST })
-	public @ResponseBody Result changePassword(@RequestParam(value = "userId", required = true) long userId,
+	public @ResponseBody GridResult changePassword(@RequestParam(value = "userId", required = true) long userId,
 			@RequestParam(value = "sessionId", required = true) String sessionId,
+			@RequestParam(value = "accountId", required = true) int accountId,
 			@RequestParam(value = "oldPassword", required = true) String oldPassword,
 			@RequestParam(value = "newPassword", required = true) String newPassword) throws Exception {
 		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
+			return new GridResult("invalid_session", false);
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CREATE_USER)){
-			return new Result("no_permission");
+			return new GridResult("no_permission", false);
 		}
-		return accountService.changePassword(userId, oldPassword, newPassword);
+		return accountService.changePassword(userId, accountId, oldPassword, newPassword);
 	}
 
 	/**

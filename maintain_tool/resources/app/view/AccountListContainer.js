@@ -133,7 +133,25 @@ Ext.define('digitalmenu.view.AccountListContainer', {
                                 },
                                 {
                                     handler: function(view, rowIndex, colIndex, item, e, record, row) {
+                                        var p = Ext.create('digitalmenu.view.ChangeUserPasswordForm',{
+                                            title: 'Change Password'
+                                        });
 
+                                        //set data
+                                        p.down('#nfAccountId').setValue(record.data.id);
+
+
+                                        //open panel in a window
+                                        var win = Ext.create('Ext.window.Window',{
+                                            header: false,
+                                            modal: true,
+                                            border: false,
+                                            items:[
+                                            p
+                                            ]
+                                        });
+
+                                        win.show();
                                     },
                                     icon: 'images/icon_change_password.png',
                                     tooltip: 'change password'

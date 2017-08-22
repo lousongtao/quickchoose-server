@@ -32,6 +32,7 @@ import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
+import com.shuishou.digitalmenu.views.GridResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Service("accountService")
@@ -259,22 +260,22 @@ public class AccountService implements IAccountService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public Result changePassword(long userId, String oldPassword, String newPassword) {
+	public GridResult changePassword(long userId, int accountId, String oldPassword, String newPassword) {
 		
 		// check user valid
 //		long lUserId = Long.parseLong(userId);
-		UserData user = userDA.getUserById(userId);
+		UserData user = userDA.getUserById(accountId);
 		if (user == null)
-			return new Result("invalid_user");
+			return new GridResult("cannot find user by id "+ accountId, false);
 
 		// check password.
 		try {
 			String hashedPassword = toSHA1(oldPassword.getBytes());
 			if (!user.getHashedPassword().equals(hashedPassword))
-				return new Result("invalid_password");
+				return new GridResult("old password is wrong", false);
 		} catch (NoSuchAlgorithmException ex) {
 			logger.error("check user password failed.", ex);
-			return new Result("invalid_password");
+			return new GridResult("invalid_password", false);
 		}
 
 		// change password
@@ -283,17 +284,18 @@ public class AccountService implements IAccountService {
 			user.setHashedPassword(newHashedPassword);
 		} catch (NoSuchAlgorithmException ex) {
 			logger.error("set new password failed.", ex);
-			return new Result("invalid_password");
+			return new GridResult("invalid_password", false);
 		}
 
 		// save.
 		userDA.saveOrUpdateUser(user);
 
 		// write log.
-		logService.write(user, LogData.LogType.ACCOUNT_MODIFY.toString(),
-				"User " + user + " change his(her) password.");
+		UserData operator = userDA.getUserById(userId);
+		logService.write(operator, LogData.LogType.ACCOUNT_MODIFY.toString(),
+				"User " + operator + " change " + user + "'s password.");
 
-		return new Result(Result.OK);
+		return new GridResult(Result.OK, true);
 	}
 
 	@Override

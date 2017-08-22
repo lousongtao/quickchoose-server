@@ -335,6 +335,76 @@
                 "scope": "me"
             },
             "designerId": "84f4ac13-abfd-45a2-b4ca-f3ca03673358"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#formChangeUserPassord #btnSave",
+                "designer|targetType": "Ext.button.Button",
+                "fn": "onChangeUserPassword",
+                "implHandler": [
+                    "var form = button.up('form');\r",
+                    "\r",
+                    "var values = form.getValues();\r",
+                    "if (values.oldPassword.length === 0){\r",
+                    "    Ext.Msg.alert(\"Error\",\"Please input old password\");\r",
+                    "    return;\r",
+                    "}\r",
+                    "if (values.newPassword != values.reNewPassword){\r",
+                    "    Ext.Msg.alert(\"Error\",\"new password are different in the 2 boxes\");\r",
+                    "    return;\r",
+                    "}\r",
+                    "var successCallback = function(form, action) {\r",
+                    "  var result = action.result;\r",
+                    "\r",
+                    "  if(action.result.result =='ok'){\r",
+                    "      Ext.Msg.alert(\"SUCCESS\",\"Change password successfully.\");\r",
+                    "      var win = button.up('form').up('window');\r",
+                    "      win.close();\r",
+                    "  } else if (action.result.result =='invalid_session'){\r",
+                    "      digitalmenu.getApplication().onSessionExpired();\r",
+                    "  } else {\r",
+                    "      Ext.Msg.alert('Failed',\"Failed to change password.\", action.result.result);\r",
+                    "  }\r",
+                    "};\r",
+                    "\r",
+                    "var failureCallback = function(form, action) {\r",
+                    "  Ext.Msg.alert(\"Failed to change password\", action.result.result);\r",
+                    "};\r",
+                    "\r",
+                    "\r",
+                    "form.submit({\r",
+                    "    url: \"account/change_password\",\r",
+                    "    params: {\r",
+                    "        userId : Ext.util.Cookies.get(\"userId\"),\r",
+                    "        sessionId : Ext.util.Cookies.get(\"sessionId\")\r",
+                    "    },\r",
+                    "    success: successCallback,\r",
+                    "    failure: failureCallback\r",
+                    "});"
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "85f63b7f-6ac2-4638-8910-8504f0de0707"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "changeUserPasswordForm",
+                "selector": "#formChangeUserPassord"
+            },
+            "designerId": "b0f81e91-6721-4ab7-8b31-6e8dbd0a6c14"
         }
     ]
 }

@@ -24,6 +24,10 @@ Ext.define('digitalmenu.controller.AccountController', {
         {
             ref: 'accountGrid',
             selector: '#accountListContainer #accountListGrid'
+        },
+        {
+            ref: 'changeUserPasswordForm',
+            selector: '#formChangeUserPassord'
         }
     ],
 
@@ -237,6 +241,48 @@ Ext.define('digitalmenu.controller.AccountController', {
         });
     },
 
+    onChangeUserPassword: function(button, e, eOpts) {
+        var form = button.up('form');
+
+        var values = form.getValues();
+        if (values.oldPassword.length === 0){
+            Ext.Msg.alert("Error","Please input old password");
+            return;
+        }
+        if (values.newPassword != values.reNewPassword){
+            Ext.Msg.alert("Error","new password are different in the 2 boxes");
+            return;
+        }
+        var successCallback = function(form, action) {
+          var result = action.result;
+
+          if(action.result.result =='ok'){
+              Ext.Msg.alert("SUCCESS","Change password successfully.");
+              var win = button.up('form').up('window');
+              win.close();
+          } else if (action.result.result =='invalid_session'){
+              digitalmenu.getApplication().onSessionExpired();
+          } else {
+              Ext.Msg.alert('Failed',"Failed to change password.", action.result.result);
+          }
+        };
+
+        var failureCallback = function(form, action) {
+          Ext.Msg.alert("Failed to change password", action.result.result);
+        };
+
+
+        form.submit({
+            url: "account/change_password",
+            params: {
+                userId : Ext.util.Cookies.get("userId"),
+                sessionId : Ext.util.Cookies.get("sessionId")
+            },
+            success: successCallback,
+            failure: failureCallback
+        });
+    },
+
     init: function(application) {
         this.control({
             "#addUpdateAccountForm #btnTest": {
@@ -256,6 +302,9 @@ Ext.define('digitalmenu.controller.AccountController', {
             },
             "#addUpdateAccountForm #btnSaveForUpdate": {
                 click: this.onSaveUpdateAccountClick
+            },
+            "#formChangeUserPassord #btnSave": {
+                click: this.onChangeUserPassword
             }
         });
     }

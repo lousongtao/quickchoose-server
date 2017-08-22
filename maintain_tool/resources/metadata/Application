@@ -47,7 +47,8 @@
             "ChangeIndentDishAmountForm",
             "AddIndentDishForm",
             "ChangeDishPictureForm",
-            "LogListContainer"
+            "LogListContainer",
+            "ChangeUserPasswordForm"
         ]
     },
     "designerId": "application",

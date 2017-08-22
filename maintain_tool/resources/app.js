@@ -52,7 +52,8 @@ Ext.application({
         'ChangeIndentDishAmountForm',
         'AddIndentDishForm',
         'ChangeDishPictureForm',
-        'LogListContainer'
+        'LogListContainer',
+        'ChangeUserPasswordForm'
     ],
     controllers: [
         'AccountController',

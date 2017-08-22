@@ -247,7 +247,25 @@
                                         ],
                                         "fn": "handler",
                                         "implHandler": [
-                                            ""
+                                            "var p = Ext.create('digitalmenu.view.ChangeUserPasswordForm',{\r",
+                                            "    title: 'Change Password'\r",
+                                            "});\r",
+                                            "\r",
+                                            "//set data\r",
+                                            "p.down('#nfAccountId').setValue(record.data.id);\r",
+                                            "\r",
+                                            "\r",
+                                            "//open panel in a window\r",
+                                            "var win = Ext.create('Ext.window.Window',{\r",
+                                            "\theader: false,\r",
+                                            "\tmodal: true,\r",
+                                            "    border: false,\r",
+                                            "\titems:[\r",
+                                            "        p\r",
+                                            "\t]\r",
+                                            "});\r",
+                                            "\r",
+                                            "win.show();"
                                         ]
                                     },
                                     "designerId": "1d400601-28d7-4119-8408-c8799f6df757"
