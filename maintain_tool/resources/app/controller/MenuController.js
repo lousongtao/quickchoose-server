@@ -292,6 +292,7 @@ Ext.define('digitalmenu.controller.MenuController', {
         var nameen = this.getTabCategory2().down('#tfCategory2EN').getValue();
         var seq = this.getTabCategory2().down('#nfCategory2Seq').getValue();
         var category1ID = this.getTabCategory2().down('#cbCategory1ID').getValue();
+        var printerId = this.getTabCategory2().down('#cbPrinter').getValue();
         var tree = this.getTreeMenu();
 
         if (category1ID < 0){
@@ -304,6 +305,7 @@ Ext.define('digitalmenu.controller.MenuController', {
             sessionId : Ext.util.Cookies.get("sessionId"),
             chineseName : namecn,
             englishName : nameen,
+            printerId : printerId,
             sequence : seq,
             category1Id : category1ID
         };
@@ -369,6 +371,7 @@ Ext.define('digitalmenu.controller.MenuController', {
         var nameen = this.getTabCategory2().down('#tfCategory2EN').getValue();
         var seq = this.getTabCategory2().down('#nfCategory2Seq').getValue();
         var id = this.getTabCategory2().down('#nfID').getValue();
+        var printerId = this.getTabCategory2().down('#cbPrinter').getValue();
         var category1ID = this.getTabCategory2().down('#cbCategory1ID').getValue();
         var tree = this.getTreeMenu();
 
@@ -383,6 +386,7 @@ Ext.define('digitalmenu.controller.MenuController', {
             chineseName : namecn,
             englishName : nameen,
             sequence : seq,
+            printerId : printerId,
             id : id,
             category1Id : category1ID
         };
@@ -937,6 +941,7 @@ Ext.define('digitalmenu.controller.MenuController', {
             this.getTabCategory2().down('#tfCategory2EN').setValue(record.get('englishName'));
             this.getTabCategory2().down('#nfCategory2Seq').setValue(record.get('sequence'));
             this.getTabCategory2().down('#cbCategory1ID').setValue(record.get('parentID'));
+            this.getTabCategory2().down('#cbPrinter').setValue(record.get('printerId'));
         } else if ('DISH' == record.get('level')){
             this.getTabDish().up().setActiveTab(this.getTabDish());
             this.getTabDish().down('#nfID').setValue(record.get('objectid'));

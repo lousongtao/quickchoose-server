@@ -171,6 +171,23 @@
                             "codeClass": null,
                             "userConfig": {
                                 "height": null,
+                                "icon": null,
+                                "itemId": "btnTableMgr",
+                                "layout|flex": null,
+                                "text": "TableMgr",
+                                "width": 150
+                            },
+                            "designerId": "9228389f-b9ed-471d-a4a5-edf16fee80ee"
+                        },
+                        {
+                            "type": "Ext.button.Button",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "height": null,
                                 "icon": "images/icon_query.png",
                                 "itemId": "btnQuery",
                                 "layout|flex": null,
@@ -187,7 +204,8 @@
                                     },
                                     "codeClass": null,
                                     "userConfig": {
-                                        "width": 120
+                                        "minWidth": 200,
+                                        "width": 200
                                     },
                                     "designerId": "7ca261e3-b6ab-4dd3-ada5-b08ae27835a8",
                                     "cn": [
@@ -203,6 +221,32 @@
                                                 "text": "Query Log"
                                             },
                                             "designerId": "847a5f76-b8a1-46c2-b1fb-e75547a8ae14"
+                                        },
+                                        {
+                                            "type": "Ext.menu.Item",
+                                            "reference": {
+                                                "name": "items",
+                                                "type": "array"
+                                            },
+                                            "codeClass": null,
+                                            "userConfig": {
+                                                "itemId": "indentQueryMenuItem",
+                                                "text": "Query Order"
+                                            },
+                                            "designerId": "07b37956-7b25-4422-a009-cbc074db72cf"
+                                        },
+                                        {
+                                            "type": "Ext.menu.Item",
+                                            "reference": {
+                                                "name": "items",
+                                                "type": "array"
+                                            },
+                                            "codeClass": null,
+                                            "userConfig": {
+                                                "itemId": "shiftWorkQueryMenuItem",
+                                                "text": "Query ShiftWork"
+                                            },
+                                            "designerId": "bfb0c0ad-fa01-40ed-97e5-dde6302d0ac8"
                                         }
                                     ]
                                 }

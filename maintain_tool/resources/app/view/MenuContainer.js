@@ -249,6 +249,20 @@ Ext.define('digitalmenu.view.MenuContainer', {
                                                     valueField: 'id'
                                                 },
                                                 {
+                                                    xtype: 'combobox',
+                                                    itemId: 'cbPrinter',
+                                                    width: 400,
+                                                    fieldLabel: 'Printer',
+                                                    labelWidth: 150,
+                                                    allowBlank: false,
+                                                    allowOnlyWhitespace: false,
+                                                    editable: false,
+                                                    displayField: 'name',
+                                                    forceSelection: true,
+                                                    store: 'PrinterListStore',
+                                                    valueField: 'id'
+                                                },
+                                                {
                                                     xtype: 'numberfield',
                                                     hidden: true,
                                                     itemId: 'nfID',

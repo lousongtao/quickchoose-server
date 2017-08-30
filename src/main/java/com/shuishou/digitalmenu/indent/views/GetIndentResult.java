@@ -13,10 +13,14 @@ public class GetIndentResult extends GridResult{
 	public static final class Indent{
 		public int id;
 		public String deskname;
-		public String time;
+		public String startTime;
+		public String endTime;
 		public byte status;
 		public int dailysequence;
 		public double totalprice;
+		public double paidPrice;
+		public byte payWay;
+		public int customerAmount;
 	}
 	
 	public List<Indent> indents;

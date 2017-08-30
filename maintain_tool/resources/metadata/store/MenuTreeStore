@@ -224,6 +224,19 @@
                 "type": "int"
             },
             "designerId": "23a477e8-27db-4f1b-80f8-34a36e9bffb2"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "printerId",
+                "type": "int"
+            },
+            "designerId": "f5175082-deb0-41d2-a8ad-4e0c0dbb21f0"
         }
     ]
 }

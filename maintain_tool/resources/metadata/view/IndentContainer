@@ -581,6 +581,20 @@
                             "designerId": "de8d1da2-727c-47c0-879d-3af795cc0d0c"
                         },
                         {
+                            "type": "Ext.grid.column.Number",
+                            "reference": {
+                                "name": "columns",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "dataIndex": "paidPrice",
+                                "text": "Paid Price",
+                                "width": 70
+                            },
+                            "designerId": "ab031664-632c-42fd-be8c-363980083ae8"
+                        },
+                        {
                             "type": "Ext.grid.column.Date",
                             "reference": {
                                 "name": "columns",
@@ -588,13 +602,63 @@
                             },
                             "codeClass": null,
                             "userConfig": {
-                                "dataIndex": "time",
+                                "dataIndex": "startTime",
                                 "format": "Y-m-d H:i:s",
                                 "minWidth": 150,
-                                "text": "Time",
+                                "text": "Start Time",
                                 "width": 150
                             },
                             "designerId": "e15c5500-6089-41b8-a9e8-fe8852ab0354"
+                        },
+                        {
+                            "type": "Ext.grid.column.Date",
+                            "reference": {
+                                "name": "columns",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "dataIndex": "endTime",
+                                "format": "Y-m-d H:i:s",
+                                "minWidth": 150,
+                                "text": "End Time",
+                                "width": 150
+                            },
+                            "designerId": "0ee2d997-ef7d-4730-ae09-2f55079e638b"
+                        },
+                        {
+                            "type": "Ext.grid.column.Template",
+                            "reference": {
+                                "name": "columns",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "dataIndex": "payWay",
+                                "text": "Pay Way"
+                            },
+                            "designerId": "79aa677e-90a0-40b0-8cc9-72a5ee103b32",
+                            "cn": [
+                                {
+                                    "type": "Ext.XTemplate",
+                                    "reference": {
+                                        "name": "tpl",
+                                        "type": "object"
+                                    },
+                                    "codeClass": null,
+                                    "userConfig": {
+                                        "designer|displayName": "tpl",
+                                        "implHandler": [
+                                            "<tpl if='status == 0'>non\r",
+                                            "<tpl elseif='status == 1'>Cash\r",
+                                            "<tpl elseif='status == 2'>Card\r",
+                                            "<tpl elseif='status == 3'>Member\r",
+                                            "</tpl>"
+                                        ]
+                                    },
+                                    "designerId": "4e99ebe1-42a0-43ad-9d74-7b99f4cae99d"
+                                }
+                            ]
                         },
                         {
                             "type": "Ext.grid.View",

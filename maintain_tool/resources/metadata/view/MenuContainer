@@ -519,6 +519,28 @@
                                             "designerId": "4bc59ec2-aebd-4840-b5b3-27f3e2c90eac"
                                         },
                                         {
+                                            "type": "Ext.form.field.ComboBox",
+                                            "reference": {
+                                                "name": "items",
+                                                "type": "array"
+                                            },
+                                            "codeClass": null,
+                                            "userConfig": {
+                                                "allowBlank": false,
+                                                "allowOnlyWhitespace": false,
+                                                "displayField": "name",
+                                                "editable": false,
+                                                "fieldLabel": "Printer",
+                                                "forceSelection": true,
+                                                "itemId": "cbPrinter",
+                                                "labelWidth": 150,
+                                                "store": "PrinterListStore",
+                                                "valueField": "id",
+                                                "width": 400
+                                            },
+                                            "designerId": "e5a85dc1-52f0-4888-9d71-635738bf5486"
+                                        },
+                                        {
                                             "type": "Ext.form.field.Number",
                                             "reference": {
                                                 "name": "items",

@@ -13,6 +13,7 @@ import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.common.services.ICommonService;
 import com.shuishou.digitalmenu.common.views.GetConfirmCodeResult;
 import com.shuishou.digitalmenu.common.views.GetDeskResult;
+import com.shuishou.digitalmenu.common.views.GetDeskWithIndentResult;
 import com.shuishou.digitalmenu.common.views.GetPrinterResult;
 import com.shuishou.digitalmenu.views.GridResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -62,6 +63,18 @@ public class CommonController {
 //			return new GetDeskResult("no_permission", false);
 //		}
 		return commonService.getDesks();
+	}
+	
+	@RequestMapping(value="/common/getdeskswithindents", method = (RequestMethod.POST))
+	public @ResponseBody GetDeskWithIndentResult getDesksWithIndents(
+			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "sessionId", required = true) String sessionId) throws Exception{
+		if (!accountService.checkSession(userId, sessionId))
+			return new GetDeskWithIndentResult("invalid_session", false, null);
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_DESK)){
+			return new GetDeskWithIndentResult("no_permission", false, null);
+		}
+		return commonService.getDesksWithIndents();
 	}
 	
 	@RequestMapping(value="/common/adddesk", method = (RequestMethod.POST))

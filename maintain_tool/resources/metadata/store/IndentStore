@@ -72,10 +72,23 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "time",
+                "name": "startTime",
                 "type": "date"
             },
             "designerId": "29f12921-46c9-45f2-9191-32d119342dc1"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "endTime",
+                "type": "date"
+            },
+            "designerId": "924a151d-3b4c-4085-a411-6335199087be"
         },
         {
             "type": "Ext.data.Field",
@@ -98,10 +111,36 @@
             },
             "codeClass": null,
             "userConfig": {
+                "name": "paidPrice",
+                "type": "float"
+            },
+            "designerId": "968ae70c-d549-4a81-a754-12d0feff219d"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
                 "name": "status",
                 "type": "int"
             },
             "designerId": "d3bf1541-6130-45f9-81f5-302c4899c14d"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "payWay",
+                "type": "int"
+            },
+            "designerId": "8a7e9890-ed9d-447e-a493-828272a3cbad"
         },
         {
             "type": "Ext.data.Field",

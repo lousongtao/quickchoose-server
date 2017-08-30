@@ -36,6 +36,7 @@ public class GetMenuResult extends GridResult {
 		public int objectid;
 		public String chineseName;
 		public String englishName;
+		public int printerId;
 		public int sequence;
 		public String level = ConstantValue.TYPE_CATEGORY2INFO;
 		public List<DishInfo> children;
@@ -45,7 +46,7 @@ public class GetMenuResult extends GridResult {
 		public boolean loaded = false; // for extjs, For all non-leaf nodes that do not have children, the server response MUST set the loaded property to true.
 		public int parentID;
 		public String displayText;//this is for display in tree of maintain tool
-		public Category2Info(int id, String chineseName,String englishName,int sequence, int parentID, List<DishInfo> dishes){
+		public Category2Info(int id, String chineseName,String englishName,int sequence, int parentID, List<DishInfo> dishes, int printerId){
 			this.objectid = id;
 			this.chineseName = chineseName;
 			this.englishName = englishName;
@@ -53,6 +54,7 @@ public class GetMenuResult extends GridResult {
 			this.children = dishes;
 			this.parentID = parentID;
 			displayText = chineseName;
+			this.printerId = printerId;
 		}
 	}
 	

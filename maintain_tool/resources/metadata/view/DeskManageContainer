@@ -1,0 +1,248 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "DeskManageContainer",
+        "height": 652,
+        "itemId": "deskManageContainer",
+        "layout": "border",
+        "width": 946
+    },
+    "designerId": "46de6cef-17bb-4849-b16c-2f6e4a901efc",
+    "cn": [
+        {
+            "type": "Ext.panel.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "container|columns": 5,
+                "desklist": [
+                    "[]"
+                ],
+                "itemId": "pDeskArea",
+                "layout": "table",
+                "layout|region": "center",
+                "title": null
+            },
+            "configAlternates": {
+                "desklist": "array"
+            },
+            "designerId": "0a56b716-c13a-4fbc-97a3-640f8fdb4e62",
+            "customConfigs": [
+                {
+                    "group": "(Custom Properties)",
+                    "name": "desklist",
+                    "type": "string"
+                }
+            ],
+            "cn": [
+                {
+                    "type": "basicfunction",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "designer|params": [
+                            "desklist"
+                        ],
+                        "fn": "getSelectDesks",
+                        "implHandler": [
+                            "var arrSelected = [];\r",
+                            "desklist.forEach(function(element, index, array){\r",
+                            "    if (element.isSelected){\r",
+                            "        arrSelected.push(element);\r",
+                            "    }\r",
+                            "});\r",
+                            "return arrSelected;"
+                        ]
+                    },
+                    "designerId": "384b7b59-ecfa-4f1b-af57-7393cc6e5e89"
+                }
+            ]
+        },
+        {
+            "type": "Ext.panel.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "itemId": "pFunction",
+                "layout|region": "east",
+                "title": null,
+                "width": 150
+            },
+            "designerId": "318caf8e-aade-4fed-9b71-d2d59e2a7e0e",
+            "cn": [
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 40,
+                        "itemId": "btnCheckout",
+                        "margin": "10 0 10 10",
+                        "text": "收银",
+                        "width": 130
+                    },
+                    "designerId": "4e622426-eb33-42a9-bab7-750d01bb2693"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "disabled": true,
+                        "height": 40,
+                        "itemId": "btnMergeDesk",
+                        "margin": "10 0 10 10",
+                        "text": "拼桌",
+                        "width": 130
+                    },
+                    "designerId": "35db3fe9-d141-4e03-84ec-01603457c2ec"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 40,
+                        "margin": "10 0 0 10",
+                        "text": "MyButton",
+                        "width": 130
+                    },
+                    "designerId": "daff3566-9832-4c57-a612-3fe01d61c872"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 40,
+                        "margin": "10 0 0 10",
+                        "text": "MyButton",
+                        "width": 130
+                    },
+                    "designerId": "c790e784-39c4-434a-b62e-0236db89a26a"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 40,
+                        "margin": "10 0 0 10",
+                        "text": "MyButton",
+                        "width": 130
+                    },
+                    "designerId": "4abcee62-c244-466a-8d39-db6dc7f1bb6c"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 40,
+                        "margin": "10 0 0 10",
+                        "text": "MyButton",
+                        "width": 130
+                    },
+                    "designerId": "d823fcd5-30bb-42fc-b8a8-af7d82959ff8"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 40,
+                        "margin": "10 0 0 10",
+                        "text": "MyButton",
+                        "width": 130
+                    },
+                    "designerId": "bca66578-54aa-4d0b-9194-4c0356a1202d"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "height": 40,
+                        "itemId": "btnPrintDuizhangdan",
+                        "margin": "10 0 10 10",
+                        "text": "打印对账单",
+                        "width": 130
+                    },
+                    "designerId": "955d38b7-dcb3-4731-b0fd-2728564a9310"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "disabled": true,
+                        "height": 40,
+                        "itemId": "btnAddDish",
+                        "margin": "10 0 10 10",
+                        "text": "加单",
+                        "width": 130
+                    },
+                    "designerId": "46480e86-20a2-4479-b236-718fb9c68b14"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "disabled": true,
+                        "height": 40,
+                        "itemId": "btnRefresh",
+                        "margin": "10 0 0 10",
+                        "text": "刷新",
+                        "width": 130
+                    },
+                    "designerId": "06aa5c2e-7e8f-4a6d-8019-15831ed495ca"
+                }
+            ]
+        }
+    ]
+}

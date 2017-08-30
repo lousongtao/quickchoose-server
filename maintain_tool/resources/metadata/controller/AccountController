@@ -368,6 +368,7 @@
                     "      win.close();\r",
                     "  } else if (action.result.result =='invalid_session'){\r",
                     "      digitalmenu.getApplication().onSessionExpired();\r",
+                    "\r",
                     "  } else {\r",
                     "      Ext.Msg.alert('Failed',\"Failed to change password.\", action.result.result);\r",
                     "  }\r",

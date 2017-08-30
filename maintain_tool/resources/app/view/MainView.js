@@ -93,18 +93,35 @@ Ext.define('digitalmenu.view.MainView', {
                                 },
                                 {
                                     xtype: 'button',
+                                    itemId: 'btnTableMgr',
+                                    width: 150,
+                                    text: 'TableMgr'
+                                },
+                                {
+                                    xtype: 'button',
                                     itemId: 'btnQuery',
                                     width: 150,
                                     icon: 'images/icon_query.png',
                                     text: 'Query',
                                     menu: {
                                         xtype: 'menu',
-                                        width: 120,
+                                        minWidth: 200,
+                                        width: 200,
                                         items: [
                                             {
                                                 xtype: 'menuitem',
                                                 itemId: 'logQueryMenuItem',
                                                 text: 'Query Log'
+                                            },
+                                            {
+                                                xtype: 'menuitem',
+                                                itemId: 'indentQueryMenuItem',
+                                                text: 'Query Order'
+                                            },
+                                            {
+                                                xtype: 'menuitem',
+                                                itemId: 'shiftWorkQueryMenuItem',
+                                                text: 'Query ShiftWork'
                                             }
                                         ]
                                     }

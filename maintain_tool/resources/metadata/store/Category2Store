@@ -57,10 +57,23 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "category1Id",
+                "name": "printerId",
                 "type": "string"
             },
             "designerId": "50f7e6d1-1a49-4940-a90d-b631bc413be0"
+        },
+        {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "MyField59",
+                "type": "string"
+            },
+            "designerId": "fd4eadd0-53b9-4e5a-a694-6ba487dd0ab1"
         },
         {
             "type": "Ext.data.Field",

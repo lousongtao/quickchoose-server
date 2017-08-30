@@ -21,7 +21,7 @@
             "codeClass": null,
             "userConfig": {
                 "name": "id",
-                "type": "string"
+                "type": "int"
             },
             "designerId": "eb063c5d-e364-4b96-be13-ac00bd8d7926"
         },

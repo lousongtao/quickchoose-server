@@ -1,0 +1,105 @@
+{
+	"header": [
+	{
+		"text": "{$title}",
+		"size": 20,
+		"bold": true,
+		"align": 1,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "桌 号：{$tableNumb}",
+		"size": 12,
+		"bold": false,
+		"align": 0,
+		"line": false,
+		"type": 0
+	},
+	
+	{
+		"text": "   订单编号：{$orderId}",
+		"size": 12,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "单据日期：{$dateTime}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "--------------------------------",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	}],
+	"goods": [{
+		"name": "菜品",
+		"width": 15,
+		"variable": "name"
+	},
+
+	{
+		"name": "数量",
+		"width": 6,
+		"variable": "amount"
+	}],
+
+	"msg": [{
+		"text": "--------------------------------",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "{$amountMsg}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "{$totalAmountMsg}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	}
+	]
+}

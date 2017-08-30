@@ -19,6 +19,8 @@ public interface IIndentDataAccessor {
 	
 	public List<Indent> getAllIndent();
 	
+	public List<Indent> getUnpaidIndent();
+	
 	public List<Indent> getIndents(int start, int limit, Date starttime, Date endtime, Byte[] status, String deskname, List<String> orderbys);
 	
 	public int getIndentCount(Date starttime, Date endtime, Byte[] status, String deskname);

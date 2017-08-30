@@ -335,12 +335,38 @@ Ext.define('digitalmenu.view.IndentContainer', {
                                     text: 'Price'
                                 },
                                 {
+                                    xtype: 'numbercolumn',
+                                    width: 70,
+                                    dataIndex: 'paidPrice',
+                                    text: 'Paid Price'
+                                },
+                                {
                                     xtype: 'datecolumn',
                                     minWidth: 150,
                                     width: 150,
-                                    dataIndex: 'time',
-                                    text: 'Time',
+                                    dataIndex: 'startTime',
+                                    text: 'Start Time',
                                     format: 'Y-m-d H:i:s'
+                                },
+                                {
+                                    xtype: 'datecolumn',
+                                    minWidth: 150,
+                                    width: 150,
+                                    dataIndex: 'endTime',
+                                    text: 'End Time',
+                                    format: 'Y-m-d H:i:s'
+                                },
+                                {
+                                    xtype: 'templatecolumn',
+                                    tpl: [
+                                        '<tpl if=\'status == 0\'>non',
+                                        '<tpl elseif=\'status == 1\'>Cash',
+                                        '<tpl elseif=\'status == 2\'>Card',
+                                        '<tpl elseif=\'status == 3\'>Member',
+                                        '</tpl>'
+                                    ],
+                                    dataIndex: 'payWay',
+                                    text: 'Pay Way'
                                 }
                             ],
                             selModel: Ext.create('Ext.selection.RowModel', {

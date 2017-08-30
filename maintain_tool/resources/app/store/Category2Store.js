@@ -38,7 +38,11 @@ Ext.define('digitalmenu.store.Category2Store', {
                     type: 'string'
                 },
                 {
-                    name: 'category1Id',
+                    name: 'printerId',
+                    type: 'string'
+                },
+                {
+                    name: 'MyField59',
                     type: 'string'
                 },
                 {

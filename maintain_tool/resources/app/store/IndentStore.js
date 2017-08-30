@@ -46,7 +46,11 @@ Ext.define('digitalmenu.store.IndentStore', {
                     type: 'string'
                 },
                 {
-                    name: 'time',
+                    name: 'startTime',
+                    type: 'date'
+                },
+                {
+                    name: 'endTime',
                     type: 'date'
                 },
                 {
@@ -54,7 +58,15 @@ Ext.define('digitalmenu.store.IndentStore', {
                     type: 'float'
                 },
                 {
+                    name: 'paidPrice',
+                    type: 'float'
+                },
+                {
                     name: 'status',
+                    type: 'int'
+                },
+                {
+                    name: 'payWay',
                     type: 'int'
                 },
                 {

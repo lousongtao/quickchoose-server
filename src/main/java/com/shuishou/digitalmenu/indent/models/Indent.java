@@ -19,7 +19,7 @@ import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.common.models.Desk;
 
 @Entity
-@Table(indexes = {@Index(name = "idx_time", columnList = "time")})
+@Table(indexes = {@Index(name = "idx_starttime", columnList = "starttime")})
 public class Indent {
 
 	@Id
@@ -31,7 +31,13 @@ public class Indent {
 	private String deskName;
 	
 	@Column(nullable = false)
-	private Date time;
+	private Date startTime;
+	
+	@Column(name = "customer_amount", nullable = false)
+	private int customerAmount;
+	
+	@Column
+	private Date endTime;
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="indent_id")
@@ -39,6 +45,12 @@ public class Indent {
 	
 	@Column(name = "total_price", nullable = false)
 	private double totalPrice;
+	
+	@Column(name ="paid_price")
+	private double paidPrice;//实际付款金额
+	
+	@Column(name = "pay_way")
+	private byte payWay;//付款方式
 	
 	@Column(nullable = false)
 	private byte status = ConstantValue.INDENT_STATUS_OPEN;
@@ -55,12 +67,44 @@ public class Indent {
 		this.id = id;
 	}
 
-	public Date getTime() {
-		return time;
+	public int getCustomerAmount() {
+		return customerAmount;
 	}
 
-	public void setTime(Date time) {
-		this.time = time;
+	public void setCustomerAmount(int customerAmount) {
+		this.customerAmount = customerAmount;
+	}
+
+	public byte getPayWay() {
+		return payWay;
+	}
+
+	public void setPayWay(byte payWay) {
+		this.payWay = payWay;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date time) {
+		this.startTime = time;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public double getPaidPrice() {
+		return paidPrice;
+	}
+
+	public void setPaidPrice(double paidPrice) {
+		this.paidPrice = paidPrice;
 	}
 
 	public List<IndentDetail> getItems() {

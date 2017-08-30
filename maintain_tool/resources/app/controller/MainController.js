@@ -51,10 +51,88 @@ Ext.define('digitalmenu.controller.MainController', {
 
     },
 
+    onTableManageButtonClick: function(button, e, eOpts) {
+        var contentPanel = this.getContentPanel();
+        var container = Ext.create('digitalmenu.view.DeskManageContainer');
+        var deskPanel = container.down('#pDeskArea');
+
+        var successCallback = function(resp, ops) {
+          var result = Ext.decode(resp.responseText);
+
+          if (result.result == 'ok') {
+
+            var desks = result.desks;
+            for(var i = 0; i < desks.length; i++){
+                var tabi = Ext.create('digitalmenu.view.DeskCell');
+                var lbDeskNo = tabi.down('#lbDeskNo');
+                lbDeskNo.setText(desks[i].name);
+                tabi.deskid = desks[i].id;
+                if (desks[i].indentId > 0){
+                    //tabi.indentid = desks[i].indentId;
+                    tabi.indentInfo = desks[i];
+                    tabi.down('#lbCustomerAmount').setText('客人数 ' + desks[i].customerAmount);
+                    tabi.down('#lbStartTime').setText('开始时间 ' + desks[i].startTime);
+                    tabi.down('#lbPrice').setText('价格 $' + desks[i].price);
+                }
+
+                deskPanel.add(tabi);
+                deskPanel.desklist.push(tabi);//加入存储列表
+            }
+
+            contentPanel.removeAll();
+            container.region = 'center';
+            contentPanel.add(container);
+          } else {
+            Ext.Msg.alert("数据加载失败", result.result);
+          }
+        };
+
+        var failureCallback = function(resp, ops) {
+            var result = Ext.decode(resp.responseText);
+            Ext.Msg.alert("数据加载失败", result.result);
+        };
+
+        Ext.Ajax.request({
+            url : "common/getdeskswithindents",
+            params : {
+                userId : Ext.util.Cookies.get('userId'),
+                sessionId : Ext.util.Cookies.get('sessionId')
+            },
+            success : successCallback,
+            failure : failureCallback
+        });
+
+
+
+    },
+
     onLogQueryMenuitemClick: function(item, e, eOpts) {
         var contentPanel = this.getContentPanel();
         var panel = Ext.create('digitalmenu.view.LogListContainer');
         var grid = panel.down('#logListGrid');
+
+        contentPanel.removeAll();
+        panel.region = 'center';
+        contentPanel.add(panel);
+
+    },
+
+    onIndentQueryMenuitemClick: function(item, e, eOpts) {
+        var contentPanel = this.getContentPanel();
+        var indentPanel = Ext.create('digitalmenu.view.IndentContainer');
+        var grid = indentPanel.down('#accountListGrid');
+        var cbRefreshTime = indentPanel.down('#cbRefreshTime');
+
+        contentPanel.removeAll();
+        indentPanel.region = 'center';
+        cbRefreshTime.setValue(5);
+        contentPanel.add(indentPanel);
+
+    },
+
+    onShiftWorkQueryMenuitemClick: function(item, e, eOpts) {
+        var contentPanel = this.getContentPanel();
+        var panel = Ext.create('digitalmenu.view.ShiftWorkListContainer');
 
         contentPanel.removeAll();
         panel.region = 'center';
@@ -99,6 +177,7 @@ Ext.define('digitalmenu.controller.MainController', {
 
         menuPanel.down('#cbCategory1ID').store.load();
         menuPanel.down('#cbCategory2ID').store.load();
+        menuPanel.down('#cbPrinter').store.load();
 
         contentPanel.removeAll();
         menuPanel.region = 'center';
@@ -137,6 +216,14 @@ Ext.define('digitalmenu.controller.MainController', {
 
     },
 
+    onMainViewAfterLayout: function(container, layout, eOpts) {
+        console.log('onMainViewAfterLayout');
+    },
+
+    onMainViewAfterRender: function(component, eOpts) {
+        console.log('onMainViewAfterRender');
+    },
+
     init: function(application) {
         this.control({
             "#mainView #btnAccount": {
@@ -145,8 +232,17 @@ Ext.define('digitalmenu.controller.MainController', {
             "#mainView #btnIndent": {
                 click: this.onIndentButtonClick
             },
+            "#mainView #btnTableMgr": {
+                click: this.onTableManageButtonClick
+            },
             "#mainView #logQueryMenuItem": {
                 click: this.onLogQueryMenuitemClick
+            },
+            "#mainView #indentQueryMenuItem": {
+                click: this.onIndentQueryMenuitemClick
+            },
+            "#mainView #shiftWorkQueryMenuItem": {
+                click: this.onShiftWorkQueryMenuitemClick
             },
             "#mainView #menuitem_maintain_confirmcode": {
                 click: this.onMenuitemChangeConfirmCodeClick
@@ -159,6 +255,10 @@ Ext.define('digitalmenu.controller.MainController', {
             },
             "#mainView #menuitem_maintain_printer": {
                 click: this.onMenuitemMaintainPrinter
+            },
+            "viewport": {
+                afterlayout: this.onMainViewAfterLayout,
+                afterrender: this.onMainViewAfterRender
             }
         });
     }

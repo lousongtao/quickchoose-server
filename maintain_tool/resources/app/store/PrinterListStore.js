@@ -31,7 +31,7 @@ Ext.define('digitalmenu.store.PrinterListStore', {
             fields: [
                 {
                     name: 'id',
-                    type: 'string'
+                    type: 'int'
                 },
                 {
                     name: 'name',

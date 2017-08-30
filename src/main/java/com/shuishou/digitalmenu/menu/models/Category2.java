@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.shuishou.digitalmenu.common.models.Printer;
+
 @Entity
 @Table
 public class Category2 {
@@ -35,6 +37,9 @@ public class Category2 {
 	
 	@ManyToOne
 	private Category1 category1;
+	
+	@ManyToOne
+	private Printer printer;
 	
 	
 
@@ -89,6 +94,16 @@ public class Category2 {
 
 	public void setDishes(List<Dish> dishes) {
 		this.dishes = dishes;
+	}
+	
+	
+
+	public Printer getPrinter() {
+		return printer;
+	}
+
+	public void setPrinter(Printer printer) {
+		this.printer = printer;
 	}
 
 	@Override

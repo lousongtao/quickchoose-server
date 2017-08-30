@@ -12,13 +12,15 @@ public class GetCategory2Result extends GridResult {
 		public String englishName;
 		public int sequence;
 		public int category1Id;
+		public int printerId;
 		public String level = ConstantValue.TYPE_CATEGORY2INFO;
-		public Category2Info(int id, String chineseName,String englishName,int sequence,int category1Id){
+		public Category2Info(int id, String chineseName,String englishName,int sequence,int category1Id,int printerId){
 			this.id = id;
 			this.chineseName = chineseName;
 			this.englishName = englishName;
 			this.sequence = sequence;
 			this.category1Id = category1Id;
+			this.printerId = printerId;
 		}
 	}
 	

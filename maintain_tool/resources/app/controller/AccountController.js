@@ -262,6 +262,7 @@ Ext.define('digitalmenu.controller.AccountController', {
               win.close();
           } else if (action.result.result =='invalid_session'){
               digitalmenu.getApplication().onSessionExpired();
+
           } else {
               Ext.Msg.alert('Failed',"Failed to change password.", action.result.result);
           }

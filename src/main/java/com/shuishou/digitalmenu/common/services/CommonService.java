@@ -1,6 +1,10 @@
 package com.shuishou.digitalmenu.common.services;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +21,10 @@ import com.shuishou.digitalmenu.common.models.IPrinterDataAccessor;
 import com.shuishou.digitalmenu.common.models.Printer;
 import com.shuishou.digitalmenu.common.views.GetConfirmCodeResult;
 import com.shuishou.digitalmenu.common.views.GetDeskResult;
+import com.shuishou.digitalmenu.common.views.GetDeskWithIndentResult;
 import com.shuishou.digitalmenu.common.views.GetPrinterResult;
+import com.shuishou.digitalmenu.indent.models.IIndentDataAccessor;
+import com.shuishou.digitalmenu.indent.models.Indent;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.views.GridResult;
@@ -39,6 +46,11 @@ public class CommonService implements ICommonService {
 	
 	@Autowired
 	private IPrinterDataAccessor printerDA;
+	
+	@Autowired
+	private IIndentDataAccessor indentDA;
+	
+	private DateFormat df = new SimpleDateFormat("HH:mm:ss");
 
 	@Override
 	@Transactional
@@ -178,6 +190,40 @@ public class CommonService implements ICommonService {
 		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " delete printer " + p.getName());
 
 		return new GridResult(Result.OK, true);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	@Transactional
+	public GetDeskWithIndentResult getDesksWithIndents() {
+		List<Desk> desks = deskDA.queryDesks();
+		Collections.sort(desks, new Comparator(){
+
+			@Override
+			public int compare(Object o1, Object o2) {
+				return ((Desk)o1).getId() - ((Desk)o2).getId();
+			}});
+		List<Indent> indents = indentDA.getUnpaidIndent();
+		List<GetDeskWithIndentResult.Desk> deskinfos = new ArrayList<GetDeskWithIndentResult.Desk>();
+		for (int i = 0; i < desks.size(); i++) {
+			Desk desk = desks.get(i);
+			GetDeskWithIndentResult.Desk deskinfo = new GetDeskWithIndentResult.Desk();
+			deskinfo.id = desk.getId();
+			deskinfo.name = desk.getName();
+			if (desk.getMergeTo() != null)
+				deskinfo.name = desk.getName() + " 并桌到 " + desk.getMergeTo().getName();
+			for(Indent indent : indents){
+				if (indent.getDeskName().equals(desk.getName())){
+					deskinfo.indentId = indent.getId();
+					deskinfo.price = indent.getTotalPrice();
+					deskinfo.customerAmount = indent.getCustomerAmount();
+					deskinfo.startTime = df.format(indent.getStartTime());
+					break;
+				}
+			}
+			deskinfos.add(deskinfo);
+		}
+		return new GetDeskWithIndentResult(Result.OK, true, deskinfos);
 	}
 
 }

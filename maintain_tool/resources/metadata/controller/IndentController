@@ -179,7 +179,7 @@
                     "if (cbOrderByTime.checked || cbOrderByPayment.checked || cbOrderByDeskname.checked){\r",
                     "    var orderby = \"\";\r",
                     "    if (cbOrderByTime.checked){\r",
-                    "        orderby += \"time\";\r",
+                    "        orderby += \"starttime\";\r",
                     "    }\r",
                     "    if (cbOrderByPayment.checked){\r",
                     "        orderby += \"status\";\r",

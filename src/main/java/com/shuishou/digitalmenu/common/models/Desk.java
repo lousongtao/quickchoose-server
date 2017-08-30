@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,11 +19,23 @@ public class Desk {
 	@Column(name = "name", nullable = false)
 	private String name;
 	
+	@OneToOne
+	private Desk mergeTo;
+	
 	public Desk(){}
 	
 	public Desk(int id, String name){
 		this.id = id;
 		this.name = name;
+	}
+	
+
+	public Desk getMergeTo() {
+		return mergeTo;
+	}
+
+	public void setMergeTo(Desk mergeTo) {
+		this.mergeTo = mergeTo;
 	}
 
 	public int getId() {

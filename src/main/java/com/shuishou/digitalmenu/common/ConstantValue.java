@@ -39,6 +39,11 @@ public class ConstantValue {
 	public static final byte INDENT_OPERATIONTYPE_CANCEL = 3;
 	public static final byte INDENT_OPERATIONTYPE_PAY = 4;
 	
+	//付款方式
+	public static final byte INDENT_PAYWAY_CASH = 1;//现金
+	public static final byte INDENT_PAYWAY_CARD = 2;//刷卡
+	public static final byte INDENT_PAYWAY_MEMBER = 3;//会员
+	
 	public static final byte INDENTDETAIL_OPERATIONTYPE_ADD = 1;
 	public static final byte INDENTDETAIL_OPERATIONTYPE_DELETE = 2;
 //	public static final byte INDENTDETAIL_OPERATIONTYPE_ADDAMOUNT = 3;//no use any more
@@ -49,4 +54,7 @@ public class ConstantValue {
 	
 	public static final byte PRINT_TYPE_TOGETHER = 0;
 	public static final byte PRINT_TYPE_SEPARATELY = 1;
+	
+	public static final byte SHIFTWORK_ONWORK = 0;
+	public static final byte SHIFTWORK_OFFWORK = 1;
 }

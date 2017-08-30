@@ -58,20 +58,21 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 		if (currenthour < 4){
 			c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) - 1);
 		}
-		String hql = "select max(dailySequence) from Indent where time > :time";
+		String hql = "select max(dailySequence) from Indent where startTime > :time";
 		Object o = sessionFactory.getCurrentSession().createQuery(hql).setTimestamp("time", c.getTime()).uniqueResult();
 		if (o == null)
 			return 0;
 		return Integer.parseInt(o.toString());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Indent> getIndents(int start, int limit, Date starttime, Date endtime, Byte[] status, String deskname, List<String> orderBys) {
 		Criteria c = sessionFactory.getCurrentSession().createCriteria(Indent.class);
 		if (starttime != null)
-			c.add(Restrictions.ge("time", starttime));
+			c.add(Restrictions.ge("startTime", starttime));
 		if (endtime != null)
-			c.add(Restrictions.le("time", endtime));
+			c.add(Restrictions.le("startTime", endtime));
 		if (status != null){
 			c.add(Restrictions.in("status", status));
 		} else {
@@ -95,10 +96,10 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 		List<String> condList = Lists.newArrayList();
 		List<String> orderbyList = Lists.newArrayList();
 		if (starttime != null){
-			condList.add("l.time >= :starttime");
+			condList.add("l.startTime >= :starttime");
 		}
 		if (endtime != null){
-			condList.add("l.time <= :endtime");
+			condList.add("l.startTime <= :endtime");
 		}
 		if (status != null){
 			condList.add("l.status in :status");
@@ -127,6 +128,12 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 			query.setParameter("deskname", deskname);
 		}
 		return (int)(long)query.uniqueResult();
+	}
+
+	@Override
+	public List<Indent> getUnpaidIndent() {
+		String hql = "from Indent where status = " + ConstantValue.INDENT_STATUS_OPEN;
+		return sessionFactory.getCurrentSession().createQuery(hql).list();
 	}
 
 }

@@ -2,6 +2,7 @@ package com.shuishou.digitalmenu.common.services;
 
 import com.shuishou.digitalmenu.common.views.GetConfirmCodeResult;
 import com.shuishou.digitalmenu.common.views.GetDeskResult;
+import com.shuishou.digitalmenu.common.views.GetDeskWithIndentResult;
 import com.shuishou.digitalmenu.common.views.GetPrinterResult;
 import com.shuishou.digitalmenu.views.GridResult;
 
@@ -14,6 +15,8 @@ public interface ICommonService {
 	GridResult saveConfirmCode(long userId, String code);
 	
 	GetDeskResult getDesks();
+	
+	GetDeskWithIndentResult getDesksWithIndents();
 	
 	GridResult saveDesk(long userId, String deskname);
 	

@@ -90,14 +90,15 @@ public class MenuController {
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
-			@RequestParam(value = "category1Id", required = true) int category1Id) throws Exception{
+			@RequestParam(value = "category1Id", required = true) int category1Id,
+			@RequestParam(value = "printerId", required = true) int printerId) throws Exception{
 		if (!accountService.checkSession(userId, sessionId))
 			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.addCategory2(userId, chineseName, englishName, sequence, category1Id);
+		Result result = menuService.addCategory2(userId, chineseName, englishName, sequence, category1Id, printerId);
 		
 		return result;
 	}
@@ -110,14 +111,15 @@ public class MenuController {
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
-			@RequestParam(value = "category1Id", required = true) int category1Id) throws Exception{
+			@RequestParam(value = "category1Id", required = true) int category1Id,
+			@RequestParam(value = "printerId", required = true) int printerId) throws Exception{
 		if (!accountService.checkSession(userId, sessionId))
 			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.updateCategory2(userId, id, chineseName, englishName, sequence, category1Id);
+		Result result = menuService.updateCategory2(userId, id, chineseName, englishName, sequence, category1Id, printerId);
 		
 		return result;
 	}

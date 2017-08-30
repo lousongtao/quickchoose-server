@@ -139,7 +139,7 @@ Ext.define('digitalmenu.controller.IndentController', {
         if (cbOrderByTime.checked || cbOrderByPayment.checked || cbOrderByDeskname.checked){
             var orderby = "";
             if (cbOrderByTime.checked){
-                orderby += "time";
+                orderby += "starttime";
             }
             if (cbOrderByPayment.checked){
                 orderby += "status";

@@ -1,12 +1,14 @@
 package com.shuishou.digitalmenu.indent.services;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -73,11 +75,11 @@ public class IndentService implements IIndentService {
 	@Autowired
 	private HttpServletRequest request;
 	
-	private DateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+	private DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 	
 	@Override
 	@Transactional
-	public synchronized MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid) {
+	public synchronized MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount) {
 		ConfirmCode cc = confirmCodeDA.getCode();
 		if (!confirmCode.equals(cc.getCode()))
 			return new MakeOrderResult("The confirm code is wrong, cannot make order.", false, -1);
@@ -87,7 +89,8 @@ public class IndentService implements IIndentService {
 		double totalprice = 0;
 		Indent indent = new Indent();
 		indent.setDeskName(desk.getName());
-		indent.setTime(Calendar.getInstance().getTime());
+		indent.setStartTime(Calendar.getInstance().getTime());
+		indent.setCustomerAmount(customerAmount);
 		int sequence = indentDA.getMaxSequenceToday() + 1;
 		indent.setDailySequence(sequence);
 		
@@ -112,10 +115,103 @@ public class IndentService implements IIndentService {
 			indent.addItem(detail);
 //			indentDetailDA.save(detail);
 		}
-		indent.setTotalPrice(totalprice);
+		indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 		indentDA.save(indent);
-		print(indent);
+		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+		printNewIndent2Kitchen(indent, tempfilePath + "/cucaigoudan.json");
+		printNewIndent2Counter(indent, tempfilePath + "/newIndentCounter.json", "对账单");
 		return new MakeOrderResult(Result.OK, true, sequence);
+	}
+	
+	//新订单在总台打印, 完整的部分
+	@Transactional
+	private void printNewIndent2Counter(Indent indent, String tempfile, String printType){
+		List<Printer> printers = printerDA.queryPrinters();
+		if (printers == null || printers.isEmpty())
+			return;
+		for(Printer p : printers){
+			if (!"counter".equals(p.getName()))
+				continue;
+			int copy = p.getCopy();
+			for(int i = 0; i< copy; i++){
+				Map<String,String> keys = new HashMap<String, String>();
+				keys.put("restaurant", "HAO SZECHUAN 好吃嘴 北桥总店");
+				keys.put("abn", "86163933686");
+				keys.put("address", "74 FRANCIS ST, NORTHBIRDHE, 6003");
+				keys.put("telephone", "(08)92280636");
+				keys.put("sequence", indent.getDailySequence()+"");
+				keys.put("customerAmount", indent.getCustomerAmount()+"");
+				keys.put("tableNo", indent.getDeskName());
+				keys.put("printType", printType);
+				keys.put("dateTime", df.format(indent.getStartTime()));
+				keys.put("totalPrice", String.valueOf(indent.getTotalPrice()));
+				keys.put("gst", String.format("%.2f",(double)indent.getTotalPrice()/11));
+				keys.put("printTime", df.format(new Date()));
+				keys.put("slogan", "澳大利亚好吃嘴 欢迎您的光临");
+				List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
+				for(IndentDetail d : indent.getItems()){
+					Map<String, String> mg = new HashMap<String, String>();
+					mg.put("name", d.getDishChineseName());
+					mg.put("price", d.getDishPrice()+"");
+					mg.put("amount", d.getAmount()+"");
+					mg.put("totalPrice", (d.getDishPrice() * d.getAmount()) + "");
+					mg.put("requirement", d.getAdditionalRequirements());
+					goods.add(mg);
+					
+				}
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("keys", keys);
+				params.put("goods", goods);
+				PrintJob job = new PrintJob(tempfile, params, p.getPrinterName());
+				PrintQueue.add(job);
+			}
+		}
+	}
+	
+	//创建订单时, 根据订单内的不同内容, 找到对应的打印机, 发送出去
+	@Transactional
+	private void printNewIndent2Kitchen(Indent indent, String tempfile){
+		//把indent下面的dish根据不同的打印输出, 分组
+		Map<Printer, List<IndentDetail>> mapPrintDish = new HashMap<Printer, List<IndentDetail>>();
+		
+		int totalamount = 0;
+		
+		for(IndentDetail detail : indent.getItems()){
+			totalamount += detail.getAmount();
+			Dish dish = dishDA.getDishById(detail.getDishId());
+			Printer printer = dish.getCategory2().getPrinter();
+			if (mapPrintDish.get(printer) == null){
+				mapPrintDish.put(printer, new ArrayList<IndentDetail>());
+			}
+			mapPrintDish.get(printer).add(detail);
+		}
+		Iterator<Printer> keys = mapPrintDish.keySet().iterator();
+		while(keys.hasNext()){
+			Printer p = keys.next();
+			Map<String,String> keyMap = new HashMap<String, String>();
+			keyMap.put("title", "出菜勾单");
+			keyMap.put("tableNumb", indent.getDeskName());
+			keyMap.put("orderId", indent.getDailySequence()+"");
+			keyMap.put("dateTime", df.format(indent.getStartTime()));
+			keyMap.put("totalAmountMsg", "本桌台共有 " + totalamount + " 份菜品");
+			int amountMsg = 0;
+			List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
+			for(IndentDetail d : mapPrintDish.get(p)){
+				Map<String, String> mg = new HashMap<String, String>();
+				for (int i = 0; i < d.getAmount(); i++) {//每个菜品单独打印一行, 重复的打印多行
+					mg.put("name", d.getDishChineseName());
+					mg.put("amount", "1");
+					amountMsg++;
+					goods.add(mg);
+				}
+			}
+			keyMap.put("amountMsg", "此单据包括 " + amountMsg + " 个菜品");
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("keys", keyMap);
+			params.put("goods", goods);
+			PrintJob job = new PrintJob(tempfile, params, p.getPrinterName());
+			PrintQueue.add(job);
+		}
 	}
 	
 	@Transactional
@@ -133,7 +229,7 @@ public class IndentService implements IIndentService {
 					keys.put("restaurantname", "restaurantname");
 					keys.put("desk", indent.getDeskName());
 					keys.put("sequence", indent.getDailySequence()+"");
-					keys.put("time", f.format(indent.getTime()));
+					keys.put("time", df.format(indent.getStartTime()));
 					keys.put("totalPrice", String.valueOf(indent.getTotalPrice()));
 					List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 					for(IndentDetail d : indent.getItems()){
@@ -158,7 +254,7 @@ public class IndentService implements IIndentService {
 						keys.put("restaurantname", "restaurantname");
 						keys.put("desk", indent.getDeskName());
 						keys.put("sequence", indent.getDailySequence()+"");
-						keys.put("time", f.format(indent.getTime()));
+						keys.put("time", df.format(indent.getStartTime()));
 						keys.put("totalPrice", String.valueOf(indent.getTotalPrice()));
 						keys.put("dishname", d.getDishChineseName());
 						keys.put("amount", d.getAmount()+"");
@@ -191,7 +287,7 @@ public class IndentService implements IIndentService {
 					keys.put("restaurantname", "restaurantname");
 					keys.put("desk", indent.getDeskName());
 					keys.put("sequence", indent.getDailySequence()+"");
-					keys.put("time", f.format(indent.getTime()));
+					keys.put("time", df.format(indent.getStartTime()));
 					keys.put("totalPrice", String.valueOf(indent.getTotalPrice()));
 					keys.put("dishname", detail.getDishChineseName());
 					keys.put("amount", detail.getAmount()+"");
@@ -223,8 +319,8 @@ public class IndentService implements IIndentService {
 		List<String> orderbys = null;//default as null. if param "orderby" is not null, then initial this array.
 		if (orderby != null && orderby.length() > 0){
 			orderbys = new ArrayList<String>();
-			if (orderby.indexOf("time")>=0){
-				orderbys.add("time");
+			if (orderby.indexOf("starTtime")>=0){
+				orderbys.add("startTime");
 			}
 			if (orderby.indexOf("status") >= 0){
 				orderbys.add("status");
@@ -238,14 +334,14 @@ public class IndentService implements IIndentService {
 		Date endtime = null;
 		if (sstarttime != null && sstarttime.length() > 0){
 			try {
-				starttime = f.parse(sstarttime);
+				starttime = df.parse(sstarttime);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}
 		if (sendtime != null && sendtime.length() > 0){
 			try {
-				endtime = f.parse(sendtime);
+				endtime = df.parse(sendtime);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -256,13 +352,19 @@ public class IndentService implements IIndentService {
 		List<GetIndentResult.Indent> resultinfos = new ArrayList<GetIndentResult.Indent>(indents.size());
 		
 		for (int i = 0; i < indents.size(); i++) {
+			Indent indenti = indents.get(i);
 			GetIndentResult.Indent resultindent = new GetIndentResult.Indent();
-			resultindent.id = indents.get(i).getId();
-			resultindent.dailysequence = indents.get(i).getDailySequence();
-			resultindent.deskname = indents.get(i).getDeskName();
-			resultindent.status = indents.get(i).getStatus();
-			resultindent.time = f.format(indents.get(i).getTime());
-			resultindent.totalprice = indents.get(i).getTotalPrice();
+			resultindent.id = indenti.getId();
+			resultindent.dailysequence = indenti.getDailySequence();
+			resultindent.deskname = indenti.getDeskName();
+			resultindent.status = indenti.getStatus();
+			resultindent.startTime = df.format(indenti.getStartTime());
+			if (indenti.getEndTime() != null)
+				resultindent.endTime = df.format(indenti.getEndTime());
+			resultindent.paidPrice = indenti.getPaidPrice();
+			resultindent.totalprice = indenti.getTotalPrice();
+			resultindent.payWay = indenti.getPayWay();
+			resultindent.customerAmount = indenti.getCustomerAmount();
 			resultinfos.add(resultindent);
 		}
 		int count = indentDA.getIndentCount(starttime, endtime, bStatus, deskname);
@@ -271,19 +373,29 @@ public class IndentService implements IIndentService {
 
 	@Override
 	@Transactional
-	public OperateIndentResult operateIndent(int userId, int indentId, byte operationType) {
+	public OperateIndentResult operateIndent(int userId, int indentId, byte operationType, double paidPrice, byte payWay) {
 		Indent indent = indentDA.getIndentById(indentId);
 		if (indent == null)
 			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
 		String logtype = LogData.LogType.INDENT_PAY.toString();
-		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_CANCEL)
+		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_CANCEL){
 			logtype = LogData.LogType.INDENT_CANCEL.toString();
-		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_CANCEL)
+		}
+		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_CANCEL){
 			indent.setStatus(ConstantValue.INDENT_STATUS_CANCELED);
-		else if (operationType == ConstantValue.INDENT_OPERATIONTYPE_PAY)
+		} else if (operationType == ConstantValue.INDENT_OPERATIONTYPE_PAY){
 			indent.setStatus(ConstantValue.INDENT_STATUS_PAID);
+			indent.setPaidPrice(paidPrice);
+			indent.setPayWay(payWay);
+		}
+		indent.setEndTime(new Date());
 		indentDA.update(indent);
 		
+		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_PAY){
+			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+			printNewIndent2Counter(indent, tempfilePath + "/newIndentCounter.json", "结账单");
+			printNewIndent2Counter(indent, tempfilePath + "/newIndentCounter.json", "客用单");
+		}
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, logtype,
@@ -388,7 +500,9 @@ public class IndentService implements IIndentService {
 		if (indent == null){
 			return new GridResult("No order for ID : " + indentId, false);
 		}
-		print(indent);
+//		print(indent);
+		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+		printNewIndent2Counter(indent, tempfilePath + "/newIndentCounter.json", "对账单");
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.INDENT_PRINT.toString(),

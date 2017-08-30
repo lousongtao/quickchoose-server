@@ -47,10 +47,11 @@ public class IndentController {
 	public @ResponseBody MakeOrderResult makeOrder(
 			@RequestParam(value="confirmCode", required = true) String confirmCode,
 			@RequestParam(value="indents", required = true) String indents,
-			@RequestParam(value="deskid", required = true) int deskid) throws Exception{
+			@RequestParam(value="deskid", required = true) int deskid,
+			@RequestParam(value="customerAmount", required = true) int customerAmount) throws Exception{
 		JSONArray jsonOrder = new JSONArray(indents);
 		
-		return indentService.saveIndent(confirmCode, jsonOrder, deskid);
+		return indentService.saveIndent(confirmCode, jsonOrder, deskid, customerAmount);
 	}
 	
 	@RequestMapping(value="/indent/queryindent", method = (RequestMethod.GET))
@@ -105,14 +106,16 @@ public class IndentController {
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "sessionId", required = true) String sessionId,
 			@RequestParam(value="id", required = true) int indentId,
-			@RequestParam(value="operatetype", required = true) byte operateType) throws Exception{
+			@RequestParam(value="operatetype", required = true) byte operateType,
+			@RequestParam(value="paidPrice", required = false, defaultValue = "0") double paidPrice,
+			@RequestParam(value="payWay", required = false, defaultValue = "0") byte payWay) throws Exception{
 		if (!accountService.checkSession(userId, sessionId))
 			return new OperateIndentResult("invalid_session", false);
 		
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
 			return new OperateIndentResult("no_permission", false);
 		}
-		return indentService.operateIndent(userId, indentId, operateType);
+		return indentService.operateIndent(userId, indentId, operateType, paidPrice, payWay);
 	}
 	
 	/**

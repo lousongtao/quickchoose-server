@@ -26,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.common.models.IPrinterDataAccessor;
+import com.shuishou.digitalmenu.common.models.Printer;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.menu.models.Category1;
@@ -71,6 +73,9 @@ public class MenuService implements IMenuService {
 	
 	@Autowired
 	private IMenuVersionDataAccessor menuVersionDA;
+	
+	@Autowired
+	private IPrinterDataAccessor printerDA;
 
 	/**
 	 * @param userId, the operator Id
@@ -99,17 +104,21 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public OperationResult addCategory2(long userId, String chineseName, String englishName, int sequence, int category1Id) {
+	public OperationResult addCategory2(long userId, String chineseName, String englishName, int sequence, int category1Id, int printerId) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null){
 			return new OperationResult("cannot find category1 by id : "+ category1Id, false, null);
 		}
-		
+		Printer p = printerDA.getPrinterById(printerId);
+		if (p == null){
+			return new OperationResult("cannot find Printer by id : "+ printerId, false, null);
+		}
 		Category2 c2 = new Category2();
 		c2.setChineseName(chineseName);
 		c2.setEnglishName(englishName);
 		c2.setSequence(sequence);
 		c2.setCategory1(c1);
+		c2.setPrinter(p);
 		
 		category2DA.save(c2);
 		
@@ -221,7 +230,8 @@ public class MenuService implements IMenuService {
 						c2s.get(i).getChineseName(), 
 						c2s.get(i).getEnglishName(), 
 						c2s.get(i).getSequence(), 
-						c2s.get(i).getCategory1().getId());
+						c2s.get(i).getCategory1().getId(),
+						c2s.get(i).getPrinter() == null ? 0 : c2s.get(i).getPrinter().getId());
 				c2InfoList.add(c2info);
 			}
 		}
@@ -290,7 +300,8 @@ public class MenuService implements IMenuService {
 					c2s.get(j).getEnglishName(), 
 					c2s.get(j).getSequence(), 
 					c1.getId(),
-					new ArrayList<GetMenuResult.DishInfo>());
+					new ArrayList<GetMenuResult.DishInfo>(),
+					c2s.get(j).getPrinter() == null ? 0 : c2s.get(j).getPrinter().getId() );
 			if (c2s.get(j).getDishes() == null || c2s.get(j).getDishes().isEmpty())
 				c2info.loaded = true;
 			c2InfoList.add(c2info);
@@ -380,7 +391,8 @@ public class MenuService implements IMenuService {
 						c2s.get(j).getEnglishName(), 
 						c2s.get(j).getSequence(), 
 						c1s.get(i).getId(),
-						new ArrayList<GetMenuResult.DishInfo>());
+						new ArrayList<GetMenuResult.DishInfo>(),
+						c2s.get(j).getPrinter() == null ? 0 : c2s.get(j).getPrinter().getId());
 				//if (c2s.get(j).getDishes() == null || c2s.get(j).getDishes().isEmpty())
 					c2info.loaded = true;
 				c1info.children.add(c2info);
@@ -512,17 +524,22 @@ public class MenuService implements IMenuService {
 	@Override
 	@Transactional
 	public OperationResult updateCategory2(long userId, int id, String chineseName, String englishName, int sequence,
-			int category1Id) {
+			int category1Id, int printerId) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null)
 			return new OperationResult("now found Category1 by id "+ category1Id, false, null);
 		Category2 c2 = category2DA.getCategory2ById(id);
 		if (c2 == null)
 			return new OperationResult("now found Category2 by id "+ id, false, null);
+		Printer p = printerDA.getPrinterById(printerId);
+		if (p == null){
+			return new OperationResult("cannot find Printer by id : "+ printerId, false, null);
+		}
 		c2.setChineseName(chineseName);
 		c2.setEnglishName(englishName);
 		c2.setSequence(sequence);
 		c2.setCategory1(c1);
+		c2.setPrinter(p);
 		category2DA.save(c2);
 		
 		// write log.

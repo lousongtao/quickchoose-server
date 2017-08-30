@@ -36,7 +36,8 @@ Ext.application({
         'DishStore',
         'LogListStore',
         'LogTypeLocalStore',
-        'IndentRefreshTimeLocalStore'
+        'IndentRefreshTimeLocalStore',
+        'ShiftWorkListStore'
     ],
     views: [
         'LoginView',
@@ -53,7 +54,11 @@ Ext.application({
         'AddIndentDishForm',
         'ChangeDishPictureForm',
         'LogListContainer',
-        'ChangeUserPasswordForm'
+        'ChangeUserPasswordForm',
+        'DeskCell',
+        'DeskManageContainer',
+        'ShiftWorkListContainer',
+        'IndentCheckoutForm'
     ],
     controllers: [
         'AccountController',
@@ -61,7 +66,8 @@ Ext.application({
         'IndentController',
         'MainController',
         'MaintainController',
-        'QueryController'
+        'QueryController',
+        'DeskManageController'
     ],
     name: 'digitalmenu',
 

@@ -1,0 +1,264 @@
+{
+    "type": "Ext.container.Container",
+    "reference": {
+        "name": "items",
+        "type": "array"
+    },
+    "codeClass": null,
+    "userConfig": {
+        "designer|userClassName": "ShiftWorkListContainer",
+        "height": 466,
+        "itemId": "logListContainer",
+        "layout": "border",
+        "padding": 5,
+        "width": 843
+    },
+    "designerId": "4ba3d624-55de-4fb5-9125-59758bce715b",
+    "cn": [
+        {
+            "type": "Ext.form.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "bodyPadding": 10,
+                "height": 58,
+                "itemId": "queryForm",
+                "layout": "column",
+                "layout|region": "north",
+                "margin": 5,
+                "title": null
+            },
+            "designerId": "4c6a7524-33cc-458a-923f-d89254ec5f01",
+            "cn": [
+                {
+                    "type": "Ext.form.field.Date",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "Start Time",
+                        "itemId": "startTime",
+                        "name": "startTime"
+                    },
+                    "designerId": "2f5eea88-36dc-48b4-a4d9-a4ffde9a13e6"
+                },
+                {
+                    "type": "Ext.form.field.Date",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "End Time",
+                        "itemId": "endTime",
+                        "name": "endTime"
+                    },
+                    "designerId": "e5cdffb6-31cb-42ef-93c4-d81eee3d238a"
+                },
+                {
+                    "type": "Ext.form.field.Text",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "User",
+                        "itemId": "txtUsername",
+                        "name": "username"
+                    },
+                    "designerId": "dddf637d-3a9f-4c0e-a4a1-e84fc28562ff"
+                },
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "formBind": true,
+                        "itemId": "btnQuery",
+                        "text": "Query"
+                    },
+                    "designerId": "64af9d2d-9f86-4941-9e41-defee308032f",
+                    "cn": [
+                        {
+                            "type": "fixedfunction",
+                            "reference": {
+                                "name": "items",
+                                "type": "array"
+                            },
+                            "codeClass": null,
+                            "userConfig": {
+                                "designer|params": [
+                                    "button",
+                                    "e"
+                                ],
+                                "fn": "handler",
+                                "implHandler": [
+                                    "var form = button.up('form');\r",
+                                    "grid = form.up('container').down('grid');\r",
+                                    "values = form.getValues();\r",
+                                    "\r",
+                                    "grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');\r",
+                                    "grid.store.proxy.extraParams.sessionId = Ext.util.Cookies.get('sessionId');\r",
+                                    "grid.store.proxy.extraParams.username = values.username;\r",
+                                    "grid.store.proxy.extraParams.beginTime = values.startTime;\r",
+                                    "grid.store.proxy.extraParams.endTime = values.endTime;\r",
+                                    "\r",
+                                    "grid.store.load();"
+                                ]
+                            },
+                            "designerId": "b179b318-cb4c-4207-a0cb-4f5151fa304a"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Ext.grid.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "columnLines": true,
+                "itemId": "shiftWorkListGrid",
+                "layout|region": "center",
+                "margin": 5,
+                "store": "ShiftWorkListStore",
+                "title": null
+            },
+            "designerId": "0f62913b-b003-4718-9e4f-9decf3e40e2d",
+            "cn": [
+                {
+                    "type": "Ext.grid.column.Number",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "id",
+                        "format": "0",
+                        "itemId": "id",
+                        "text": "ID",
+                        "width": 80
+                    },
+                    "designerId": "c0538827-5cee-495b-9703-44dcd613d7dc"
+                },
+                {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "username",
+                        "itemId": "username",
+                        "text": "User"
+                    },
+                    "designerId": "0c55a3c6-ffa3-4a33-8442-66888c36479c"
+                },
+                {
+                    "type": "Ext.grid.column.Date",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "startTime",
+                        "defaultWidth": 150,
+                        "format": "y-M-d H:i:s",
+                        "itemId": "startTime",
+                        "text": "Start Time",
+                        "width": 150
+                    },
+                    "designerId": "0669dc5b-5997-4725-91b6-124ef5e626d7"
+                },
+                {
+                    "type": "Ext.grid.column.Date",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "endTime",
+                        "defaultWidth": 150,
+                        "format": "y-M-d H:i:s",
+                        "itemId": "endTime",
+                        "text": "End Time",
+                        "width": 150
+                    },
+                    "designerId": "a2bd8283-1a00-4d75-9e14-a6febbc57878"
+                },
+                {
+                    "type": "Ext.grid.View",
+                    "reference": {
+                        "name": "viewConfig",
+                        "type": "object"
+                    },
+                    "codeClass": null,
+                    "designerId": "e27093ea-1d1e-4682-9311-e5b195f7d4b2"
+                },
+                {
+                    "type": "Ext.toolbar.Paging",
+                    "reference": {
+                        "name": "dockedItems",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "displayInfo": true,
+                        "dock": "bottom",
+                        "store": "LogListStore",
+                        "width": 360
+                    },
+                    "designerId": "27f6be5c-efc8-4547-9351-bce05051aafe"
+                }
+            ]
+        },
+        {
+            "type": "Ext.panel.Panel",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "height": 50,
+                "itemId": "functionPanel",
+                "layout|region": "south",
+                "title": null
+            },
+            "designerId": "bf31dc85-7569-4161-928e-d525a9327e32",
+            "cn": [
+                {
+                    "type": "Ext.button.Button",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "itemId": "btnPrintSwift",
+                        "margin": "10 0 0 10",
+                        "text": "打印交班单"
+                    },
+                    "designerId": "c90bbfd4-7834-49c8-819c-baeae6fc9827"
+                }
+            ]
+        }
+    ]
+}

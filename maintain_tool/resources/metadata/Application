@@ -12,7 +12,8 @@
             "IndentController",
             "MainController",
             "MaintainController",
-            "QueryController"
+            "QueryController",
+            "DeskManageController"
         ],
         "name": "digitalmenu",
         "stores": [
@@ -31,7 +32,8 @@
             "DishStore",
             "LogListStore",
             "LogTypeLocalStore",
-            "IndentRefreshTimeLocalStore"
+            "IndentRefreshTimeLocalStore",
+            "ShiftWorkListStore"
         ],
         "views": [
             "LoginView",
@@ -48,7 +50,11 @@
             "AddIndentDishForm",
             "ChangeDishPictureForm",
             "LogListContainer",
-            "ChangeUserPasswordForm"
+            "ChangeUserPasswordForm",
+            "DeskCell",
+            "DeskManageContainer",
+            "ShiftWorkListContainer",
+            "IndentCheckoutForm"
         ]
     },
     "designerId": "application",
