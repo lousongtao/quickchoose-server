@@ -113,7 +113,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "root": "categories"
+                        "root": "data"
                     },
                     "designerId": "d24aced5-9f2f-4957-be1c-ffea093b4fe6"
                 }

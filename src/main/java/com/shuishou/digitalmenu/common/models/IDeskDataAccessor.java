@@ -9,6 +9,8 @@ public interface IDeskDataAccessor {
 	
 	Desk getDeskById(int id);
 	
+	Desk getDeskByName(String name);
+	
 	Serializable insertDesk(Desk desk);
 	
 	void updateDesk(Desk desk);

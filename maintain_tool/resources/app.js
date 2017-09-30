@@ -37,7 +37,8 @@ Ext.application({
         'LogListStore',
         'LogTypeLocalStore',
         'IndentRefreshTimeLocalStore',
-        'ShiftWorkListStore'
+        'ShiftWorkListStore',
+        'DiscountTemplateStore'
     ],
     views: [
         'LoginView',
@@ -58,7 +59,8 @@ Ext.application({
         'DeskCell',
         'DeskManageContainer',
         'ShiftWorkListContainer',
-        'IndentCheckoutForm'
+        'IndentCheckoutForm',
+        'DiscountTemplateContainer'
     ],
     controllers: [
         'AccountController',

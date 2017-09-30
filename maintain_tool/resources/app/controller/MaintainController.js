@@ -24,6 +24,10 @@ Ext.define('digitalmenu.controller.MaintainController', {
         {
             ref: 'printerListContainer',
             selector: '#printerListContainer'
+        },
+        {
+            ref: 'discountTemplateContainer',
+            selector: '#discountTempListContainer'
         }
     ],
 
@@ -93,6 +97,34 @@ Ext.define('digitalmenu.controller.MaintainController', {
         button.up('form').down('#tfIPAddress').setValue('');
     },
 
+    onAddDiscountTemplateButtonClick: function(button, e, eOpts) {
+        var grid = this.getDiscountTemplateContainer().down('grid');
+        var values = {
+            userId : Ext.util.Cookies.get("userId")
+        };
+        button.up('form').submit({
+            url: "common/adddiscounttemplate",
+            params : values,
+            success: function(form, action){
+                var result = action.result;
+
+                if(action.result.result =='ok'){
+                    Ext.Msg.alert("SUCCESS","Add discount template successfully.");
+                    grid.store.load();
+                    button.up('form').down('#tfName').setValue('');
+                    button.up('form').down('#nfRate').setValue(0);
+                } else if (action.result.result =='invalid_session'){
+                    digitalmenu.getApplication().onSessionExpired();
+                } else {
+                    Ext.Msg.alert('Failed',"Failed to add discount template.", action.result.result);
+                }
+            },
+            failure: function(form, action){
+                Ext.Msg.alert('Failed',"Failed to add discount template.", action.result.result);
+            }
+        });
+    },
+
     init: function(application) {
         this.control({
             "#deskListContainer #btnAdd": {
@@ -106,6 +138,9 @@ Ext.define('digitalmenu.controller.MaintainController', {
             },
             "#printerListContainer #btnCancel": {
                 click: this.onCancelPrinterButtonClick
+            },
+            "#discountTempListContainer #btnAdd": {
+                click: this.onAddDiscountTemplateButtonClick
             }
         });
     }

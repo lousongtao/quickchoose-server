@@ -18,11 +18,11 @@ public interface IMenuService {
 
 	public OperationResult addCategory1(long userId, String chineseName, String englishName, int sequence);
 	public OperationResult addCategory2(long userId, String chineseName, String englishName, int sequence, int category1Id, int printerId);
-	public OperationResult addDish(long userId, String chineseName, String englishName, int sequence, double price, boolean isNew, boolean isSpecial, int hotLevel, MultipartFile image, int category2Id);
+	public OperationResult addDish(long userId, String chineseName, String englishName, int sequence, double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation, MultipartFile image, int category2Id);
 	
 	public OperationResult updateCategory1(long userId, int id, String chineseName, String englishName, int sequence);
 	public OperationResult updateCategory2(long userId, int id, String chineseName, String englishName, int sequence, int category1Id, int printerId);
-	public OperationResult updateDish(long userId, int id, String chineseName, String englishName, int sequence, double price, boolean isNew, boolean isSpecial, byte hotLevel, int category2Id);
+	public OperationResult updateDish(long userId, int id, String chineseName, String englishName, int sequence, double price, boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, int category2Id);
 	public OperationResult changeDishPrice(long userId, int id, double newprice);
 	public OperationResult changeDishPicture(long userId, int id, MultipartFile image);
 	public Result changeDishSpecial(long userId, int id, boolean isSpecial);

@@ -4,10 +4,10 @@ import com.shuishou.digitalmenu.views.GridResult;
 
 public class GetConfirmCodeResult extends GridResult{
 
-	public String confirmCode;
+	public String data;
 	public GetConfirmCodeResult(String result, boolean success,String confirmCode) {
 		super(result, success);
-		this.confirmCode = confirmCode;
+		this.data = confirmCode;
 	}
 
 }

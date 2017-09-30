@@ -57,7 +57,7 @@ Ext.define('digitalmenu.store.PrinterListStore', {
                 url: 'common/getprinters',
                 reader: {
                     type: 'json',
-                    root: 'printers'
+                    root: 'data'
                 }
             }
         }, cfg)]);

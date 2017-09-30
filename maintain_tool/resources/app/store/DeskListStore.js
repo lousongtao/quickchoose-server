@@ -36,6 +36,10 @@ Ext.define('digitalmenu.store.DeskListStore', {
                 {
                     name: 'name',
                     type: 'string'
+                },
+                {
+                    name: 'sequence',
+                    type: 'int'
                 }
             ],
             proxy: {
@@ -45,7 +49,7 @@ Ext.define('digitalmenu.store.DeskListStore', {
                 url: 'common/getdesks',
                 reader: {
                     type: 'json',
-                    root: 'desks'
+                    root: 'data'
                 }
             }
         }, cfg)]);

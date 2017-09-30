@@ -190,6 +190,7 @@ Ext.define('digitalmenu.controller.MenuController', {
                 //icon : '../dishimage_small/catalog1.png',
                 chineseName : namecn,
                 englishName : nameen,
+                displayText : namecn,
                 sequence : seq,
                 loaded : true,
                 expanded : true
@@ -207,7 +208,7 @@ Ext.define('digitalmenu.controller.MenuController', {
                 if(result.result =='ok'){
                     Ext.Msg.alert("SUCCESS", "Create category1 successfully.");
                     //insert new node
-                    addNewNode(result.infoMap.id);
+                    addNewNode(result.data.id);
                     //hide SAVE button and CANCEL button
                     me.showSaveCancelButtons(false);
                     //refresh combobox store
@@ -327,7 +328,9 @@ Ext.define('digitalmenu.controller.MenuController', {
                 objectid : newid,
                 chineseName : namecn,
                 englishName : nameen,
+                displayText : namecn,
                 parentID : category1ID,
+                printerId : printerId,
                 sequence : seq,
                 level: 'C2',
                 //iconCls : 'menutreenode-icon-size',
@@ -349,7 +352,7 @@ Ext.define('digitalmenu.controller.MenuController', {
                 if(result.result =='ok'){
                     Ext.Msg.alert("SUCCESS","Create category2 successfully.");
                     //insert new node
-                    addNewNode(result.infoMap.id);
+                    addNewNode(result.data.id);
                     //hide SAVE button and CANCEL button
                     me.showSaveCancelButtons(false);
                     //refresh combobox store
@@ -464,6 +467,7 @@ Ext.define('digitalmenu.controller.MenuController', {
         var isNew = this.getTabDish().down('#cbNew').getValue();
         var hotLevel = this.getTabDish().down('#cbHotLevel').getValue();
         var category2ID = this.getTabDish().down('#cbCategory2ID').getValue();
+        var abbr = this.getTabDish().down('#tfAbbreviation').getValue();
         //var fileName = this.getTabDish().down('#dishPicture').getValue();
         var tree = this.getTreeMenu();
 
@@ -518,6 +522,7 @@ Ext.define('digitalmenu.controller.MenuController', {
                 isNew : isNew,
                 isSpecial : isSpecial,
                 hotLevel : hotLevel,
+                abbreviation : abbr,
                 leaf : true
             });
         };
@@ -533,7 +538,7 @@ Ext.define('digitalmenu.controller.MenuController', {
                 if(action.result.result =='ok'){
                     Ext.Msg.alert("SUCCESS","Create dish successfully.");
                     //insert new node
-                    addNewNode(result.infoMap.id, result.infoMap.dishicon);
+                    addNewNode(result.data.id, result.data.dishicon);
                     //hide SAVE button and CANCEL button
                     me.showSaveCancelButtons(false);
                 } else if (action.result.result =='invalid_session'){
@@ -558,6 +563,7 @@ Ext.define('digitalmenu.controller.MenuController', {
         var isNew = this.getTabDish().down('#cbNew').getValue();
         var hotLevel = this.getTabDish().down('#cbHotLevel').getValue();
         var category2ID = this.getTabDish().down('#cbCategory2ID').getValue();
+        var abbr = this.getTabDish().down('#tfAbbreviation').getValue();
         var tree = this.getTreeMenu();
 
         if (category2ID < 0){
@@ -577,6 +583,7 @@ Ext.define('digitalmenu.controller.MenuController', {
             isSpecial : isSpecial,
             hotLevel : hotLevel,
             category2Id : category2ID,
+            abbreviation : abbr,
             pictureName : ""
         };
 
@@ -802,7 +809,7 @@ Ext.define('digitalmenu.controller.MenuController', {
                     Ext.Msg.alert("SUCCESS","Change picture successfully.");
                     var win = button.up('form').up('window');
                     win.close();
-                    revalueNode(dishid, action.result.infoMap.dishicon);
+                    revalueNode(dishid, action.result.data.dishicon);
                 } else if (action.result.result =='invalid_session'){
                     digitalmenu.getApplication().onSessionExpired();
                 } else {
@@ -872,6 +879,7 @@ Ext.define('digitalmenu.controller.MenuController', {
         this.getTabDish().down('#cbNew').setValue(false);
         this.getTabDish().down('#cbSpecial').setValue(false);
         this.getTabDish().down('#cbHotLevel').setValue(0);
+        this.getTabDish().down('#tfAbbreviation').setValue("");
     },
 
     setStoreForCategory1ComboBox: function() {
@@ -950,10 +958,11 @@ Ext.define('digitalmenu.controller.MenuController', {
             this.getTabDish().down('#nfDishSeq').setValue(record.get('sequence'));
             this.getTabDish().down('#nfPrice').setValue(record.get('price'));
             this.getTabDish().down('#cbCategory2ID').setValue(record.get('parentID'));
-            this.getTabDish().down('#image').setSrc('../dishimage_original/'+record.get('pictureName'));
+            this.getTabDish().down('#image').setSrc('../dishimage_big/'+record.get('pictureName'));
             this.getTabDish().down('#cbNew').setValue(record.get('isNew'));
             this.getTabDish().down('#cbSpecial').setValue(record.get('isSpecial'));
             this.getTabDish().down('#cbHotLevel').setValue(record.get('hotLevel'));
+            this.getTabDish().down('#tfAbbreviation').setValue(record.get('abbreviation'));
         }
 
     },

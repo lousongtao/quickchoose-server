@@ -89,6 +89,10 @@ Ext.define('digitalmenu.store.MenuTreeStore', {
                 {
                     name: 'printerId',
                     type: 'int'
+                },
+                {
+                    name: 'abbreviation',
+                    type: 'string'
                 }
             ],
             sorters: {

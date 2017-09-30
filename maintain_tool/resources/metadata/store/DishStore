@@ -102,7 +102,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "root": "dishes"
+                        "root": "data"
                     },
                     "designerId": "d6311aa2-ec64-43d7-b062-1ad9bb4fb2f9"
                 }

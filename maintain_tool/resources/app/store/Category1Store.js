@@ -52,7 +52,7 @@ Ext.define('digitalmenu.store.Category1Store', {
                 url: 'menu/queryallcategory1',
                 reader: {
                     type: 'json',
-                    root: 'categories'
+                    root: 'data'
                 }
             }
         }, cfg)]);

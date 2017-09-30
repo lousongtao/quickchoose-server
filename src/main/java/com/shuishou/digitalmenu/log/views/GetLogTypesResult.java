@@ -17,13 +17,13 @@ public class GetLogTypesResult extends GridResult {
 		}
 	}
 
-	public List<LogTypeInfo> logTypeInfos = new ArrayList<LogTypeInfo>();
+	public List<LogTypeInfo> data = new ArrayList<LogTypeInfo>();
 
 	public GetLogTypesResult(String result, boolean success) {
 		super(result, success);
 		LogType[] logTypes = LogData.LogType.values();
 		for (LogType lt : logTypes) {
-			logTypeInfos.add(new LogTypeInfo(lt.toString()));
+			data.add(new LogTypeInfo(lt.toString()));
 		}
 
 	}

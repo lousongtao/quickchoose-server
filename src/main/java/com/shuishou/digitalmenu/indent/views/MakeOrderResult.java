@@ -4,10 +4,10 @@ import com.shuishou.digitalmenu.views.GridResult;
 
 public class MakeOrderResult extends GridResult {
 
-	public int sequence;
+	public int data;
 	public MakeOrderResult(String result, boolean success, int sequence) {
 		super(result, success);
-		this.sequence = sequence;
+		this.data = sequence;
 	}
 
 }

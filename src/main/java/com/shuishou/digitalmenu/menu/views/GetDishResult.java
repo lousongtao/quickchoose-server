@@ -17,10 +17,10 @@ public class GetDishResult extends GridResult {
 		public String level = ConstantValue.TYPE_DISHINFO;
 	}
 	
-	public List dishes;
+	public List data;
 	public GetDishResult(String result, boolean success, List infos) {
 		super(result, success);
-		this.dishes = infos;
+		this.data = infos;
 	}
 
 }

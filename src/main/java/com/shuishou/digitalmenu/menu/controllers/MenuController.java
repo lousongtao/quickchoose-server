@@ -48,12 +48,9 @@ public class MenuController {
 	@RequestMapping(value = "/menu/add_category1", method = {RequestMethod.POST})
 	public @ResponseBody Result addCategory1(
 			@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId,
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -66,13 +63,10 @@ public class MenuController {
 	@RequestMapping(value = "/menu/update_category1", method = {RequestMethod.POST})
 	public @ResponseBody Result updateCategory1(
 			@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId,
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -86,14 +80,11 @@ public class MenuController {
 	@RequestMapping(value="/menu/add_category2", method = {RequestMethod.POST})
 	public @ResponseBody Result addCategory2(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
 			@RequestParam(value = "printerId", required = true) int printerId) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -106,15 +97,12 @@ public class MenuController {
 	@RequestMapping(value="/menu/update_category2", method = {RequestMethod.POST})
 	public @ResponseBody Result updateCategory2(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
 			@RequestParam(value = "printerId", required = true) int printerId) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -127,7 +115,6 @@ public class MenuController {
 	@RequestMapping(value="/menu/add_dish", method = {RequestMethod.POST})
 	public @ResponseBody Result addDish(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence,
@@ -135,15 +122,14 @@ public class MenuController {
 			@RequestParam(value = "isNew", required = false, defaultValue = "false") boolean isNew,
 			@RequestParam(value = "isSpecial", required = false, defaultValue = "false") boolean isSpecial,
 			@RequestParam(value = "hotLevel", required = true) int hotLevel,
+			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
 			@RequestParam(value = "dishPicture", required = false) MultipartFile image,
 			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, image, category2Id);
+		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, abbreviation, image, category2Id);
 		
 		return result;
 	}
@@ -167,7 +153,6 @@ public class MenuController {
 	@RequestMapping(value="/menu/update_dish", method = {RequestMethod.POST})
 	public @ResponseBody Result updateDish(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
@@ -177,14 +162,13 @@ public class MenuController {
 			@RequestParam(value = "isSpecial", required = true) boolean isSpecial,
 			@RequestParam(value = "hotLevel", required = true) byte hotLevel,
 			@RequestParam(value = "pictureName", required = true) String pictureName,
+			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
 			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.updateDish(userId, id, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, category2Id);
+		Result result = menuService.updateDish(userId, id, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, abbreviation, category2Id);
 		
 		return result;
 	}
@@ -192,11 +176,8 @@ public class MenuController {
 	@RequestMapping(value="/menu/changedishpicture", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishPicture(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "picture", required = false) MultipartFile image) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -209,11 +190,8 @@ public class MenuController {
 	@RequestMapping(value="/menu/change_dish_price", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishPrice(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "newPrice", required = true) double newPrice) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -226,11 +204,8 @@ public class MenuController {
 	@RequestMapping(value="/menu/change_dish_newproduct", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishNewProduct(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "isNew", required = true) boolean isNew) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -243,11 +218,8 @@ public class MenuController {
 	@RequestMapping(value="/menu/changedishsoldout", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishSoldOut(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "isSoldOut", required = true) boolean isSoldOut) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -274,11 +246,8 @@ public class MenuController {
 	@RequestMapping(value="/menu/change_dish_special", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishSpecial(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "sessionId", required = true) String sessionId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "isSpecial", required = true) boolean isSpecial) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
@@ -291,11 +260,8 @@ public class MenuController {
 	@RequestMapping(value="/menu/querymenu", method = {RequestMethod.GET})
 	public @ResponseBody Result queryMenu(
 			//@RequestParam(value="userId", required = true) long userId 
-			//@RequestParam(value="sessionId", required = true) String sessionId,
 			//@RequestParam(value = "node", required = true) String node
 			) throws Exception{
-//		if (!accountService.checkSession(userId, sessionId))
-//			return new Result("invalid_session");
 //		if (!permissionService.checkPermission(userId, Permission.PERMISSION_EDIT_MENU)){
 //			return new Result("no_permission");
 //		}
@@ -335,7 +301,6 @@ public class MenuController {
 	/**
 	 * 删除操作, 包括删除目录及dish
 	 * @param userId
-	 * @param sessionId
 	 * @param objectTypeId, 由于查询菜单时拼装的ID为"type+ID", 所以前端同样范围该值, 这里需要根据type进行区分.
 	 * @return
 	 * @throws Exception
@@ -343,11 +308,8 @@ public class MenuController {
 	@RequestMapping(value = "/menu/delete", method = (RequestMethod.POST))
 	public @ResponseBody Result deleteMenu(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value="sessionId", required = true) String sessionId,
 			@RequestParam(value = "objectId", required = true) String objectId,
 			@RequestParam(value = "objectType", required = true) String objectType) throws Exception{
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}

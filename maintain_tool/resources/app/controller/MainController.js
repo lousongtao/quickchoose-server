@@ -61,7 +61,7 @@ Ext.define('digitalmenu.controller.MainController', {
 
           if (result.result == 'ok') {
 
-            var desks = result.desks;
+            var desks = result.data;
             for(var i = 0; i < desks.length; i++){
                 var tabi = Ext.create('digitalmenu.view.DeskCell');
                 var lbDeskNo = tabi.down('#lbDeskNo');
@@ -193,7 +193,6 @@ Ext.define('digitalmenu.controller.MainController', {
         grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');
         grid.store.proxy.extraParams.sessionId = Ext.util.Cookies.get('sessionId');
         grid.store.load();
-        grid.store.sort('name','ASC');
 
         contentPanel.removeAll();
         deskPanel.region = 'center';
@@ -216,12 +215,18 @@ Ext.define('digitalmenu.controller.MainController', {
 
     },
 
-    onMainViewAfterLayout: function(container, layout, eOpts) {
-        console.log('onMainViewAfterLayout');
-    },
+    onMenuitemMaintainDiscountClick: function(item, e, eOpts) {
+        var contentPanel = this.getContentPanel();
+        var templatePanel = Ext.create('digitalmenu.view.DiscountTemplateContainer');
+        var grid = templatePanel.down('#listGrid');
 
-    onMainViewAfterRender: function(component, eOpts) {
-        console.log('onMainViewAfterRender');
+        grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');
+        grid.store.load();
+
+        contentPanel.removeAll();
+        templatePanel.region = 'center';
+        contentPanel.add(templatePanel);
+
     },
 
     init: function(application) {
@@ -256,9 +261,8 @@ Ext.define('digitalmenu.controller.MainController', {
             "#mainView #menuitem_maintain_printer": {
                 click: this.onMenuitemMaintainPrinter
             },
-            "viewport": {
-                afterlayout: this.onMainViewAfterLayout,
-                afterrender: this.onMainViewAfterRender
+            "#mainView #menuitem_maintain_discounttemplate": {
+                click: this.onMenuitemMaintainDiscountClick
             }
         });
     }

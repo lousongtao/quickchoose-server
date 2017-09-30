@@ -59,7 +59,7 @@ Ext.define('digitalmenu.store.DishStore', {
                 url: 'menu/queryalldish',
                 reader: {
                     type: 'json',
-                    root: 'dishes'
+                    root: 'data'
                 }
             }
         }, cfg)]);

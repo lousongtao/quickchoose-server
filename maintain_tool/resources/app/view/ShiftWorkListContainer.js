@@ -28,7 +28,7 @@ Ext.define('digitalmenu.view.ShiftWorkListContainer', {
     ],
 
     height: 466,
-    itemId: 'logListContainer',
+    itemId: 'shiftWorkContainer',
     padding: 5,
     width: 843,
     layout: 'border',
@@ -105,7 +105,7 @@ Ext.define('digitalmenu.view.ShiftWorkListContainer', {
                         {
                             xtype: 'gridcolumn',
                             itemId: 'username',
-                            dataIndex: 'username',
+                            dataIndex: 'userName',
                             text: 'User'
                         },
                         {
@@ -115,7 +115,7 @@ Ext.define('digitalmenu.view.ShiftWorkListContainer', {
                             defaultWidth: 150,
                             dataIndex: 'startTime',
                             text: 'Start Time',
-                            format: 'y-M-d H:i:s'
+                            format: 'y/M/d H:i:s'
                         },
                         {
                             xtype: 'datecolumn',
@@ -124,7 +124,7 @@ Ext.define('digitalmenu.view.ShiftWorkListContainer', {
                             defaultWidth: 150,
                             dataIndex: 'endTime',
                             text: 'End Time',
-                            format: 'y-M-d H:i:s'
+                            format: 'y/M/d H:i:s'
                         }
                     ],
                     dockedItems: [
@@ -145,7 +145,7 @@ Ext.define('digitalmenu.view.ShiftWorkListContainer', {
                     items: [
                         {
                             xtype: 'button',
-                            itemId: 'btnPrintSwift',
+                            itemId: 'btnPrintShift',
                             margin: '10 0 0 10',
                             text: '打印交班单'
                         }

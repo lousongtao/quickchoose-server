@@ -433,6 +433,19 @@ Ext.define('digitalmenu.view.MenuContainer', {
                                                             queryMode: 'local',
                                                             store: 'Category2Store',
                                                             valueField: 'id'
+                                                        },
+                                                        {
+                                                            xtype: 'textfield',
+                                                            itemId: 'tfAbbreviation',
+                                                            padding: 5,
+                                                            width: 400,
+                                                            fieldLabel: 'Abbreviation',
+                                                            labelWidth: 150,
+                                                            name: 'abbreviation',
+                                                            allowBlank: false,
+                                                            allowOnlyWhitespace: false,
+                                                            maxLength: 32,
+                                                            minLength: 2
                                                         }
                                                     ]
                                                 },
@@ -454,9 +467,9 @@ Ext.define('digitalmenu.view.MenuContainer', {
                                                         },
                                                         {
                                                             xtype: 'image',
-                                                            height: 520,
+                                                            height: 240,
                                                             itemId: 'image',
-                                                            width: 710
+                                                            width: 240
                                                         }
                                                     ]
                                                 },

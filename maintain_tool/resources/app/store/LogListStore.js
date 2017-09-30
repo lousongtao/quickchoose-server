@@ -33,7 +33,7 @@ Ext.define('digitalmenu.store.LogListStore', {
                 url: 'log/logs',
                 reader: {
                     type: 'json',
-                    root: 'logs'
+                    root: 'data'
                 }
             },
             fields: [

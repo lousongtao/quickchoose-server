@@ -89,7 +89,7 @@
                     "\r",
                     "  if (result.result == 'ok') {\r",
                     "\r",
-                    "    var desks = result.desks;\r",
+                    "    var desks = result.data;\r",
                     "    for(var i = 0; i < desks.length; i++){\r",
                     "        var tabi = Ext.create('digitalmenu.view.DeskCell');\r",
                     "        var lbDeskNo = tabi.down('#lbDeskNo');\r",
@@ -324,7 +324,6 @@
                     "grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');\r",
                     "grid.store.proxy.extraParams.sessionId = Ext.util.Cookies.get('sessionId');\r",
                     "grid.store.load();\r",
-                    "grid.store.sort('name','ASC');\r",
                     "\r",
                     "contentPanel.removeAll();\r",
                     "deskPanel.region = 'center';\r",
@@ -374,35 +373,26 @@
             },
             "codeClass": null,
             "userConfig": {
-                "designer|controlQuery": "viewport",
-                "designer|targetType": "MainView",
-                "fn": "onMainViewAfterLayout",
+                "designer|controlQuery": "#mainView #menuitem_maintain_discounttemplate",
+                "designer|targetType": "Ext.menu.Item",
+                "fn": "onMenuitemMaintainDiscountClick",
                 "implHandler": [
-                    "console.log('onMainViewAfterLayout');"
+                    "var contentPanel = this.getContentPanel();\r",
+                    "var templatePanel = Ext.create('digitalmenu.view.DiscountTemplateContainer');\r",
+                    "var grid = templatePanel.down('#listGrid');\r",
+                    "\r",
+                    "grid.store.proxy.extraParams.userId = Ext.util.Cookies.get('userId');\r",
+                    "grid.store.load();\r",
+                    "\r",
+                    "contentPanel.removeAll();\r",
+                    "templatePanel.region = 'center';\r",
+                    "contentPanel.add(templatePanel);\r",
+                    ""
                 ],
-                "name": "afterlayout",
+                "name": "click",
                 "scope": "me"
             },
-            "designerId": "ca059671-a945-47af-b64a-952044504346"
-        },
-        {
-            "type": "controlleraction",
-            "reference": {
-                "name": "listeners",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "designer|controlQuery": "viewport",
-                "designer|targetType": "MainView",
-                "fn": "onMainViewAfterRender",
-                "implHandler": [
-                    "console.log('onMainViewAfterRender');"
-                ],
-                "name": "afterrender",
-                "scope": "me"
-            },
-            "designerId": "e0bf7464-f7a4-4f3c-883d-dd1ca7e5a220"
+            "designerId": "ae57d05e-32ad-4282-98c3-c1ec09393bf6"
         }
     ]
 }

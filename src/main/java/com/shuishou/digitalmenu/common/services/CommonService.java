@@ -1,8 +1,10 @@
 package com.shuishou.digitalmenu.common.services;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -13,18 +15,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.UserData;
+import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.common.models.ConfirmCode;
 import com.shuishou.digitalmenu.common.models.Desk;
+import com.shuishou.digitalmenu.common.models.DiscountTemplate;
 import com.shuishou.digitalmenu.common.models.IConfirmCodeDataAccessor;
 import com.shuishou.digitalmenu.common.models.IDeskDataAccessor;
+import com.shuishou.digitalmenu.common.models.IDiscountTemplateDataAccessor;
 import com.shuishou.digitalmenu.common.models.IPrinterDataAccessor;
 import com.shuishou.digitalmenu.common.models.Printer;
+import com.shuishou.digitalmenu.common.views.CheckConfirmCodeResult;
 import com.shuishou.digitalmenu.common.views.GetConfirmCodeResult;
 import com.shuishou.digitalmenu.common.views.GetDeskResult;
 import com.shuishou.digitalmenu.common.views.GetDeskWithIndentResult;
+import com.shuishou.digitalmenu.common.views.GetDiscountTemplateResult;
 import com.shuishou.digitalmenu.common.views.GetPrinterResult;
 import com.shuishou.digitalmenu.indent.models.IIndentDataAccessor;
 import com.shuishou.digitalmenu.indent.models.Indent;
+import com.shuishou.digitalmenu.indent.models.IndentDetail;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.views.GridResult;
@@ -48,17 +56,18 @@ public class CommonService implements ICommonService {
 	private IPrinterDataAccessor printerDA;
 	
 	@Autowired
+	private IDiscountTemplateDataAccessor discountTemplateDA;
+	
+	@Autowired
 	private IIndentDataAccessor indentDA;
 	
-	private DateFormat df = new SimpleDateFormat("HH:mm:ss");
-
 	@Override
 	@Transactional
-	public GridResult checkConfirmCode(String code) {
+	public CheckConfirmCodeResult checkConfirmCode(String code) {
 		ConfirmCode cc = confirmCodeDA.getCode();
 		if (code.equals(cc.getCode()))
-			return new GridResult(Result.OK, true);
-		return new GridResult(Result.FAIL, false);
+			return new CheckConfirmCodeResult(Result.OK, true, true);
+		return new CheckConfirmCodeResult(Result.FAIL, false, false);
 	}
 
 	@Override
@@ -89,19 +98,25 @@ public class CommonService implements ICommonService {
 	public GetDeskResult getDesks() {
 		List<Desk> desks = deskDA.queryDesks();
 		GetDeskResult result = new GetDeskResult(Result.OK, true);
-		result.desks = new ArrayList<GetDeskResult.Desk>(desks.size());
+		result.data = new ArrayList<GetDeskResult.Desk>(desks.size());
 		for(int i = 0; i<desks.size(); i++){
-			GetDeskResult.Desk d = new GetDeskResult.Desk(desks.get(i).getId(), desks.get(i).getName());
-			result.desks.add(d);
+			GetDeskResult.Desk d = new GetDeskResult.Desk();
+			d.id = desks.get(i).getId();
+			d.name = desks.get(i).getName();
+			d.sequence = desks.get(i).getSequence();
+			if (desks.get(i).getMergeTo() != null)
+				d.mergeTo = desks.get(i).getMergeTo().getName();
+			result.data.add(d);
 		}
 		return result;
 	}
 
 	@Override
 	@Transactional
-	public GridResult saveDesk(long userId, String deskname) {
+	public GridResult saveDesk(long userId, String deskname, int sequence) {
 		Desk desk = new Desk();
 		desk.setName(deskname);
+		desk.setSequence(sequence);
 		deskDA.insertDesk(desk);
 		
 		// write log.
@@ -147,7 +162,7 @@ public class CommonService implements ICommonService {
 	public GetPrinterResult getPrinters() {
 		List<Printer> printers = printerDA.queryPrinters();
 		GetPrinterResult result = new GetPrinterResult(Result.OK, true);
-		result.printers = new ArrayList<GetPrinterResult.Printer>();
+		result.data = new ArrayList<GetPrinterResult.Printer>();
 		for (int i = 0; i < printers.size(); i++) {
 			GetPrinterResult.Printer p = new GetPrinterResult.Printer();
 			p.id = printers.get(i).getId();
@@ -155,7 +170,7 @@ public class CommonService implements ICommonService {
 			p.printerName = printers.get(i).getPrinterName();
 			p.copy = printers.get(i).getCopy();
 			p.printStyle = printers.get(i).getPrintStyle();
-			result.printers.add(p);
+			result.data.add(p);
 		}
 		return result;
 	}
@@ -204,26 +219,155 @@ public class CommonService implements ICommonService {
 				return ((Desk)o1).getId() - ((Desk)o2).getId();
 			}});
 		List<Indent> indents = indentDA.getUnpaidIndent();
-		List<GetDeskWithIndentResult.Desk> deskinfos = new ArrayList<GetDeskWithIndentResult.Desk>();
+		List<GetDeskWithIndentResult.DeskWithIndent> deskinfos = new ArrayList<>();
 		for (int i = 0; i < desks.size(); i++) {
 			Desk desk = desks.get(i);
-			GetDeskWithIndentResult.Desk deskinfo = new GetDeskWithIndentResult.Desk();
+			GetDeskWithIndentResult.DeskWithIndent deskinfo = new GetDeskWithIndentResult.DeskWithIndent();
 			deskinfo.id = desk.getId();
 			deskinfo.name = desk.getName();
 			if (desk.getMergeTo() != null)
-				deskinfo.name = desk.getName() + " 并桌到 " + desk.getMergeTo().getName();
+				deskinfo.mergeTo =desk.getMergeTo().getName();
 			for(Indent indent : indents){
 				if (indent.getDeskName().equals(desk.getName())){
 					deskinfo.indentId = indent.getId();
 					deskinfo.price = indent.getTotalPrice();
 					deskinfo.customerAmount = indent.getCustomerAmount();
-					deskinfo.startTime = df.format(indent.getStartTime());
+					deskinfo.startTime = ConstantValue.DFYMDHMS.format(indent.getStartTime());
 					break;
 				}
 			}
 			deskinfos.add(deskinfo);
 		}
 		return new GetDeskWithIndentResult(Result.OK, true, deskinfos);
+	}
+
+	@Override
+	@Transactional
+	public GetDeskWithIndentResult mergeDesks(int userId, int mainDeskId, String subDesksId) {
+		String[] subDeskIds = subDesksId.split("/");
+		String subDesksName = "";
+		List<Desk> subDesks = new ArrayList<Desk>();
+		for(String sid : subDeskIds){
+			subDesks.add(deskDA.getDeskById(Integer.parseInt(sid)));
+		}
+		Desk mainDesk = deskDA.getDeskById(mainDeskId);
+		List<Indent> mainIndents = indentDA.getIndents(0, 100, null, null, new Byte[]{ConstantValue.INDENT_STATUS_OPEN}, mainDesk.getName(), null);
+		Indent mainIndent = null;
+		if (!mainIndents.isEmpty()){
+			mainIndent = mainIndents.get(0);
+		}
+		List<Indent> subDesksIndents = new ArrayList<Indent>();
+		for(Desk desk : subDesks){
+			subDesksIndents.addAll(indentDA.getIndents(0, 100, null, null, new Byte[]{ConstantValue.INDENT_STATUS_OPEN}, desk.getName(), null));
+		}
+		//flag the merge info for sub desks
+		for(Desk desk : subDesks){
+			if (subDesksName.length() > 0)
+				subDesksName += ",";
+			subDesksName += desk.getName();
+			desk.setMergeTo(mainDesk);
+			deskDA.updateDesk(desk);
+		}
+		//if there are not indents on sub tables, no need to merge indent
+		if (subDesksIndents.isEmpty()){
+			//do nothing
+		} else if (!subDesksIndents.isEmpty()){
+			if (mainIndent == null){
+				mainIndent = new Indent();
+				mainIndent.setDeskName(mainDesk.getName());
+				mainIndent.setStartTime(Calendar.getInstance().getTime());
+				mainIndent.setCustomerAmount(0);
+				int sequence = indentDA.getMaxSequenceToday() + 1;
+				mainIndent.setDailySequence(sequence);
+			} 
+			double totalprice = mainIndent.getTotalPrice();
+			int customers = mainIndent.getCustomerAmount();
+			for(Indent subIndent : subDesksIndents){
+				List<IndentDetail> details = subIndent.getItems();
+				for(IndentDetail detail : details){
+					detail.setIndent(mainIndent);
+				}
+				totalprice += subIndent.getTotalPrice();
+				customers += subIndent.getCustomerAmount();
+				indentDA.delete(subIndent);
+			}
+			mainIndent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
+			mainIndent.setCustomerAmount(customers);
+			indentDA.save(mainIndent);
+		}
+		
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.MERGETABLE.toString(), "User "+ selfUser + " merge tables [ " + subDesksName + " ] to table [ "+ mainDesk.getName()+" ]");
+
+		//prepare return data
+		List<GetDeskWithIndentResult.DeskWithIndent> deskinfos = new ArrayList<>();
+		GetDeskWithIndentResult.DeskWithIndent deskinfo = new GetDeskWithIndentResult.DeskWithIndent();
+		deskinfo.id = mainDesk.getId();
+		deskinfo.name = mainDesk.getName();
+		if (mainIndent != null){
+			deskinfo.indentId = mainIndent.getId();
+			deskinfo.price = mainIndent.getTotalPrice();
+			deskinfo.customerAmount = mainIndent.getCustomerAmount();
+			deskinfo.startTime = ConstantValue.DFYMDHMS.format(mainIndent.getStartTime());
+		}
+		
+		deskinfos.add(deskinfo);
+		for(Desk desk : subDesks){
+			deskinfo = new GetDeskWithIndentResult.DeskWithIndent();
+			deskinfo.id = desk.getId();
+			deskinfo.name = desk.getName();
+			deskinfo.mergeTo = mainDesk.getName();
+			deskinfos.add(deskinfo);
+		}
+		return new GetDeskWithIndentResult(Result.OK, true, deskinfos);
+	}
+
+	@Override
+	@Transactional
+	public GetDiscountTemplateResult getDiscountTemplates() {
+		List<DiscountTemplate> templates = discountTemplateDA.queryDiscountTemplates();
+		GetDiscountTemplateResult result = new GetDiscountTemplateResult(Result.OK, true);
+		result.data = new ArrayList<GetDiscountTemplateResult.DiscountTemplate>();
+		for (int i = 0; i < templates.size(); i++) {
+			GetDiscountTemplateResult.DiscountTemplate p = new GetDiscountTemplateResult.DiscountTemplate();
+			p.id = templates.get(i).getId();
+			p.name = templates.get(i).getName();
+			p.rate = templates.get(i).getRate();
+			result.data.add(p);
+		}
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public GridResult saveDiscountTemplate(long userId, String name, double rate) {
+		DiscountTemplate t = new DiscountTemplate();
+		t.setName(name);
+		t.setRate(rate);
+		discountTemplateDA.insertDiscountTemplate(t);
+		
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_DISCOUNTTEMPLATE.toString(), 
+				"User "+ selfUser + " add discount template "+ name);
+
+		return new GridResult(Result.OK, true);
+	}
+
+	@Override
+	@Transactional
+	public GridResult deleteDiscountTemplate(long userId, int id) {
+		DiscountTemplate t = discountTemplateDA.getDiscountTemplateById(id);
+		if (t == null)
+			return new GridResult("No Discount Template found, id = "+ id, false);
+		discountTemplateDA.deleteDiscountTemplate(t);
+		
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_DISCOUNTTEMPLATE.toString(), "User "+ selfUser + " delete discount template " + t.getName());
+
+		return new GridResult(Result.OK, true);
 	}
 
 }

@@ -87,14 +87,14 @@
 		"variable": "name"
 	},
 	{
-		"name": "数量",
-		"width": 6,
-		"variable": "amount"
-	},
-	{
 		"name": "单价",
 		"width": 5,
 		"variable": "price"
+	},
+	{
+		"name": "数量",
+		"width": 6,
+		"variable": "amount"
 	},
 	{
 		"name": "金额",
@@ -113,6 +113,14 @@
 	},
 	{
 		"text": "合计:                    ${$totalPrice}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "实付:                    ${$paidPrice}",
 		"size": 9,
 		"bold": false,
 		"align": 0,

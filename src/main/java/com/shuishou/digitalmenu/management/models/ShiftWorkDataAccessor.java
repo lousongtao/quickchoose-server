@@ -15,11 +15,15 @@ public class ShiftWorkDataAccessor extends BaseDataAccessor implements IShiftWor
 
 	@Override
 	public ShiftWork getLastShiftWork() {
-		String hql = "from ShiftWork l where l.id = (select max(t.id) from ShiftWork t";
+		String hql = "from ShiftWork l where l.id = (select max(t.id) from ShiftWork t)";
 		return (ShiftWork) sessionFactory.getCurrentSession().createQuery(hql).uniqueResult();
 	}
 	
 	public void insertShitWork(ShiftWork sw){
+		sessionFactory.getCurrentSession().save(sw);
+	}
+	
+	public void save(ShiftWork sw){
 		sessionFactory.getCurrentSession().save(sw);
 	}
 
@@ -31,15 +35,21 @@ public class ShiftWorkDataAccessor extends BaseDataAccessor implements IShiftWor
 			c.add(Restrictions.ilike("userName", shiftName));
 		}
 		if (startTime != null){
-			c.add(Restrictions.ge("time", startTime));
+			c.add(Restrictions.ge("endTime", startTime));
 		}
 		if (endTime != null){
-			c.add(Restrictions.le("time", endTime));
+			c.add(Restrictions.le("startTime", endTime));
 		}
 		c.addOrder(Order.asc("id"));
 		c.setFirstResult(start);
 		c.setMaxResults(limit);
 		return (List<ShiftWork>)c.list();
+	}
+
+	@Override
+	public ShiftWork getShiftWorkById(int shiftWorkId) {
+		String hql = "from ShiftWork l where l.id = " + shiftWorkId;
+		return (ShiftWork) sessionFactory.getCurrentSession().createQuery(hql).uniqueResult();
 	}
 
 }

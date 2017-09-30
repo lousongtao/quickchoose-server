@@ -32,7 +32,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "root": "logs"
+                        "root": "data"
                     },
                     "designerId": "a06b9d5a-6930-4099-8f87-ecb5ca915dc2"
                 }

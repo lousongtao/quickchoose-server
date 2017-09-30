@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -137,7 +138,7 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public OperationResult addDish(long userId, String chineseName, String englishName, int sequence, double price, boolean isNew, boolean isSpecial, int hotLevel, MultipartFile image, int category2Id) {
+	public OperationResult addDish(long userId, String chineseName, String englishName, int sequence, double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation, MultipartFile image, int category2Id) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null){
 			return new OperationResult("cannot find category2 by id "+ category2Id, false, null);
@@ -154,26 +155,21 @@ public class MenuService implements IMenuService {
 		dish.setPrice(price);
 		dish.setNew(isNew);
 		dish.setSpecial(isSpecial);
+		dish.setAbbreviation(abbreviation);
 		dishDA.save(dish);
 		
 		if (image != null && image.getSize() > 0){
 			//save image as a file in server harddisk
 			//generate a name for this dish. name formular: category1.englishname + '-' + category2.englishname + '-' + dish.englishname
-			String filePath = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_ORIGINAL + "/";
 			String fileName = "DISH-"+dish.getId() + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1);
-			 
-			File convFile = new File(filePath + fileName);
 			try {
-				convFile.createNewFile();
-				FileOutputStream fos = new FileOutputStream(convFile);
-				fos.write(image.getBytes());
-				fos.close();
 				dish.setPictureName(fileName);
+				
 				//generate small picture from original picture
-//				String fileNameMiddle = (filePath + fileName).replace(ConstantValue.CATEGORY_DISHIMAGE_ORIGINAL, ConstantValue.CATEGORY_DISHIMAGE_MIDDLE);
-//				String fileNameSmall = (filePath + fileName).replace(ConstantValue.CATEGORY_DISHIMAGE_ORIGINAL, ConstantValue.CATEGORY_DISHIMAGE_SMALL);
-//				makeZoomImage(filePath + fileName, fileNameMiddle, ConstantValue.DISHIMAGE_WIDTH_MIDDLE, ConstantValue.DISHIMAGE_HEIGHT_MIDDLE);
-//				makeZoomImage(filePath + fileName, fileNameSmall, ConstantValue.DISHIMAGE_WIDTH_SMALL, ConstantValue.DISHIMAGE_HEIGHT_SMALL);
+				String fileNameBig = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_BIG + "/" + fileName;
+				String fileNameSmall = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_SMALL + "/" + fileName;
+				makeZoomImage(image.getInputStream(), fileNameBig, ConstantValue.DISHIMAGE_WIDTH_BIG, ConstantValue.DISHIMAGE_HEIGHT_BIG);
+				makeZoomImage(image.getInputStream(), fileNameSmall, ConstantValue.DISHIMAGE_WIDTH_SMALL, ConstantValue.DISHIMAGE_HEIGHT_SMALL);
 				resultInfoMap.put("dishicon", fileName);
 			} catch (IOException e) {
 				logger.error("Exception when create image file for dish : " + dish, e);
@@ -349,8 +345,8 @@ public class MenuService implements IMenuService {
 	@Override
 	@Transactional
 	public GetMenuResult queryAllMenu() {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		logger.info("start query menu " + df.format(System.currentTimeMillis()));
+//		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		logger.info("start query menu " + ConstantValue.DFYMDHMS.format(System.currentTimeMillis()));
 		List<Category1> c1s = category1DA.getAllCategory1();
 		logger.info("finish query category1");
 //		c1s.sort(new Comparator<Object>(){
@@ -412,6 +408,7 @@ public class MenuService implements IMenuService {
 					dishInfo.objectid = dishes.get(k).getId();
 					dishInfo.chineseName = dishes.get(k).getChineseName();
 					dishInfo.englishName = dishes.get(k).getEnglishName();
+					dishInfo.abbreviation = dishes.get(k).getAbbreviation();
 					dishInfo.sequence = dishes.get(k).getSequence();
 					dishInfo.price = dishes.get(k).getPrice();
 					dishInfo.parentID = c2s.get(j).getId();
@@ -481,17 +478,16 @@ public class MenuService implements IMenuService {
 		dishDA.delete(dish);
 
 		//delete picture files
-		String filePath = request.getSession().getServletContext().getRealPath("/")+"..\\";
+		String filePath = request.getSession().getServletContext().getRealPath("/")+"../";
 		String fileName = dish.getPictureName();
-		File file = new File(filePath + fileName);
-		if (file.exists())
-			file.delete();
-		file = new File(filePath + fileName.replace(ConstantValue.CATEGORY_DISHIMAGE_ORIGINAL, ConstantValue.CATEGORY_DISHIMAGE_SMALL));
-		if (file.exists())
-			file.delete();
-		file = new File(filePath + fileName.replace(ConstantValue.CATEGORY_DISHIMAGE_ORIGINAL, ConstantValue.CATEGORY_DISHIMAGE_MIDDLE));
-		if (file.exists())
-			file.delete();
+		if (fileName != null) {
+			File file = new File(filePath + ConstantValue.CATEGORY_DISHIMAGE_BIG + "/" +fileName);
+			if (file.exists())
+				file.delete();
+			file = new File(filePath + ConstantValue.CATEGORY_DISHIMAGE_SMALL + "/" + fileName);
+			if (file.exists())
+				file.delete();
+		}
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
@@ -553,7 +549,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public OperationResult updateDish(long userId, int id, String chineseName, String englishName, int sequence, double price, boolean isNew, boolean isSpecial, byte hotLevel, int category2Id) {
+	public OperationResult updateDish(long userId, int id, String chineseName, String englishName, int sequence, double price, boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, int category2Id) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null)
 			return new OperationResult("now found Category2 by id "+ category2Id, false, null);
@@ -568,6 +564,7 @@ public class MenuService implements IMenuService {
 		dish.setNew(isNew);
 		dish.setSpecial(isSpecial);
 		dish.setHotLevel(hotLevel);
+		dish.setAbbreviation(abbreviation);
 		dishDA.save(dish);
 		
 		// write log.
@@ -582,24 +579,55 @@ public class MenuService implements IMenuService {
 	/*
      * 图片缩放,w，h为缩放的目标宽度和高度
      * src为源文件目录，dest为缩放后保存目录
+     * 如果图片原始尺寸小于设定尺寸, 不进行缩放 
      */
-    public static void makeZoomImage(String src,String dest,int w,int h) throws IOException {
+    public static void makeZoomImage(BufferedImage bufImg,String dest,int w,int h) throws IOException {
         
         double wr=0,hr=0;
-        File srcFile = new File(src);
         File destFile = new File(dest);
 
-        BufferedImage bufImg = ImageIO.read(srcFile); //读取图片
         Image Itemp = bufImg.getScaledInstance(w, h, Image.SCALE_SMOOTH);//设置缩放目标图片模板
         
-        wr=w*1.0/bufImg.getWidth();     //获取缩放比例
+        wr=w*1.0 / bufImg.getWidth();     //获取缩放比例
         hr=h*1.0 / bufImg.getHeight();
 
+        if(wr > 1.0){
+        	wr = 1.0;
+        }
+        if (hr > 1.0){
+        	hr = 1.0;
+        }
+        if (wr > hr){
+        	wr = hr;
+        } else {
+        	hr = wr;
+        }
+        
         AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(wr, hr), null);
         Itemp = ato.filter(bufImg, null);
         
         ImageIO.write((BufferedImage) Itemp,dest.substring(dest.lastIndexOf(".")+1), destFile); //写入缩减后的图片
         
+    }
+	/*
+     * 图片缩放,w，h为缩放的目标宽度和高度
+     * src为源文件目录，dest为缩放后保存目录
+     * 如果图片原始尺寸小于设定尺寸, 不进行缩放 
+     */
+    public static void makeZoomImage(InputStream is,String dest,int w,int h) throws IOException {
+    	BufferedImage bufImg = ImageIO.read(is); //读取图片
+    	makeZoomImage(bufImg, dest, w, h);
+    }
+	
+	/*
+     * 图片缩放,w，h为缩放的目标宽度和高度
+     * src为源文件目录，dest为缩放后保存目录
+     * 如果图片原始尺寸小于设定尺寸, 不进行缩放 
+     */
+    public static void makeZoomImage(String src,String dest,int w,int h) throws IOException {
+        File srcFile = new File(src);
+        BufferedImage bufImg = ImageIO.read(srcFile); //读取图片
+        makeZoomImage(bufImg, dest, w, h);
     }
     
     /*
@@ -654,27 +682,30 @@ public class MenuService implements IMenuService {
 		if (image != null && image.getSize() > 0){
 			//save image as a file in server harddisk
 			//generate a name for this dish. name formular: category1.englishname + '-' + category2.englishname + '-' + dish.englishname
-			String filePath = request.getSession().getServletContext().getRealPath("/")+"..\\" + ConstantValue.CATEGORY_DISHIMAGE_ORIGINAL + "/";
+			String filePath = request.getSession().getServletContext().getRealPath("/")+"..\\" + ConstantValue.CATEGORY_DISHIMAGE_BIG + "/";
 			String fileName = null;
 			if (dish.getPictureName() != null){
-				//如果fileName已经存在, 就生成一个新的文件名. 如果继续使用旧文件名, 浏览器不会去下载更新后的图片
-				int random = (int)(Math.random() * 1000);
-				fileName = dish.getPictureName();
-				fileName = "DISH-"+dish.getId() + "-" + random + fileName.substring(fileName.length() - 4);
-			} else {
-				fileName = "DISH-"+dish.getId() + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1);
-			}
+				File file = new File(filePath + fileName);
+				if (file.exists())
+					file.delete();
+//				//如果fileName已经存在, 就生成一个新的文件名. 如果继续使用旧文件名, 浏览器不会去下载更新后的图片
+//				int random = (int)(Math.random() * 1000);
+//				fileName = dish.getPictureName();
+//				fileName = "DISH-"+dish.getId() + "-" + random + fileName.substring(fileName.length() - 4);
+			} 
+
+			////重新生成文件名, 避免扩展名不一致的情况
+			fileName = "DISH-"+dish.getId() + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1);
 		
 			dish.setPictureName(fileName);
 			dishDA.update(dish);
 			
-			File convFile = new File(filePath + fileName);
 			try {
-				if (!convFile.exists())
-					convFile.createNewFile();
-				FileOutputStream fos = new FileOutputStream(convFile);
-				fos.write(image.getBytes());
-				fos.close();
+				//generate small picture from original picture
+				String fileNameBig = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_BIG + "/" + fileName;
+				String fileNameSmall = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_SMALL + "/" + fileName;
+				makeZoomImage(image.getInputStream(), fileNameBig, ConstantValue.DISHIMAGE_WIDTH_BIG, ConstantValue.DISHIMAGE_HEIGHT_BIG);
+				makeZoomImage(image.getInputStream(), fileNameSmall, ConstantValue.DISHIMAGE_WIDTH_SMALL, ConstantValue.DISHIMAGE_HEIGHT_SMALL);
 				resultInfoMap.put("dishicon", fileName);
 			} catch (IOException e) {
 				logger.error("Exception when create image file for dish : " + dish, e);

@@ -141,16 +141,16 @@ public class AccountService implements IAccountService {
 		// check username.
 		UserData user = userDA.getUserByUsername(username);
 		if (user == null)
-			return new LoginResult("invalid_user", "", "");
+			return new LoginResult("invalid_user", "", "", "");
 
 		// check password.
 		try {
 			String hashedPassword = toSHA1(password.getBytes());
 			if (!user.getHashedPassword().equals(hashedPassword))
-				return new LoginResult("invalid_password", "", "");
+				return new LoginResult("invalid_password", "", "", "");
 		} catch (NoSuchAlgorithmException ex) {
 			logger.error("check user password failed.", ex);
-			return new LoginResult("invalid_password", "", "");
+			return new LoginResult("invalid_password", "", "","");
 		}
 
 		// build session.
@@ -168,7 +168,7 @@ public class AccountService implements IAccountService {
 		logService.write(user, LogData.LogType.ACCOUNT_LOGIN.toString(),
 				"User " + user + " login, and get session id " + session.getId() + ".");
 
-		return new LoginResult(Result.OK, Long.toString(user.getId()), session.getId().toString());
+		return new LoginResult(Result.OK, Long.toString(user.getId()), user.getUsername(), session.getId().toString());
 	}
 
 	@Override

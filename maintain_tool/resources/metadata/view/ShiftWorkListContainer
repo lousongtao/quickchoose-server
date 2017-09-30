@@ -8,7 +8,7 @@
     "userConfig": {
         "designer|userClassName": "ShiftWorkListContainer",
         "height": 466,
-        "itemId": "logListContainer",
+        "itemId": "shiftWorkContainer",
         "layout": "border",
         "padding": 5,
         "width": 843
@@ -163,7 +163,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "dataIndex": "username",
+                        "dataIndex": "userName",
                         "itemId": "username",
                         "text": "User"
                     },
@@ -179,7 +179,7 @@
                     "userConfig": {
                         "dataIndex": "startTime",
                         "defaultWidth": 150,
-                        "format": "y-M-d H:i:s",
+                        "format": "y/M/d H:i:s",
                         "itemId": "startTime",
                         "text": "Start Time",
                         "width": 150
@@ -196,7 +196,7 @@
                     "userConfig": {
                         "dataIndex": "endTime",
                         "defaultWidth": 150,
-                        "format": "y-M-d H:i:s",
+                        "format": "y/M/d H:i:s",
                         "itemId": "endTime",
                         "text": "End Time",
                         "width": 150
@@ -252,7 +252,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "itemId": "btnPrintSwift",
+                        "itemId": "btnPrintShift",
                         "margin": "10 0 0 10",
                         "text": "打印交班单"
                     },

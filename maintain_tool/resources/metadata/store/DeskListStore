@@ -39,6 +39,19 @@
             "designerId": "c61d9826-cd00-40ee-abb3-68b2192107ba"
         },
         {
+            "type": "Ext.data.Field",
+            "reference": {
+                "name": "fields",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "name": "sequence",
+                "type": "int"
+            },
+            "designerId": "13e53085-6232-4440-86d4-6a960b4023b0"
+        },
+        {
             "type": "Ext.data.proxy.Ajax",
             "reference": {
                 "name": "proxy",
@@ -62,7 +75,7 @@
                     "codeClass": null,
                     "userConfig": {
                         "designer|displayName": "reader",
-                        "root": "desks"
+                        "root": "data"
                     },
                     "designerId": "156308c3-482d-4d62-94a5-53d402bd83d8"
                 }

@@ -24,10 +24,10 @@ public class GetCategory2Result extends GridResult {
 		}
 	}
 	
-	public List categories;
+	public List data;
 	public GetCategory2Result(String result, boolean success, List infos) {
 		super(result, success);
-		this.categories = infos;
+		this.data = infos;
 	}
 
 }

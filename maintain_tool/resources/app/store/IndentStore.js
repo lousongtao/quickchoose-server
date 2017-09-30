@@ -33,7 +33,7 @@ Ext.define('digitalmenu.store.IndentStore', {
                 url: 'indent/queryindent',
                 reader: {
                     type: 'json',
-                    root: 'indents'
+                    root: 'data'
                 }
             },
             fields: [
@@ -42,7 +42,7 @@ Ext.define('digitalmenu.store.IndentStore', {
                     type: 'int'
                 },
                 {
-                    name: 'deskname',
+                    name: 'deskName',
                     type: 'string'
                 },
                 {
@@ -54,7 +54,7 @@ Ext.define('digitalmenu.store.IndentStore', {
                     type: 'date'
                 },
                 {
-                    name: 'totalprice',
+                    name: 'totalPrice',
                     type: 'float'
                 },
                 {
@@ -70,7 +70,7 @@ Ext.define('digitalmenu.store.IndentStore', {
                     type: 'int'
                 },
                 {
-                    name: 'dailysequence',
+                    name: 'dailySequence',
                     type: 'int'
                 }
             ]

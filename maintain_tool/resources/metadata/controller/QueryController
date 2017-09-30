@@ -35,6 +35,76 @@
                 "selector": "#mainView"
             },
             "designerId": "fac31522-14a1-4c4d-bd6a-38d7501b13c6"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "shiftWorkContainer",
+                "selector": "#shiftWorkContainer"
+            },
+            "designerId": "6659b7a0-6e6e-4db9-925a-a8b8615eebc7"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#shiftWorkContainer #btnPrintShift",
+                "designer|targetType": "Ext.button.Button",
+                "fn": "onPrintShiftWorkButtonClick",
+                "implHandler": [
+                    "var grid = this.getShiftWorkContainer().down('grid');\r",
+                    "if (grid.getSelectionModel().getSelection() === 0)\r",
+                    "    return;\r",
+                    "var record = grid.getSelectionModel().getSelection()[0];\r",
+                    "var values = {\r",
+                    "    userId : Ext.util.Cookies.get(\"userId\"),\r",
+                    "    shiftWorkId : record.get('id')\r",
+                    "};\r",
+                    "\r",
+                    "var me =this;\r",
+                    "\r",
+                    "var successCallback = function(resp){\r",
+                    "        var result = Ext.decode(resp.responseText);\r",
+                    "\r",
+                    "        if(result.result ==='ok'){\r",
+                    "            Ext.Msg.alert(\"SUCCESS\",\"Send print command to printer successfully.\");\r",
+                    "        } else if (result.result ==='invalid_session'){\r",
+                    "            digitalmenu.getApplication().onSessionExpired();\r",
+                    "        } else {\r",
+                    "            Ext.Msg.alert('Failed',\"Failed to send print command.\", resp.responseText);\r",
+                    "        }\r",
+                    "    };\r",
+                    "\r",
+                    "Ext.Msg.confirm(\"Confirm\", \"You will print the shift work record for user \"+ record.get('userName'),\r",
+                    "                function(btnId){\r",
+                    "                    if (btnId === 'no'){\r",
+                    "                        return;\r",
+                    "                    }\r",
+                    "                    Ext.Ajax.request({\r",
+                    "                        url: \"management/printshiftwork\",\r",
+                    "                        params : values,\r",
+                    "                        success : successCallback,\r",
+                    "                        failure : function(resp){\r",
+                    "                                Ext.Msg.alert('Failed',\"Failed to send print command.\", resp.responseText);\r",
+                    "                        }\r",
+                    "                    });\r",
+                    "                });\r",
+                    "\r",
+                    ""
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "da3d1e7d-0062-48c6-9006-ed6f4d74f221"
         }
     ]
 }

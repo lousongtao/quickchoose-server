@@ -6,10 +6,10 @@ import com.shuishou.digitalmenu.views.GridResult;
 
 public class OperationResult extends GridResult {
 
-	public Map infoMap;
+	public Map data;
 	public OperationResult(String result, boolean success, Map objectsInfo) {
 		super(result, success);
-		this.infoMap = objectsInfo;
+		this.data = objectsInfo;
 	}
 
 }

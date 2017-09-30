@@ -32,7 +32,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "root": "indents"
+                        "root": "data"
                     },
                     "designerId": "e22f5ecf-7ca3-4d43-9263-28f90c72e32c"
                 }
@@ -59,7 +59,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "deskname",
+                "name": "deskName",
                 "type": "string"
             },
             "designerId": "3bdc0626-3c41-4cdb-a55a-7055df22e4de"
@@ -98,7 +98,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "totalprice",
+                "name": "totalPrice",
                 "type": "float"
             },
             "designerId": "ff4eaa22-cd0c-407d-a7ea-74d823af3a0e"
@@ -150,7 +150,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "dailysequence",
+                "name": "dailySequence",
                 "type": "int"
             },
             "designerId": "cdd94318-6083-43e6-936f-6b68f228166a"

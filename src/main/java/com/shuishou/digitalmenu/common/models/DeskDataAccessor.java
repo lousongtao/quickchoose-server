@@ -12,7 +12,7 @@ public class DeskDataAccessor extends BaseDataAccessor implements IDeskDataAcces
 
 	@Override
 	public List queryDesks() {
-		return sessionFactory.getCurrentSession().createQuery("from Desk order by name").list();
+		return sessionFactory.getCurrentSession().createQuery("from Desk order by sequence").list();
 	}
 
 	@Override
@@ -37,4 +37,10 @@ public class DeskDataAccessor extends BaseDataAccessor implements IDeskDataAcces
 		return (Desk) sessionFactory.getCurrentSession().createQuery(hql).uniqueResult();
 	}
 
+	@Override
+	public Desk getDeskByName(String name) {
+		String hql = "from Desk where name = '"+ name+"'";
+		
+		return (Desk) sessionFactory.getCurrentSession().createQuery(hql).uniqueResult();
+	}
 }

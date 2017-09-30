@@ -1,6 +1,13 @@
 package com.shuishou.digitalmenu.common;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class ConstantValue {
+	public static final DateFormat DFYMDHMS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	public static final DateFormat DFHMS = new SimpleDateFormat("HH:mm:ss");
+	public static final DateFormat DFYMD = new SimpleDateFormat("yyyy/MM/dd");
+	
 	public static final String PERMISSION_QUERY_USER = "QUERY_USER";
 	public static final String PERMISSION_CREATE_USER = "CREATE_USER";
 	public static final String PERMISSION_EDIT_MENU = "EDIT_MENU";
@@ -10,6 +17,8 @@ public class ConstantValue {
 	public static final String PERMISSION_QUERY_DESK = "QUERY_DESK";
 	public static final String PERMISSION_EDIT_DESK = "EDIT_DESK";
 	public static final String PERMISSION_EDIT_PRINTER = "EDIT_PRINTER";
+	public static final String PERMISSION_EDIT_DISCOUNTTEMPLATE = "EDIT_DISCOUNTTEMPLATE";
+	public static final String PERMISSION_QUERY_SHIFTWORK = "QUERY_SHIFTWORK";
 	
 	public final static String SPLITTAG_PERMISSION = ";";
 	
@@ -17,15 +26,15 @@ public class ConstantValue {
 	public static final String TYPE_CATEGORY2INFO = "C2";
 	public static final String TYPE_DISHINFO = "DISH";
 	
-	public static final String CATEGORY_DISHIMAGE_ORIGINAL = "dishimage_original";
+	public static final String CATEGORY_DISHIMAGE_BIG = "dishimage_big";
 	public static final String CATEGORY_DISHIMAGE_MIDDLE = "dishimage_middle";
 	public static final String CATEGORY_DISHIMAGE_SMALL = "dishimage_small";
 	public static final String CATEGORY_PRINTTEMPLATE = "printtemplate";
 	
-	public static final int DISHIMAGE_WIDTH_SMALL = 50;
-	public static final int DISHIMAGE_HEIGHT_SMALL = 50;
-	public static final int DISHIMAGE_WIDTH_MIDDLE = 280;
-	public static final int DISHIMAGE_HEIGHT_MIDDLE = 300;
+	public static final int DISHIMAGE_WIDTH_SMALL = 120;
+	public static final int DISHIMAGE_HEIGHT_SMALL = 120;
+	public static final int DISHIMAGE_WIDTH_BIG = 240;
+	public static final int DISHIMAGE_HEIGHT_BIG = 240;
 	
 	public static final String CSS_MENUTREENODE_ICON_SIZE = "menutreenode-icon-size";
 	
@@ -33,6 +42,7 @@ public class ConstantValue {
 	public static final byte INDENT_STATUS_CLOSED = 2;
 	public static final byte INDENT_STATUS_PAID = 3;
 	public static final byte INDENT_STATUS_CANCELED = 4;
+	public static final byte INDENT_STATUS_FORCEEND = 5;//强制清台
 	
 	public static final byte INDENT_OPERATIONTYPE_ADD = 1;
 	public static final byte INDENT_OPERATIONTYPE_DELETE = 2;
@@ -55,6 +65,6 @@ public class ConstantValue {
 	public static final byte PRINT_TYPE_TOGETHER = 0;
 	public static final byte PRINT_TYPE_SEPARATELY = 1;
 	
-	public static final byte SHIFTWORK_ONWORK = 0;
-	public static final byte SHIFTWORK_OFFWORK = 1;
+//	public static final byte SHIFTWORK_ONWORK = 0;
+//	public static final byte SHIFTWORK_OFFWORK = 1;
 }

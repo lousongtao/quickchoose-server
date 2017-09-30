@@ -19,18 +19,29 @@ public class ShiftWork {
 	@Column(name="user_name", nullable=false)
 	private String userName;
 	
-	@Column
-	private Date time;
+	@Column(name="user_id", nullable = false)
+	private int userId;
 	
-	@Column
-	private byte status;
-
+	@Column(name="start_time", nullable = false)
+	private Date startTime;
+	
+	@Column(name="end_time")
+	private Date endTime;
+	
 	public int getId() {
 		return id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public String getUserName() {
@@ -41,25 +52,11 @@ public class ShiftWork {
 		this.userName = userName;
 	}
 
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
-	}
-
-	public byte getStatus() {
-		return status;
-	}
-
-	public void setStatus(byte status) {
-		this.status = status;
-	}
-
+	
 	@Override
 	public String toString() {
-		return "ShiftWork [id=" + id + ", userName=" + userName + ", time=" + time + ", status=" + status + "]";
+		return "ShiftWork [id=" + id + ", userName=" + userName + ", userId=" + userId + ", startTime=" + startTime
+				+ ", endTime=" + endTime + "]";
 	}
 
 	@Override
@@ -83,6 +80,24 @@ public class ShiftWork {
 			return false;
 		return true;
 	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	
 	
 	
 }

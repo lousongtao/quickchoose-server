@@ -875,6 +875,27 @@
                                                         "width": 400
                                                     },
                                                     "designerId": "ef65b89e-e3c9-4152-b918-e08e702ffa2f"
+                                                },
+                                                {
+                                                    "type": "Ext.form.field.Text",
+                                                    "reference": {
+                                                        "name": "items",
+                                                        "type": "array"
+                                                    },
+                                                    "codeClass": null,
+                                                    "userConfig": {
+                                                        "allowBlank": false,
+                                                        "allowOnlyWhitespace": false,
+                                                        "fieldLabel": "Abbreviation",
+                                                        "itemId": "tfAbbreviation",
+                                                        "labelWidth": 150,
+                                                        "maxLength": 32,
+                                                        "minLength": 2,
+                                                        "name": "abbreviation",
+                                                        "padding": 5,
+                                                        "width": 400
+                                                    },
+                                                    "designerId": "c812f8e4-6013-4793-b190-eb536280afb2"
                                                 }
                                             ]
                                         },
@@ -920,9 +941,9 @@
                                                     },
                                                     "codeClass": null,
                                                     "userConfig": {
-                                                        "height": 520,
+                                                        "height": 240,
                                                         "itemId": "image",
-                                                        "width": 710
+                                                        "width": 240
                                                     },
                                                     "designerId": "e762292e-480b-4e9f-872a-1b99eae339ed"
                                                 }

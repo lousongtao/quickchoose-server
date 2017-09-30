@@ -21,7 +21,7 @@ Ext.define('digitalmenu.view.DeskListContainer', {
         'Ext.grid.View',
         'Ext.grid.column.Action',
         'Ext.form.Panel',
-        'Ext.form.field.Text',
+        'Ext.form.field.Number',
         'Ext.button.Button'
     ],
 
@@ -64,6 +64,15 @@ Ext.define('digitalmenu.view.DeskListContainer', {
                             dataIndex: 'name',
                             menuDisabled: true,
                             text: 'Name'
+                        },
+                        {
+                            xtype: 'gridcolumn',
+                            draggable: false,
+                            width: 150,
+                            sortable: true,
+                            dataIndex: 'sequence',
+                            menuDisabled: true,
+                            text: 'Sequence'
                         },
                         {
                             xtype: 'actioncolumn',
@@ -130,7 +139,15 @@ Ext.define('digitalmenu.view.DeskListContainer', {
                             name: 'name'
                         },
                         {
+                            xtype: 'numberfield',
+                            anchor: '100%',
+                            itemId: 'tfSequence',
+                            fieldLabel: 'Sequence',
+                            name: 'sequence'
+                        },
+                        {
                             xtype: 'button',
+                            formBind: true,
                             itemId: 'btnAdd',
                             margin: 10,
                             width: 100,

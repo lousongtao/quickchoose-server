@@ -19,6 +19,9 @@ public class Desk {
 	@Column(name = "name", nullable = false)
 	private String name;
 	
+	@Column
+	private int sequence;
+	
 	@OneToOne
 	private Desk mergeTo;
 	
@@ -36,6 +39,14 @@ public class Desk {
 
 	public void setMergeTo(Desk mergeTo) {
 		this.mergeTo = mergeTo;
+	}
+
+	public int getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
 	}
 
 	public int getId() {

@@ -32,7 +32,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
-                        "root": "logs"
+                        "root": "data"
                     },
                     "designerId": "8f25958e-aa5d-43b6-90e2-971cc90f54c4"
                 }
@@ -50,19 +50,6 @@
                 "type": "int"
             },
             "designerId": "e78f4950-984f-428f-95ed-f1de4d3e8e4d"
-        },
-        {
-            "type": "Ext.data.Field",
-            "reference": {
-                "name": "fields",
-                "type": "array"
-            },
-            "codeClass": null,
-            "userConfig": {
-                "name": "type",
-                "type": "string"
-            },
-            "designerId": "3d13ee83-fa15-4587-87e7-3952b4f83342"
         },
         {
             "type": "Ext.data.Field",
@@ -98,7 +85,7 @@
             },
             "codeClass": null,
             "userConfig": {
-                "name": "username",
+                "name": "userName",
                 "type": "string"
             },
             "designerId": "b5d22680-6fc4-4e5d-88e3-24e12e84c5bc"

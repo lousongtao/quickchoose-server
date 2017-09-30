@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.views.GridResult;
 
 public class GetLogsResult extends GridResult {
@@ -16,7 +17,7 @@ public class GetLogsResult extends GridResult {
 	 * @author zhing the log information.
 	 */
 	public final static class LogInfo {
-		public final static DateFormat simpleDateFmt = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//		public final static DateFormat simpleDateFmt = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 		public final long id;
 		public final long userId;
@@ -30,7 +31,7 @@ public class GetLogsResult extends GridResult {
 			this.userId = userId;
 			this.username = username;
 			this.type = type;
-			this.time = simpleDateFmt.format(time);
+			this.time = ConstantValue.DFYMDHMS.format(time);
 			this.message = message;
 		}
 	}
@@ -38,7 +39,7 @@ public class GetLogsResult extends GridResult {
 	/**
 	 * the result.
 	 */
-	public final List<LogInfo> logs;
+	public final List<LogInfo> data;
 
 	/**
 	 * the total count.
@@ -55,7 +56,7 @@ public class GetLogsResult extends GridResult {
 	 */
 	public GetLogsResult(String result, boolean success, List<LogInfo> logs, int total) {
 		super(result, success);
-		this.logs = logs;
+		this.data = logs;
 		this.total = total;
 	}
 

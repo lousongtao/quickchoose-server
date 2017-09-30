@@ -24,6 +24,61 @@ Ext.define('digitalmenu.controller.QueryController', {
         {
             ref: 'mainView',
             selector: '#mainView'
+        },
+        {
+            ref: 'shiftWorkContainer',
+            selector: '#shiftWorkContainer'
         }
-    ]
+    ],
+
+    onPrintShiftWorkButtonClick: function(button, e, eOpts) {
+        var grid = this.getShiftWorkContainer().down('grid');
+        if (grid.getSelectionModel().getSelection() === 0)
+            return;
+        var record = grid.getSelectionModel().getSelection()[0];
+        var values = {
+            userId : Ext.util.Cookies.get("userId"),
+            shiftWorkId : record.get('id')
+        };
+
+        var me =this;
+
+        var successCallback = function(resp){
+                var result = Ext.decode(resp.responseText);
+
+                if(result.result ==='ok'){
+                    Ext.Msg.alert("SUCCESS","Send print command to printer successfully.");
+                } else if (result.result ==='invalid_session'){
+                    digitalmenu.getApplication().onSessionExpired();
+                } else {
+                    Ext.Msg.alert('Failed',"Failed to send print command.", resp.responseText);
+                }
+            };
+
+        Ext.Msg.confirm("Confirm", "You will print the shift work record for user "+ record.get('userName'),
+                        function(btnId){
+                            if (btnId === 'no'){
+                                return;
+                            }
+                            Ext.Ajax.request({
+                                url: "management/printshiftwork",
+                                params : values,
+                                success : successCallback,
+                                failure : function(resp){
+                                        Ext.Msg.alert('Failed',"Failed to send print command.", resp.responseText);
+                                }
+                            });
+                        });
+
+
+    },
+
+    init: function(application) {
+        this.control({
+            "#shiftWorkContainer #btnPrintShift": {
+                click: this.onPrintShiftWorkButtonClick
+            }
+        });
+    }
+
 });

@@ -103,7 +103,7 @@
                     "codeClass": null,
                     "userConfig": {
                         "designer|displayName": "reader",
-                        "root": "printers"
+                        "root": "data"
                     },
                     "designerId": "fc23d195-4b1a-4af7-b568-d7a568221b67"
                 }

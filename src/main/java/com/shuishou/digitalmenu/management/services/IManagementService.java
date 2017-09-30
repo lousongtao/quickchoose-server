@@ -5,6 +5,7 @@ import java.util.Date;
 import com.shuishou.digitalmenu.management.views.CurrentDutyResult;
 import com.shuishou.digitalmenu.management.views.ShiftWorkResult;
 import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.Result;
 
 public interface IManagementService {
 
@@ -12,7 +13,9 @@ public interface IManagementService {
 	
 	ShiftWorkResult getShiftWorkList(int userId, int start, int limit, String shiftName, Date startTime, Date endTime);
 	
-	GridResult startShiftWork(int userId);
+	CurrentDutyResult startShiftWork(int userId);
 	
-	GridResult endShiftWork(int userId);
+	CurrentDutyResult endShiftWork(int userId, Date startTime, boolean printShiftTicket);
+	
+	GridResult printShiftWork(int userId, int shiftWorkId);
 }

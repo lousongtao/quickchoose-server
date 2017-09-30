@@ -161,6 +161,62 @@
                 "selector": "#printerListContainer"
             },
             "designerId": "d7af81fc-5416-4d06-972d-1fe3bf40e82d"
+        },
+        {
+            "type": "controllerref",
+            "reference": {
+                "name": "items",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "ref": "discountTemplateContainer",
+                "selector": "#discountTempListContainer"
+            },
+            "designerId": "0e1b6c08-501e-4997-a8b2-93a25e6aa4da"
+        },
+        {
+            "type": "controlleraction",
+            "reference": {
+                "name": "listeners",
+                "type": "array"
+            },
+            "codeClass": null,
+            "userConfig": {
+                "designer|controlQuery": "#discountTempListContainer #btnAdd",
+                "designer|targetType": "Ext.button.Button",
+                "fn": "onAddDiscountTemplateButtonClick",
+                "implHandler": [
+                    "var grid = this.getDiscountTemplateContainer().down('grid');\r",
+                    "var values = {\r",
+                    "    userId : Ext.util.Cookies.get(\"userId\")\r",
+                    "};\r",
+                    "button.up('form').submit({\r",
+                    "    url: \"common/adddiscounttemplate\",\r",
+                    "    params : values,\r",
+                    "    success: function(form, action){\r",
+                    "        var result = action.result;\r",
+                    "\r",
+                    "        if(action.result.result =='ok'){\r",
+                    "            Ext.Msg.alert(\"SUCCESS\",\"Add discount template successfully.\");\r",
+                    "            grid.store.load();\r",
+                    "            button.up('form').down('#tfName').setValue('');\r",
+                    "            button.up('form').down('#nfRate').setValue(0);\r",
+                    "        } else if (action.result.result =='invalid_session'){\r",
+                    "            digitalmenu.getApplication().onSessionExpired();\r",
+                    "        } else {\r",
+                    "            Ext.Msg.alert('Failed',\"Failed to add discount template.\", action.result.result);\r",
+                    "        }\r",
+                    "    },\r",
+                    "    failure: function(form, action){\r",
+                    "        Ext.Msg.alert('Failed',\"Failed to add discount template.\", action.result.result);\r",
+                    "    }\r",
+                    "});"
+                ],
+                "name": "click",
+                "scope": "me"
+            },
+            "designerId": "62ac10c1-7d48-43ff-9fb9-0df781247f43"
         }
     ]
 }

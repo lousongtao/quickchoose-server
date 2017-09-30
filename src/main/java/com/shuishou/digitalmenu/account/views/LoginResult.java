@@ -15,6 +15,8 @@ public class LoginResult {
 	 * the user id.
 	 */
 	private final String userId;
+	
+	private final String userName;
 
 	/**
 	 * the session id.
@@ -31,10 +33,11 @@ public class LoginResult {
 	 * @param sessionId
 	 *            the session id.
 	 */
-	public LoginResult(String result, String userId, String sessionId) {
+	public LoginResult(String result, String userId, String userName, String sessionId) {
 		this.result = result;
 		this.userId = userId;
 		this.sessionId = sessionId;
+		this.userName = userName;
 	}
 
 	/**
@@ -58,4 +61,9 @@ public class LoginResult {
 		return sessionId;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	
 }

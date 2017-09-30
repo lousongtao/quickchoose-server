@@ -304,7 +304,7 @@ Ext.define('digitalmenu.view.IndentContainer', {
                                 {
                                     xtype: 'gridcolumn',
                                     width: 90,
-                                    dataIndex: 'deskname',
+                                    dataIndex: 'deskName',
                                     text: 'Table Name'
                                 },
                                 {
@@ -324,14 +324,14 @@ Ext.define('digitalmenu.view.IndentContainer', {
                                 {
                                     xtype: 'numbercolumn',
                                     width: 80,
-                                    dataIndex: 'dailysequence',
+                                    dataIndex: 'dailySequence',
                                     text: 'Sequence',
                                     format: '0'
                                 },
                                 {
                                     xtype: 'numbercolumn',
                                     width: 70,
-                                    dataIndex: 'totalprice',
+                                    dataIndex: 'totalPrice',
                                     text: 'Price'
                                 },
                                 {

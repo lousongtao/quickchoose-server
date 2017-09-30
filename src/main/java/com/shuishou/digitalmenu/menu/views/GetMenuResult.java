@@ -17,8 +17,6 @@ public class GetMenuResult extends GridResult {
 		public String chineseName;
 		public String englishName;
 		public int sequence;
-//		public String iconCls = ConstantValue.CSS_MENUTREENODE_ICON_SIZE;
-//		public String icon = "../" + ConstantValue.CATEGORY_DISHIMAGE_SMALL+"/catalog1.png";
 		public String level = ConstantValue.TYPE_CATEGORY1INFO;
 		public List<Category2Info> children;
 		public String displayText;//this is for display in tree of maintain tool
@@ -40,8 +38,6 @@ public class GetMenuResult extends GridResult {
 		public int sequence;
 		public String level = ConstantValue.TYPE_CATEGORY2INFO;
 		public List<DishInfo> children;
-//		public String iconCls = ConstantValue.CSS_MENUTREENODE_ICON_SIZE;
-//		public String icon = "../" + ConstantValue.CATEGORY_DISHIMAGE_SMALL+"/catalog2.png";
 		public boolean expanded = true;
 		public boolean loaded = false; // for extjs, For all non-leaf nodes that do not have children, the server response MUST set the loaded property to true.
 		public int parentID;
@@ -67,10 +63,9 @@ public class GetMenuResult extends GridResult {
 		public int objectid;
 		public String chineseName;
 		public String englishName;
+		public String abbreviation;
 		public int sequence;
 		public boolean leaf = true;
-//		public String iconCls = ConstantValue.CSS_MENUTREENODE_ICON_SIZE;
-//		public String icon;
 		public int parentID;
 		public double price;
 		public boolean isNew;
@@ -80,26 +75,13 @@ public class GetMenuResult extends GridResult {
 		public String pictureName;
 		public String displayText; //this is for display in tree of maintain tool
 		public String level = ConstantValue.TYPE_DISHINFO;
-//		public DishInfo(int id, String chineseName,String englishName,int sequence,double price, int parentID, boolean isNewProduct, boolean isSpecial, int hotLevel, String pictureName){
-//			this.objectid = id;
-//			this.chineseName = chineseName;
-//			this.englishName = englishName;
-//			this.sequence = sequence;
-//			this.parentID = parentID;
-//			this.price = price;
-//			this.isNewProduct = isNewProduct;
-//			this.isSpecial = isSpecial;
-//			this.pictureName = pictureName;
-//			this.hotLevel = hotLevel;
-//		}
+
 	}
 	
-	public List children;//这里必须定义成children, 否则前端读出来这部分不认做跟节点的children
+	public List children;//这里必须定义成children, 否则前端javascript读出来这部分不认做跟节点的children
 	public GetMenuResult(String result, boolean success, List infos) {
 		super(result, success);
 		this.children = infos;
 	}
-	
-//	public final class 
 
 }

@@ -85,11 +85,8 @@ public class AccountController {
 	 */
 	@RequestMapping(value = "/account/accounts", method = { RequestMethod.GET })
 	public @ResponseBody GetAccountsResult getAccountList(
-			@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId)
+			@RequestParam(value = "userId", required = true) long userId)
 			throws Exception {
-		if (!accountService.checkSession(userId, sessionId))
-			return new GetAccountsResult("invalid_session", false, null, 0);
 		
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_USER)){
 			return new GetAccountsResult("no_permission", false, null, 0);
@@ -116,12 +113,9 @@ public class AccountController {
 	 */
 	@RequestMapping(value = "/account/change_password", method = { RequestMethod.POST })
 	public @ResponseBody GridResult changePassword(@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId,
 			@RequestParam(value = "accountId", required = true) int accountId,
 			@RequestParam(value = "oldPassword", required = true) String oldPassword,
 			@RequestParam(value = "newPassword", required = true) String newPassword) throws Exception {
-		if (!accountService.checkSession(userId, sessionId))
-			return new GridResult("invalid_session", false);
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CREATE_USER)){
 			return new GridResult("no_permission", false);
 		}
@@ -148,13 +142,10 @@ public class AccountController {
 	 */
 	@RequestMapping(value = "/account/add", method = { RequestMethod.POST })
 	public @ResponseBody Result addAccount(@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId,
 			@RequestParam(value = "username", required = true, defaultValue = "") String username,
 			@RequestParam(value = "password", required = true, defaultValue = "") String password,
 			@RequestParam(value = "permission", required = true, defaultValue = "") String permission)
 			throws Exception {
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CREATE_USER)){
 			return new Result("no_permission");
 		}
@@ -182,13 +173,10 @@ public class AccountController {
 	 */
 	@RequestMapping(value = "/account/modify", method = { RequestMethod.POST })
 	public @ResponseBody Result modifyAccount(@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId,
 			@RequestParam(value = "id", required = true) long updateUserId,
 			@RequestParam(value = "username", required = true, defaultValue = "") String username,
 			@RequestParam(value = "permission", required = true, defaultValue = "") String permission)
 			throws Exception {
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CREATE_USER)){
 			return new Result("no_permission");
 		}
@@ -211,10 +199,7 @@ public class AccountController {
 	 */
 	@RequestMapping(value = "/account/remove", method = { RequestMethod.POST })
 	public @ResponseBody Result removeAccount(@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId,
 			@RequestParam(value = "id", required = true, defaultValue = "") String idStr) throws Exception {
-		if (!accountService.checkSession(userId, sessionId))
-			return new Result("invalid_session");
 		UserData user = accountService.getUserById(userId);
 		if (user.getId() == Long.parseLong(idStr))
 			return new Result("can_not_remove_self");

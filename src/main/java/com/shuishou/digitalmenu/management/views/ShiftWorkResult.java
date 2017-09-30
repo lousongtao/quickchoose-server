@@ -14,7 +14,7 @@ public class ShiftWorkResult extends GridResult {
 		public String endTime;
 	}
 	
-	public List<ShiftWork> shiftWorks;
+	public List<ShiftWork> data;
 	public ShiftWorkResult(String result, boolean success) {
 		super(result, success);
 	}

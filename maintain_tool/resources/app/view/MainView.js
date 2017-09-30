@@ -81,6 +81,11 @@ Ext.define('digitalmenu.view.MainView', {
                                                 itemId: 'menuitem_maintain_printer',
                                                 icon: 'images/icon_maintain_printer.png',
                                                 text: 'Maintain Printer'
+                                            },
+                                            {
+                                                xtype: 'menuitem',
+                                                itemId: 'menuitem_maintain_discounttemplate',
+                                                text: 'Maintain Discount Template'
                                             }
                                         ]
                                     }

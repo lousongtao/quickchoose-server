@@ -508,7 +508,7 @@
                             },
                             "codeClass": null,
                             "userConfig": {
-                                "dataIndex": "deskname",
+                                "dataIndex": "deskName",
                                 "designer|displayName": "Table Name",
                                 "text": "Table Name",
                                 "width": 90
@@ -559,7 +559,7 @@
                             },
                             "codeClass": null,
                             "userConfig": {
-                                "dataIndex": "dailysequence",
+                                "dataIndex": "dailySequence",
                                 "format": "0",
                                 "text": "Sequence",
                                 "width": 80
@@ -574,7 +574,7 @@
                             },
                             "codeClass": null,
                             "userConfig": {
-                                "dataIndex": "totalprice",
+                                "dataIndex": "totalPrice",
                                 "text": "Price",
                                 "width": 70
                             },

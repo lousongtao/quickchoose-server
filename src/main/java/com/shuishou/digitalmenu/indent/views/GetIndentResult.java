@@ -1,5 +1,6 @@
 package com.shuishou.digitalmenu.indent.views;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,22 +13,33 @@ public class GetIndentResult extends GridResult{
 
 	public static final class Indent{
 		public int id;
-		public String deskname;
+		public String deskName;
 		public String startTime;
 		public String endTime;
 		public byte status;
-		public int dailysequence;
-		public double totalprice;
+		public int dailySequence;
+		public double totalPrice;
 		public double paidPrice;
 		public byte payWay;
 		public int customerAmount;
+		public ArrayList<IndentDetail> items = new ArrayList<>();
 	}
 	
-	public List<Indent> indents;
+	public static final class IndentDetail{
+		public int id;
+		public int dishId;
+		public int amount;
+		public double dishPrice;//单个dish价格, 不考虑amount
+		public String dishChineseName;
+		public String dishEnglishName;
+		public String additionalRequirements;
+	}
+	
+	public ArrayList<Indent> data;
 	public final int total;
-	public GetIndentResult(String result, boolean success,List<Indent> indents, int total) {
+	public GetIndentResult(String result, boolean success,ArrayList<Indent> indents, int total) {
 		super(result, success);
-		this.indents = indents;
+		this.data = indents;
 		this.total = total;
 	}
 

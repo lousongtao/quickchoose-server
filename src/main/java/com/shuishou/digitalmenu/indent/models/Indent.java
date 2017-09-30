@@ -52,6 +52,9 @@ public class Indent {
 	@Column(name = "pay_way")
 	private byte payWay;//付款方式
 	
+	@Column(name = "member_card")
+	private String memberCard;
+	
 	@Column(nullable = false)
 	private byte status = ConstantValue.INDENT_STATUS_OPEN;
 
@@ -81,6 +84,14 @@ public class Indent {
 
 	public void setPayWay(byte payWay) {
 		this.payWay = payWay;
+	}
+
+	public String getMemberCard() {
+		return memberCard;
+	}
+
+	public void setMemberCard(String memberCard) {
+		this.memberCard = memberCard;
 	}
 
 	public Date getStartTime() {

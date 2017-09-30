@@ -81,6 +81,23 @@
                     "designerId": "2840159a-f6e5-4034-948b-a8269c752a77"
                 },
                 {
+                    "type": "Ext.grid.column.Column",
+                    "reference": {
+                        "name": "columns",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "dataIndex": "sequence",
+                        "draggable": false,
+                        "menuDisabled": true,
+                        "sortable": true,
+                        "text": "Sequence",
+                        "width": 150
+                    },
+                    "designerId": "4b55a92d-359f-4193-8e42-b9911fec9420"
+                },
+                {
                     "type": "Ext.grid.column.Action",
                     "reference": {
                         "name": "columns",
@@ -201,6 +218,21 @@
                     "designerId": "dde87b23-80c3-4bad-ae0c-7017ef961792"
                 },
                 {
+                    "type": "Ext.form.field.Number",
+                    "reference": {
+                        "name": "items",
+                        "type": "array"
+                    },
+                    "codeClass": null,
+                    "userConfig": {
+                        "fieldLabel": "Sequence",
+                        "itemId": "tfSequence",
+                        "layout|anchor": "100%",
+                        "name": "sequence"
+                    },
+                    "designerId": "c7306e68-acfb-4663-8ef6-938958e814b7"
+                },
+                {
                     "type": "Ext.button.Button",
                     "reference": {
                         "name": "items",
@@ -208,6 +240,7 @@
                     },
                     "codeClass": null,
                     "userConfig": {
+                        "formBind": true,
                         "itemId": "btnAdd",
                         "margin": 10,
                         "text": "Add",

@@ -140,6 +140,20 @@
                                                 "text": "Maintain Printer"
                                             },
                                             "designerId": "f1cf6478-b722-4c24-a53b-4ad991a824b5"
+                                        },
+                                        {
+                                            "type": "Ext.menu.Item",
+                                            "reference": {
+                                                "name": "items",
+                                                "type": "array"
+                                            },
+                                            "codeClass": null,
+                                            "userConfig": {
+                                                "icon": null,
+                                                "itemId": "menuitem_maintain_discounttemplate",
+                                                "text": "Maintain Discount Template"
+                                            },
+                                            "designerId": "4ff77cfa-feda-4afb-922f-866e40ccc099"
                                         }
                                     ]
                                 }

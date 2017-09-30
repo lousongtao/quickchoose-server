@@ -33,17 +33,13 @@ Ext.define('digitalmenu.store.ShiftWorkListStore', {
                 url: 'management/getshiftwork',
                 reader: {
                     type: 'json',
-                    root: 'logs'
+                    root: 'data'
                 }
             },
             fields: [
                 {
                     name: 'id',
                     type: 'int'
-                },
-                {
-                    name: 'type',
-                    type: 'string'
                 },
                 {
                     name: 'startTime',
@@ -54,7 +50,7 @@ Ext.define('digitalmenu.store.ShiftWorkListStore', {
                     type: 'date'
                 },
                 {
-                    name: 'username',
+                    name: 'userName',
                     type: 'string'
                 }
             ]

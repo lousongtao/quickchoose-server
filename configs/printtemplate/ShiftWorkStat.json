@@ -1,0 +1,211 @@
+{
+	"header": [
+	{
+		"text": "{$restaurant}",
+		"size": 10,
+		"bold": true,
+		"align": 1,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "               {$printType}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "开始时间：{$startTime}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "结束时间：{$endTime}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "时长：{$workHours}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": false,
+		"type": 0
+	},
+	{
+		"text": "人数：{$customerAmount}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "订单数：{$indnetAmount}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": false,
+		"type": 0
+	},
+	{
+		"text": "点菜数：{$dishAmount}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "金额：{$totalPrice}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": false,
+		"type": 0
+	},
+	{
+		"text": "实收金额：{$paidPrice}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "现金：{$cashMoney}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": false,
+		"type": 0
+	},
+	{
+		"text": "刷卡：{$bankcardMoney}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": false,
+		"type": 0
+	},
+	{
+		"text": "会员：{$memberMoney}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-----------明  细------------",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	}],
+	
+	"goods": [{
+		"name": "菜品",
+		"width": 15,
+		"variable": "name"
+	},
+	{
+		"name": "单价",
+		"width": 5,
+		"variable": "price"
+	},
+	{
+		"name": "数量",
+		"width": 6,
+		"variable": "amount"
+	},
+	{
+		"name": "金额",
+		"width": 5,
+		"variable": "totalPrice"
+	}],
+	
+
+	"msg": [{
+		"text": "--------------------------------",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "合计:                    ${$totalPrice}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "GST:                     ${$gst}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "打印时间: {$printTime}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	]
+}

@@ -136,4 +136,18 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 		return sessionFactory.getCurrentSession().createQuery(hql).list();
 	}
 
+	/**
+	 * query the indent records which are paid between the period
+	 * @param starttime cannot be null
+	 * @param endtime cannot be null
+	 */
+	@Override
+	public List<Indent> getIndentsByPaidTime(Date starttime, Date endtime) {
+		Criteria c = sessionFactory.getCurrentSession().createCriteria(Indent.class);
+		c.add(Restrictions.eq("status", ConstantValue.INDENT_STATUS_PAID));
+		c.add(Restrictions.ge("endTime", starttime));
+		c.add(Restrictions.le("endTime", endtime));
+		return (List<Indent>)c.list();
+	}
+
 }

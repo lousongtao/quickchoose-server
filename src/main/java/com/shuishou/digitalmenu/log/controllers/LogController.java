@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shuishou.digitalmenu.account.services.IAccountService;
+import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.log.views.GetLogTypesResult;
 import com.shuishou.digitalmenu.log.views.GetLogsResult;
@@ -40,8 +41,6 @@ public class LogController {
 	 * 
 	 * @param userId
 	 *            the user id.
-	 * @param sessionId
-	 *            the session id.
 	 * @param page
 	 *            the page number.
 	 * @param start
@@ -61,7 +60,6 @@ public class LogController {
 	 */
 	@RequestMapping(value = "/log/logs", method = { RequestMethod.GET })
 	public @ResponseBody GetLogsResult getLogList(@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId,
 			@RequestParam(value = "message", required = false, defaultValue = "") String message,
 			@RequestParam(value = "page", required = false, defaultValue = "0") String pageStr,
 			@RequestParam(value = "start", required = false, defaultValue = "0") String startStr,
@@ -70,21 +68,19 @@ public class LogController {
 			@RequestParam(value = "type", required = false, defaultValue = "") String type,
 			@RequestParam(value = "beginTime", required = false, defaultValue = "") String beginTimeStr,
 			@RequestParam(value = "endTime", required = false, defaultValue = "") String endTimeStr) throws Exception {
-		if (!accountService.checkSession(userId, sessionId))
-			return new GetLogsResult("invalid_session", false, null, 0);
 		int start = Integer.parseInt(startStr);
 		int limit = Integer.parseInt(limitStr);
 		Date beginTime = null;
 		Date endTime = null;
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");// low case of M
+//		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");// low case of M
 															// instance minute,
 															// for MONTH must
 															// use capital M
 		if (beginTimeStr != null && beginTimeStr.length() > 0) {
-			beginTime = df.parse(beginTimeStr);
+			beginTime = ConstantValue.DFYMD.parse(beginTimeStr);
 		}
 		if (endTimeStr != null && endTimeStr.length() > 0) {
-			endTime = df.parse(endTimeStr);
+			endTime = ConstantValue.DFYMD.parse(endTimeStr);
 		}
 		return logService.queryLog(start, limit, username, beginTime, endTime, type, message);
 	}
@@ -92,17 +88,12 @@ public class LogController {
 	/**
 	 * 
 	 * @param userId
-	 * @param sessionId
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/log/log_types", method = { RequestMethod.GET })
 	public @ResponseBody GetLogTypesResult getLogTypeList(
-			@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "sessionId", required = true) String sessionId) throws Exception {
-		if (!accountService.checkSession(userId, sessionId))
-			return new GetLogTypesResult("invalid_session", false);
-
+			@RequestParam(value = "userId", required = true) long userId) throws Exception {
 		return new GetLogTypesResult("ok", true);
 	}
 

@@ -6,7 +6,7 @@ import com.shuishou.digitalmenu.views.GridResult;
 
 public class GetPrinterResult extends GridResult{
 
-	public List<Printer> printers;
+	public List<Printer> data;
 	
 	public final static class Printer{
 		public int id;

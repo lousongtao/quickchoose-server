@@ -12,8 +12,10 @@ public interface IIndentService {
 	MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount);
 	GetIndentResult queryIndent(int start, int limit, String sstarttime, String sendtime, String status, String deskname, String orderby);
 	GetIndentDetailResult queryIndentDetail(int indentId);
-	OperateIndentResult operateIndent(int userId, int indentId, byte operationType, double paidPrice, byte payWay);
+	OperateIndentResult operateIndent(int userId, int indentId, byte operationType, double paidPrice, byte payWay, String memberCard);
 	OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType);
+	OperateIndentResult addDishToIndent(int deskId, JSONArray jsonOrder);
 	GridResult printIndent(int userId, int indentId);
 	GridResult printIndentDetail(int userId, int indentDetailId);
+	GridResult clearDesk(int userId, int deskId);
 }

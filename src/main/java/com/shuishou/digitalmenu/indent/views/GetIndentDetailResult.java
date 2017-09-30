@@ -15,10 +15,10 @@ public class GetIndentDetailResult extends GridResult{
 		public String additionalRequirements;
 	}
 	
-	public List<IndentDetail> details;
+	public List<IndentDetail> data;
 	public GetIndentDetailResult(String result, boolean success,List<IndentDetail> details) {
 		super(result, success);
-		this.details = details;
+		this.data = details;
 	}
 
 }

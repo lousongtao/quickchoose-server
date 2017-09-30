@@ -32,7 +32,7 @@ Ext.define('digitalmenu.store.IndentDetailStore', {
                 url: 'indent/queryindentdetail',
                 reader: {
                     type: 'json',
-                    root: 'details'
+                    root: 'data'
                 }
             },
             fields: [
