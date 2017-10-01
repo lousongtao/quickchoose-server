@@ -43,7 +43,9 @@
 	}],
 	"goods": [{
 		"name": "菜品",
-		"width": 15,
+		"width": 25,
+		"bold": true,
+		"size": 12,
 		"variable": "name"
 	},
 

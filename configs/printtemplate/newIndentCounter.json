@@ -88,7 +88,7 @@
 	},
 	{
 		"name": "单价",
-		"width": 5,
+		"width": 8,
 		"variable": "price"
 	},
 	{
@@ -113,22 +113,6 @@
 	},
 	{
 		"text": "合计:                    ${$totalPrice}",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "实付:                    ${$paidPrice}",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "GST:                     ${$gst}",
 		"size": 9,
 		"bold": false,
 		"align": 0,

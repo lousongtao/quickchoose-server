@@ -9,6 +9,30 @@
 		"type": 0
 	},
 	{
+		"text": "ABN：{$abn}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "ADDRESS: {$address}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "TEL：{$telephone}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
 		"text": "               {$printType}",
 		"size": 9,
 		"bold": false,
@@ -17,23 +41,7 @@
 		"type": 0
 	},
 	{
-		"text": "开始时间：{$startTime}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "结束时间：{$endTime}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "时长：{$workHours}   ",
+		"text": "订单编号：{$sequence}  ",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -45,19 +53,11 @@
 		"size": 9,
 		"bold": false,
 		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "订单数：{$indnetAmount}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
 		"line": false,
 		"type": 0
 	},
 	{
-		"text": "点菜数：{$dishAmount}   ",
+		"text": "桌号：{$tableNo}",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -65,15 +65,7 @@
 		"type": 0
 	},
 	{
-		"text": "金额：{$totalPrice}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": false,
-		"type": 0
-	},
-	{
-		"text": "实收金额：{$paidPrice}   ",
+		"text": "单据日期：{$dateTime}",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -81,31 +73,7 @@
 		"type": 0
 	},
 	{
-		"text": "现金：{$cashMoney}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": false,
-		"type": 0
-	},
-	{
-		"text": "刷卡：{$bankcardMoney}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": false,
-		"type": 0
-	},
-	{
-		"text": "会员：{$memberMoney}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "-----------明  细------------",
+		"text": "--------------------------------",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -152,6 +120,14 @@
 		"type": 0
 	},
 	{
+		"text": "实付:                    ${$paidPrice}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
 		"text": "GST:                     ${$gst}",
 		"size": 9,
 		"bold": false,
@@ -184,7 +160,7 @@
 		"type": 0
 	},
 	{
-		"text": "-",
+		"text": "{$slogan}",
 		"size": 9,
 		"bold": false,
 		"align": 0,

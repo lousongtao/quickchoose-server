@@ -89,6 +89,10 @@ public class IndentService implements IIndentService {
 		Desk desk = deskDA.getDeskById(deskid);
 		if (desk == null)
 			return new MakeOrderResult("cannot find table by id "+ deskid, false, -1);
+		//if this table is already merged to other table, which means this is a sub-desk, then do ADDDISH operation to main-desk
+		if (desk.getMergeTo() != null){
+			//TODO:
+		}
 		double totalprice = 0;
 		Indent indent = new Indent();
 		indent.setDeskName(desk.getName());
@@ -206,6 +210,7 @@ public class IndentService implements IIndentService {
 				for (int i = 0; i < d.getAmount(); i++) {//每个菜品单独打印一行, 重复的打印多行
 					mg.put("name", d.getDishChineseName());
 					mg.put("amount", "1");
+					mg.put("requirement", d.getAdditionalRequirements());
 					amountMsg++;
 					goods.add(mg);
 				}
@@ -423,8 +428,8 @@ public class IndentService implements IIndentService {
 		
 		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_PAY){
 			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-			printNewIndent2Counter(indent, tempfilePath + "/newIndentCounter.json", "结账单");
-			printNewIndent2Counter(indent, tempfilePath + "/newIndentCounter.json", "客用单");
+			printNewIndent2Counter(indent, tempfilePath + "/payorder_template.json", "结账单");
+			printNewIndent2Counter(indent, tempfilePath + "/payorder_template.json", "客用单");
 		}
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
@@ -446,6 +451,7 @@ public class IndentService implements IIndentService {
 	public OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType) {
 		String logtype = null;
 		Indent indent = null;
+		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
 		if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_ADD){
 			logtype = LogData.LogType.INDENTDETAIL_ADDDISH.toString();
 			Dish dish = dishDA.getDishById(dishId);
@@ -464,7 +470,8 @@ public class IndentService implements IIndentService {
 			indent.addItem(detail);
 			indent.setTotalPrice(indent.getTotalPrice() + amount * dish.getPrice());
 			indentDA.update(indent);
-			print(detail);
+			printNewIndent2Kitchen(indent, tempfilePath + "/cucaigoudan.json");
+			printNewIndent2Counter(indent, tempfilePath + "/newIndentCounter.json", "对账单");
 		} else if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_CHANGEAMOUNT){
 			logtype = LogData.LogType.INDENTDETAIL_CHANGEAMOUNT.toString();
 			IndentDetail detail = indentDetailDA.getIndentDetailById(indentDetailId);
@@ -479,7 +486,8 @@ public class IndentService implements IIndentService {
 			}
 			indent.setTotalPrice(totalprice);
 			indentDA.update(indent);
-			print(detail);
+			printNewIndent2Kitchen(indent, tempfilePath + "/cucaigoudan.json");
+			printNewIndent2Counter(indent, tempfilePath + "/newIndentCounter.json", "对账单");
 		} else if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_DELETE){
 			logtype = LogData.LogType.INDENTDETAIL_DELETE.toString();
 			IndentDetail detail = indentDetailDA.getIndentDetailById(indentDetailId);
