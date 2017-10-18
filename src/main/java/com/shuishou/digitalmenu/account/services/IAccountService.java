@@ -7,7 +7,7 @@ package com.shuishou.digitalmenu.account.services;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
 
@@ -43,13 +43,6 @@ public interface IAccountService {
    */
   LoginResult auth(String username, String password);
   
-  /**
-   * check the user session expired time
-   * @param userId
-   * @param sessionId
-   * @return
-   */
-  boolean checkSession(long userId, String sessionId);
 
   /**
    * query user record
@@ -76,7 +69,7 @@ public interface IAccountService {
    * @param newPasswordAgain  new password again
    * @return
    */
-  GridResult changePassword(long userId, int accountId, String oldPassword, String newPassword);
+  ObjectResult changePassword(long userId, int accountId, String oldPassword, String newPassword);
 
   /**
    * modify user record

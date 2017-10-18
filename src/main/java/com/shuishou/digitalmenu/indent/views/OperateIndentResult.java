@@ -3,9 +3,9 @@ package com.shuishou.digitalmenu.indent.views;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class OperateIndentResult extends GridResult {
+public class OperateIndentResult extends ObjectResult {
 	public static final class Indent{
 		public int id;
 		public String deskName;

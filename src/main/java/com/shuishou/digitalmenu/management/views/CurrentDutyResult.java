@@ -1,8 +1,8 @@
 package com.shuishou.digitalmenu.management.views;
 
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class CurrentDutyResult extends GridResult {
+public class CurrentDutyResult extends ObjectResult {
 
 	public CurrentDutyInfo data = new CurrentDutyInfo();
 	

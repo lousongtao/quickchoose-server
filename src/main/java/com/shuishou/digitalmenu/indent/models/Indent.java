@@ -114,6 +114,10 @@ public class Indent {
 		return paidPrice;
 	}
 
+	public String getFormatPaidPrice(){
+		return String.format("%.2f", paidPrice);
+	}
+	
 	public void setPaidPrice(double paidPrice) {
 		this.paidPrice = paidPrice;
 	}
@@ -136,6 +140,10 @@ public class Indent {
 		return totalPrice;
 	}
 
+	public String getFormatTotalPrice(){
+		return String.format("%.2f", totalPrice);
+	}
+	
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}

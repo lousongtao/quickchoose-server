@@ -6,9 +6,9 @@ package com.shuishou.digitalmenu.account.views;
 
 import java.util.List;
 
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetAccountsResult extends GridResult {
+public class GetAccountsResult extends ObjectResult {
 
 	public final static class AccountInfo {
 		public final String id;

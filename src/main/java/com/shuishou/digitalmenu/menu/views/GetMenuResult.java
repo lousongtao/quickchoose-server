@@ -3,9 +3,9 @@ package com.shuishou.digitalmenu.menu.views;
 import java.util.List;
 
 import com.shuishou.digitalmenu.common.ConstantValue;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetMenuResult extends GridResult {
+public class GetMenuResult extends ObjectResult {
 
 	
 	

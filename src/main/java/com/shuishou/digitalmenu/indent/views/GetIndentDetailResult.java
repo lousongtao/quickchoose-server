@@ -2,9 +2,9 @@ package com.shuishou.digitalmenu.indent.views;
 
 import java.util.List;
 
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetIndentDetailResult extends GridResult{
+public class GetIndentDetailResult extends ObjectResult{
 
 	public static final class IndentDetail{
 		public int id;

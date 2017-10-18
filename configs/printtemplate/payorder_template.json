@@ -1,7 +1,7 @@
 {
 	"header": [
 	{
-		"text": "{$restaurant}",
+		"text": "HAO SZECHUAN 好吃嘴 北桥总店",
 		"size": 10,
 		"bold": true,
 		"align": 1,
@@ -9,7 +9,7 @@
 		"type": 0
 	},
 	{
-		"text": "ABN：{$abn}",
+		"text": "ABN：86163933686",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -17,7 +17,7 @@
 		"type": 0
 	},
 	{
-		"text": "ADDRESS: {$address}",
+		"text": "ADDRESS: 74 FRANCIS ST, NORTHBIRDHE, 6003",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -25,7 +25,7 @@
 		"type": 0
 	},
 	{
-		"text": "TEL：{$telephone}",
+		"text": "TEL：(08)92280636",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -160,7 +160,7 @@
 		"type": 0
 	},
 	{
-		"text": "{$slogan}",
+		"text": "澳大利亚好吃嘴 欢迎您的光临",
 		"size": 9,
 		"bold": false,
 		"align": 0,

@@ -2,9 +2,9 @@ package com.shuishou.digitalmenu.account.views;
 
 import java.util.List;
 
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetPermissionResult extends GridResult{
+public class GetPermissionResult extends ObjectResult{
 
 	public final static class PermissionInfo{
 		public String id;

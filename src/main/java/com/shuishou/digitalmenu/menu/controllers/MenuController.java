@@ -1,8 +1,11 @@
 package com.shuishou.digitalmenu.menu.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.shuishou.digitalmenu.account.models.Permission;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
 import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.menu.models.Category1;
+import com.shuishou.digitalmenu.menu.models.DishChoosePopinfo;
+import com.shuishou.digitalmenu.menu.models.DishChooseSubitem;
 import com.shuishou.digitalmenu.menu.services.IMenuService;
 import com.shuishou.digitalmenu.menu.views.CheckMenuVersionResult;
 import com.shuishou.digitalmenu.menu.views.GetCategory1Result;
@@ -24,7 +32,8 @@ import com.shuishou.digitalmenu.menu.views.GetCategory2Result;
 import com.shuishou.digitalmenu.menu.views.GetDishResult;
 import com.shuishou.digitalmenu.menu.views.GetMenuResult;
 import com.shuishou.digitalmenu.menu.views.OperationResult;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectListResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 import com.shuishou.digitalmenu.views.SimpleValueResult;
 
@@ -124,12 +133,67 @@ public class MenuController {
 			@RequestParam(value = "hotLevel", required = true) int hotLevel,
 			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
 			@RequestParam(value = "dishPicture", required = false) MultipartFile image,
+			@RequestParam(value = "autoMerge", required = true) boolean autoMerge,
+			@RequestParam(value = "chooseAction", required = true) int chooseAction,
+			@RequestParam(value = "dishChoosePopinfo", required = false) String sDishChoosePopinfo,
+			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,
+			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
 			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
+		DishChoosePopinfo popinfo = null;
+		ArrayList<DishChooseSubitem> subitems= null;
+		if (sDishChoosePopinfo != null && sDishChoosePopinfo.length() > 0){
+			popinfo = new Gson().fromJson(sDishChoosePopinfo, DishChoosePopinfo.class);
+		}
+		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
+			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
+			
+		}
+		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, 
+				isSpecial, hotLevel, abbreviation, image, category2Id, chooseAction, 
+				popinfo, subitems, subitemAmount, autoMerge);
 		
-		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, abbreviation, image, category2Id);
+		return result;
+	}
+	
+	@RequestMapping(value="/menu/add_dish3", method = {RequestMethod.POST})
+	public @ResponseBody Result addDish3(
+			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value = "chineseName", required = true) String chineseName, 
+			@RequestParam(value = "englishName", required = true) String englishName, 
+			@RequestParam(value = "sequence", required = true) int sequence,
+			@RequestParam(value = "price", required = true) double price,
+			@RequestParam(value = "isNew", required = false, defaultValue = "false") boolean isNew,
+			@RequestParam(value = "isSpecial", required = false, defaultValue = "false") boolean isSpecial,
+			@RequestParam(value = "hotLevel", required = true) int hotLevel,
+			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
+			@RequestParam(value = "autoMerge", required = true) boolean autoMerge,
+			@RequestParam(value = "chooseMode", required = true) int chooseMode,
+			@RequestParam(value = "dishChoosePopinfo_cn", required = false) String sDishChoosePopinfo_cn,
+			@RequestParam(value = "dishChoosePopinfo_en", required = false) String sDishChoosePopinfo_en,
+			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
+			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
+			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		DishChoosePopinfo popinfo = null;
+		ArrayList<DishChooseSubitem> subitems= null;
+		if (sDishChoosePopinfo_cn != null && sDishChoosePopinfo_cn.length() > 0
+				&& sDishChoosePopinfo_en != null && sDishChoosePopinfo_en.length() > 0){
+			popinfo = new DishChoosePopinfo();
+			popinfo.setPopInfoCN(sDishChoosePopinfo_cn);
+			popinfo.setPopInfoEN(sDishChoosePopinfo_en);
+		}
+		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
+			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
+			
+		}
+		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, 
+				isSpecial, hotLevel, abbreviation, null, category2Id, chooseMode, popinfo, subitems, subitemAmount,
+				autoMerge);
 		
 		return result;
 	}
@@ -158,17 +222,37 @@ public class MenuController {
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence,
 			@RequestParam(value = "price", required = true) double price,
-			@RequestParam(value = "isNew", required = true) boolean isNew,
-			@RequestParam(value = "isSpecial", required = true) boolean isSpecial,
+			@RequestParam(value = "isNew", required = false, defaultValue = "false") boolean isNew,
+			@RequestParam(value = "isSpecial", required = false, defaultValue = "false") boolean isSpecial,
 			@RequestParam(value = "hotLevel", required = true) byte hotLevel,
-			@RequestParam(value = "pictureName", required = true) String pictureName,
+			@RequestParam(value = "pictureName", required = false, defaultValue = "") String pictureName,
 			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
+			@RequestParam(value = "autoMerge", required = true) boolean autoMerge,
+			@RequestParam(value = "chooseMode", required = true) int chooseMode,
+			@RequestParam(value = "dishChoosePopinfo_cn", required = false) String sDishChoosePopinfo_cn,
+			@RequestParam(value = "dishChoosePopinfo_en", required = false) String sDishChoosePopinfo_en,
+			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
+			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
 			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.updateDish(userId, id, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, abbreviation, category2Id);
+		DishChoosePopinfo popinfo = null;
+		ArrayList<DishChooseSubitem> subitems= null;
+		if (sDishChoosePopinfo_cn != null && sDishChoosePopinfo_cn.length() > 0
+				&& sDishChoosePopinfo_en != null && sDishChoosePopinfo_en.length() > 0){
+			popinfo = new DishChoosePopinfo();
+			popinfo.setPopInfoCN(sDishChoosePopinfo_cn);
+			popinfo.setPopInfoEN(sDishChoosePopinfo_en);
+		}
+		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
+			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
+			
+		}
+		
+		Result result = menuService.updateDish(userId, id, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, 
+				abbreviation, category2Id, chooseMode, popinfo, subitems, subitemAmount, autoMerge);
 		
 		return result;
 	}
@@ -325,4 +409,46 @@ public class MenuController {
 		}
 	}
 	
+	@RequestMapping(value = "/menu/delete_category1", method = (RequestMethod.POST))
+	public @ResponseBody Result deleteCategory1(
+			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.deleteCategory1(userId, id);
+	}
+	
+	@RequestMapping(value = "/menu/delete_category2", method = (RequestMethod.POST))
+	public @ResponseBody Result deleteCategory2(
+			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.deleteCategory2(userId, id);
+	}
+	
+	@RequestMapping(value = "/menu/delete_dish", method = (RequestMethod.POST))
+	public @ResponseBody Result deleteDish(
+			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.deleteDish(userId, id);
+	}
+	
+	@RequestMapping(value="/menu/queryflavor", method = {RequestMethod.GET})
+	public @ResponseBody Result queryFlavor() throws Exception{
+		ObjectListResult result = menuService.queryFlavor();
+		return result;
+	}
+	
+	@RequestMapping(value="/menu/querydishbyname", method = {RequestMethod.POST})
+	public @ResponseBody Result queryDishByName(
+			@RequestParam(value = "dishName", required = true) String dishName) throws Exception{
+		ObjectResult result = menuService.queryDishByName(dishName);
+		return result;
+	}
 }

@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.models.LogData.LogType;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetLogTypesResult extends GridResult {
+public class GetLogTypesResult extends ObjectResult {
 
 	public final static class LogTypeInfo {
 		public String type;

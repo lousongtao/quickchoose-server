@@ -3,9 +3,9 @@ package com.shuishou.digitalmenu.menu.views;
 import java.util.List;
 
 import com.shuishou.digitalmenu.common.ConstantValue;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetDishResult extends GridResult {
+public class GetDishResult extends ObjectResult {
 	public static class DishInfo{
 		public int id;
 		public String chineseName;

@@ -3,24 +3,17 @@ package com.shuishou.digitalmenu.menu.models;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table
-public class Category1 implements Serializable {
+public class Flavor implements Serializable{
 
 	@Id
 	@GeneratedValue
@@ -33,25 +26,6 @@ public class Category1 implements Serializable {
 	@Column(name = "english_name", nullable = false)
 	private String englishName;
 	
-	@Column
-	private int sequence;
-
-//	@JsonManagedReference
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="category1")
-	@OrderBy("sequence")
-//	@JoinColumn(name="category1_id")
-	private List<Category2> category2s;
-	
-	public Category1(){}
-	
-	public List<Category2> getCategory2s() {
-		return category2s;
-	}
-
-	public void setCategory2s(List<Category2> category2s) {
-		this.category2s = category2s;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -76,14 +50,6 @@ public class Category1 implements Serializable {
 		this.englishName = englishName;
 	}
 
-	public int getSequence() {
-		return sequence;
-	}
-
-	public void setSequence(int sequence) {
-		this.sequence = sequence;
-	}
-
 	@Override
 	public String toString() {
 		return "Category1 [chineseName=" + chineseName + ", englishName=" + englishName + "]";
@@ -105,7 +71,7 @@ public class Category1 implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Category1 other = (Category1) obj;
+		Flavor other = (Flavor) obj;
 		if (id != other.id)
 			return false;
 		return true;

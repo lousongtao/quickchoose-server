@@ -21,7 +21,7 @@ import com.shuishou.digitalmenu.indent.views.GetIndentDetailResult;
 import com.shuishou.digitalmenu.indent.views.GetIndentResult;
 import com.shuishou.digitalmenu.indent.views.MakeOrderResult;
 import com.shuishou.digitalmenu.indent.views.OperateIndentResult;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
 
 @Controller
@@ -55,7 +55,7 @@ public class IndentController {
 	}
 	
 	@RequestMapping(value="/indent/cleardesk", method = (RequestMethod.POST))
-	public @ResponseBody GridResult clearDesk(
+	public @ResponseBody ObjectResult clearDesk(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="deskId", required = true) int deskId) throws Exception{
 		
@@ -137,7 +137,7 @@ public class IndentController {
 	}
 	
 	@RequestMapping(value="/indent/adddishtoindent", method = (RequestMethod.POST))
-	public @ResponseBody OperateIndentResult addDishToIndent(
+	public @ResponseBody MakeOrderResult addDishToIndent(
 			@RequestParam(value="deskid", required = true) int deskId,
 			@RequestParam(value="indents", required = true) String indents) throws Exception{
 		JSONArray jsonOrder = new JSONArray(indents);
@@ -145,7 +145,7 @@ public class IndentController {
 	}
 	
 	@RequestMapping(value="/indent/printindent", method = (RequestMethod.POST))
-	public @ResponseBody GridResult printIndent(
+	public @ResponseBody ObjectResult printIndent(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="indentId", required = true) int indentId) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
@@ -155,12 +155,23 @@ public class IndentController {
 	}
 	
 	@RequestMapping(value="/indent/printindentdetail", method = (RequestMethod.POST))
-	public @ResponseBody GridResult printIndentDetail(
+	public @ResponseBody ObjectResult printIndentDetail(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="indentDetailId", required = true) int indentDetailId) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
 			return new OperateIndentResult("no_permission", false);
 		}
 		return indentService.printIndentDetail(userId, indentDetailId);
+	}
+	
+	@RequestMapping(value="/indent/changedesks", method = (RequestMethod.POST))
+	public @ResponseBody ObjectResult changeDesks(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="deskId1", required = true) int deskId1,
+			@RequestParam(value="deskId2", required = true) int deskId2) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
+			return new OperateIndentResult("no_permission", false);
+		}
+		return indentService.changeDesks(userId, deskId1, deskId2);
 	}
 }

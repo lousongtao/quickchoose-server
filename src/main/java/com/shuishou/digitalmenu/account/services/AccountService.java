@@ -20,11 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.shuishou.digitalmenu.account.models.IPermissionDataAccessor;
-import com.shuishou.digitalmenu.account.models.ISessionDataAccessor;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.IUserPermissionDataAccessor;
 import com.shuishou.digitalmenu.account.models.Permission;
-import com.shuishou.digitalmenu.account.models.SessionData;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.account.models.UserPermission;
 import com.shuishou.digitalmenu.account.views.GetAccountsResult;
@@ -32,7 +30,7 @@ import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Service("accountService")
@@ -64,11 +62,6 @@ public class AccountService implements IAccountService {
 	private IUserDataAccessor userDA;
 
 
-	/**
-	 * the session data accessor.
-	 */
-	@Autowired
-	private ISessionDataAccessor sessionDA;
 
 	/**
 	 * @param data
@@ -141,55 +134,26 @@ public class AccountService implements IAccountService {
 		// check username.
 		UserData user = userDA.getUserByUsername(username);
 		if (user == null)
-			return new LoginResult("invalid_user", "", "", "");
+			return new LoginResult("invalid_user", "", "");
 
 		// check password.
 		try {
 			String hashedPassword = toSHA1(password.getBytes());
 			if (!user.getHashedPassword().equals(hashedPassword))
-				return new LoginResult("invalid_password", "", "", "");
+				return new LoginResult("invalid_password", "", "");
 		} catch (NoSuchAlgorithmException ex) {
 			logger.error("check user password failed.", ex);
-			return new LoginResult("invalid_password", "", "","");
+			return new LoginResult("invalid_password", "", "");
 		}
 
-		// build session.
-		SessionData session = sessionDA.getSessionByUser(user.getId());
-		if (session != null) {
-			sessionDA.deleteSession(session);
-			sessionDA.getSession().flush();
-		}
-		session = new SessionData();
-		session.setUser(user);
-		session.getExpiredTime().setTime(System.currentTimeMillis() + SessionData.EXPIRED_TIME);
-		sessionDA.saveOrUpdateSession(session);
 
 		// write log.
 		logService.write(user, LogData.LogType.ACCOUNT_LOGIN.toString(),
-				"User " + user + " login, and get session id " + session.getId() + ".");
+				"User " + user + " login.");
 
-		return new LoginResult(Result.OK, Long.toString(user.getId()), user.getUsername(), session.getId().toString());
+		return new LoginResult(Result.OK, Long.toString(user.getId()), user.getUsername());
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public boolean checkSession(long userId, String sessionId) {
-//		long lUserId = Long.parseLong(userId);
-		UUID id = UUID.fromString(sessionId);
-		SessionData session = sessionDA.getSessionById(id);
-
-		// check session id.
-		if (session == null)
-			return false;
-		if (session.getUser() == null || session.getUser().getId() != userId)
-			return false;
-
-		// check expired.
-		if (session.getExpiredTime().getTime() <= System.currentTimeMillis())
-			return false;
-
-		return true;
-	}
 
 
 	@Override
@@ -221,10 +185,10 @@ public class AccountService implements IAccountService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public Result addAccount(long userId, String username, String password, String permission) {
+	public ObjectResult addAccount(long userId, String username, String password, String permission) {
 		UserData user = userDA.getUserByUsername(username);
 		if (user != null)
-			return new Result("account_existing");
+			return new ObjectResult("account_existing", false);
 
 		user = new UserData();
 		user.setUsername(username);
@@ -255,27 +219,27 @@ public class AccountService implements IAccountService {
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.ACCOUNT_ADD.toString(), "User " + selfUser + " add user " + user + " account.");
 
-		return new Result(Result.OK);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public GridResult changePassword(long userId, int accountId, String oldPassword, String newPassword) {
+	public ObjectResult changePassword(long userId, int accountId, String oldPassword, String newPassword) {
 		
 		// check user valid
 //		long lUserId = Long.parseLong(userId);
 		UserData user = userDA.getUserById(accountId);
 		if (user == null)
-			return new GridResult("cannot find user by id "+ accountId, false);
+			return new ObjectResult("cannot find user by id "+ accountId, false);
 
 		// check password.
 		try {
 			String hashedPassword = toSHA1(oldPassword.getBytes());
 			if (!user.getHashedPassword().equals(hashedPassword))
-				return new GridResult("old password is wrong", false);
+				return new ObjectResult("old password is wrong", false);
 		} catch (NoSuchAlgorithmException ex) {
 			logger.error("check user password failed.", ex);
-			return new GridResult("invalid_password", false);
+			return new ObjectResult("invalid_password", false);
 		}
 
 		// change password
@@ -284,7 +248,7 @@ public class AccountService implements IAccountService {
 			user.setHashedPassword(newHashedPassword);
 		} catch (NoSuchAlgorithmException ex) {
 			logger.error("set new password failed.", ex);
-			return new GridResult("invalid_password", false);
+			return new ObjectResult("invalid_password", false);
 		}
 
 		// save.
@@ -295,15 +259,15 @@ public class AccountService implements IAccountService {
 		logService.write(operator, LogData.LogType.ACCOUNT_MODIFY.toString(),
 				"User " + operator + " change " + user + "'s password.");
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public Result modifyAccount(long operateUserId, long userId, String username, String permission) {
+	public ObjectResult modifyAccount(long operateUserId, long userId, String username, String permission) {
 		UserData user = userDA.getUserById(userId);
 		if (user == null)
-			return new Result("not_found_account");
+			return new ObjectResult("not_found_account", false);
 
 		user.setUsername(username);
 		//remove old permissions and renew the new ones
@@ -326,15 +290,15 @@ public class AccountService implements IAccountService {
 		UserData selfUser = userDA.getUserById(operateUserId);
 		logService.write(selfUser, LogData.LogType.ACCOUNT_MODIFY.toString(), "User "+ selfUser + " modify user "+ user + " account information to (******).");
 
-		return new Result(Result.OK);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public Result removeAccount(long userId, long id) {
+	public ObjectResult removeAccount(long userId, long id) {
 		UserData user = userDA.getUserById(id);
 		if (user == null)
-			return new Result("not_found_account");
+			return new ObjectResult("not_found_account", false);
 		userPermissionDA.deleteByUserId(id);
 		userDA.deleteUser(user);
 
@@ -343,7 +307,7 @@ public class AccountService implements IAccountService {
 		logService.write(selfUser, LogData.LogType.ACCOUNT_DELETE.toString(),
 				"User " + selfUser + " remove user " + user + ".");
 
-		return new Result(Result.OK);
+		return new ObjectResult(Result.OK, true);
 	}
 
 }

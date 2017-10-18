@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.shuishou.digitalmenu.common.ConstantValue;
+
 @Entity
 @Table
 public class Printer {
@@ -23,6 +25,13 @@ public class Printer {
 	
 	@Column(name = "copy", nullable = false)
 	private int copy;
+	
+	/**
+	 * distinct printers as counter, kitchen
+	 * 
+	 */
+	@Column(name = "type")
+	private int type = ConstantValue.PRINTER_TYPE_COUNTER;
 	
 	@Column(name = "print_style", nullable = false)
 	private byte printStyle; //0: 连续打印, 1: 单菜打印
@@ -42,6 +51,14 @@ public class Printer {
 		this.id = id;
 	}
 
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 
 	public String getPrinterName() {
 		return printerName;

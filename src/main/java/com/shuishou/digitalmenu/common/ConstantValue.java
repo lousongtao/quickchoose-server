@@ -1,7 +1,10 @@
 package com.shuishou.digitalmenu.common;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Properties;
 
 public class ConstantValue {
 	public static final DateFormat DFYMDHMS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -26,6 +29,7 @@ public class ConstantValue {
 	public static final String TYPE_CATEGORY2INFO = "C2";
 	public static final String TYPE_DISHINFO = "DISH";
 	
+	public static final String CATEGORY_ERRORLOG = "errorlog";
 	public static final String CATEGORY_DISHIMAGE_BIG = "dishimage_big";
 	public static final String CATEGORY_DISHIMAGE_MIDDLE = "dishimage_middle";
 	public static final String CATEGORY_DISHIMAGE_SMALL = "dishimage_small";
@@ -54,7 +58,7 @@ public class ConstantValue {
 	public static final byte INDENT_PAYWAY_CARD = 2;//刷卡
 	public static final byte INDENT_PAYWAY_MEMBER = 3;//会员
 	
-	public static final byte INDENTDETAIL_OPERATIONTYPE_ADD = 1;
+//	public static final byte INDENTDETAIL_OPERATIONTYPE_ADD = 1;//deprecated
 	public static final byte INDENTDETAIL_OPERATIONTYPE_DELETE = 2;
 //	public static final byte INDENTDETAIL_OPERATIONTYPE_ADDAMOUNT = 3;//no use any more
 //	public static final byte INDENTDETAIL_OPERATIONTYPE_MINUSAMOUNT = 4;// no use any more
@@ -62,9 +66,16 @@ public class ConstantValue {
 	
 	public static final byte MENUCHANGE_TYPE_SOLDOUT = 0;
 	
-	public static final byte PRINT_TYPE_TOGETHER = 0;
-	public static final byte PRINT_TYPE_SEPARATELY = 1;
-	
+	public static final byte PRINT_STYLE_TOGETHER = 0;
+	public static final byte PRINT_STYLE_SEPARATELY = 1;
+	public static final byte PRINTER_TYPE_COUNTER = 1;
+	public static final byte PRINTER_TYPE_KITCHEN = 2;
 //	public static final byte SHIFTWORK_ONWORK = 0;
 //	public static final byte SHIFTWORK_OFFWORK = 1;
+	
+	public static final byte DISH_CHOOSEMODE_DEFAULT = 1;
+	public static final byte DISH_CHOOSEMODE_SUBITEM = 2;
+	public static final byte DISH_CHOOSEMODE_POPINFOCHOOSE = 3;
+	public static final byte DISH_CHOOSEMODE_POPINFOQUIT = 4;
+	
 }

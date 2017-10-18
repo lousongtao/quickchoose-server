@@ -6,7 +6,7 @@ import com.shuishou.digitalmenu.indent.views.GetIndentDetailResult;
 import com.shuishou.digitalmenu.indent.views.GetIndentResult;
 import com.shuishou.digitalmenu.indent.views.MakeOrderResult;
 import com.shuishou.digitalmenu.indent.views.OperateIndentResult;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
 public interface IIndentService {
 	MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount);
@@ -14,8 +14,9 @@ public interface IIndentService {
 	GetIndentDetailResult queryIndentDetail(int indentId);
 	OperateIndentResult operateIndent(int userId, int indentId, byte operationType, double paidPrice, byte payWay, String memberCard);
 	OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType);
-	OperateIndentResult addDishToIndent(int deskId, JSONArray jsonOrder);
-	GridResult printIndent(int userId, int indentId);
-	GridResult printIndentDetail(int userId, int indentDetailId);
-	GridResult clearDesk(int userId, int deskId);
+	MakeOrderResult addDishToIndent(int deskId, JSONArray jsonOrder);
+	ObjectResult printIndent(int userId, int indentId);
+	ObjectResult printIndentDetail(int userId, int indentDetailId);
+	ObjectResult clearDesk(int userId, int deskId);
+	ObjectResult changeDesks(int userId, int deskId1, int deskId2);
 }

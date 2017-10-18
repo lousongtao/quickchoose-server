@@ -9,9 +9,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.shuishou.digitalmenu.common.ConstantValue;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetLogsResult extends GridResult {
+public class GetLogsResult extends ObjectResult {
 
 	/**
 	 * @author zhing the log information.

@@ -1,10 +1,34 @@
 {
 	"header": [
 	{
-		"text": "{$restaurant}",
+		"text": "HAO SZECHUAN 好吃嘴 北桥总店",
 		"size": 10,
 		"bold": true,
 		"align": 1,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "ABN：86163933686",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "ADDRESS: 74 FRANCIS ST, NORTHBIRDHE, 6003",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "TEL：(08)92280636",
+		"size": 9,
+		"bold": false,
+		"align": 0,
 		"line": true,
 		"type": 0
 	},
@@ -17,31 +41,7 @@
 		"type": 0
 	},
 	{
-		"text": "操作员：{$userName}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "开始时间：{$startTime}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "结束时间：{$endTime}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "时长：{$workHours}   ",
+		"text": "订单编号：{$sequence}  ",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -53,19 +53,11 @@
 		"size": 9,
 		"bold": false,
 		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "订单数：{$indnetAmount}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
 		"line": false,
 		"type": 0
 	},
 	{
-		"text": "点菜数：{$dishAmount}   ",
+		"text": "桌号：{$tableNo}",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -73,15 +65,7 @@
 		"type": 0
 	},
 	{
-		"text": "金额：{$totalPrice}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": false,
-		"type": 0
-	},
-	{
-		"text": "实收金额：{$paidPrice}   ",
+		"text": "单据日期：{$dateTime}",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -89,31 +73,7 @@
 		"type": 0
 	},
 	{
-		"text": "现金：{$cashMoney}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": false,
-		"type": 0
-	},
-	{
-		"text": "刷卡：{$bankcardMoney}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": false,
-		"type": 0
-	},
-	{
-		"text": "会员：{$memberMoney}   ",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
-		"text": "-----------明  细------------",
+		"text": "--------------------------------",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -160,14 +120,6 @@
 		"type": 0
 	},
 	{
-		"text": "GST:                     ${$gst}",
-		"size": 9,
-		"bold": false,
-		"align": 0,
-		"line": true,
-		"type": 0
-	},
-	{
 		"text": "打印时间: {$printTime}",
 		"size": 9,
 		"bold": false,
@@ -192,7 +144,7 @@
 		"type": 0
 	},
 	{
-		"text": "-",
+		"text": "澳大利亚好吃嘴 欢迎您的光临",
 		"size": 9,
 		"bold": false,
 		"align": 0,

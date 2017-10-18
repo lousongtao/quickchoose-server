@@ -2,9 +2,9 @@ package com.shuishou.digitalmenu.common.views;
 
 import java.util.List;
 
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetDeskWithIndentResult extends GridResult{
+public class GetDeskWithIndentResult extends ObjectResult{
 
 	public List<DeskWithIndent> data;
 	
