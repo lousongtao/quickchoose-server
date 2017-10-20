@@ -36,8 +36,7 @@
         p:maxUploadSize="5242880"  
         p:uploadTempDir="fileUpload"  >  
   </beans:bean>
-  
-  
+
   
   <!-- Enables the Spring MVC @Controller programming model -->
   <annotation-driven />

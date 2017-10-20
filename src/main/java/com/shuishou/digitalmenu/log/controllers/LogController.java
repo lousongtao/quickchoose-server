@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.log.services.ILogService;
@@ -22,7 +23,7 @@ import com.shuishou.digitalmenu.log.views.GetLogTypesResult;
 import com.shuishou.digitalmenu.log.views.GetLogsResult;
 
 @Controller
-public class LogController {
+public class LogController extends BaseController {
 
 	/**
 	 * the log service.
