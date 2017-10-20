@@ -222,12 +222,22 @@ public class IndentService implements IIndentService {
 			List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 			for(IndentDetail d : mapPrintDish.get(p)){
 				Map<String, String> mg = new HashMap<String, String>();
-				for (int i = 0; i < d.getAmount(); i++) {//每个菜品单独打印一行, 重复的打印多行
+				Dish dish = dishDA.getDishById(d.getDishId());
+				if (dish.getChooseMode() == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE
+						|| dish.getChooseMode() == ConstantValue.DISH_CHOOSEMODE_POPINFOQUIT){
 					mg.put("name", d.getDishChineseName());
-					mg.put("amount", "1");
+					mg.put("amount", d.getAmount()+"");
 					mg.put("requirement", d.getAdditionalRequirements());
 					amount++;
 					goods.add(mg);
+				} else {
+					for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
+						mg.put("name", d.getDishChineseName());
+						mg.put("amount", "1");
+						mg.put("requirement", d.getAdditionalRequirements());
+						amount++;
+						goods.add(mg);
+					}
 				}
 			}
 			keyMap.put("amountOnThisTicket", amount + "");
@@ -321,13 +331,24 @@ public class IndentService implements IIndentService {
 			List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 			for (IndentDetail d : mapPrintDish.get(p)) {
 				Map<String, String> mg = new HashMap<String, String>();
-				for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行, 重复的打印多行
+				Dish dish = dishDA.getDishById(d.getDishId());
+				if (dish.getChooseMode() == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE
+						|| dish.getChooseMode() == ConstantValue.DISH_CHOOSEMODE_POPINFOQUIT){
 					mg.put("name", d.getDishChineseName());
-					mg.put("amount", "1");
+					mg.put("amount", d.getAmount()+"");
 					mg.put("requirement", d.getAdditionalRequirements());
 					amount++;
 					goods.add(mg);
+				} else {
+					for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
+						mg.put("name", d.getDishChineseName());
+						mg.put("amount", "1");
+						mg.put("requirement", d.getAdditionalRequirements());
+						amount++;
+						goods.add(mg);
+					}
 				}
+				
 			}
 			keyMap.put("amountOnThisTicket", amount + "");
 			Map<String, Object> params = new HashMap<String, Object>();
