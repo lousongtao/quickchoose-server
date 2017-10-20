@@ -395,7 +395,6 @@ public class CommonService implements ICommonService {
 		try {
 			logfile.transferTo(f);
 		} catch (IllegalStateException | IOException e) {
-			// TODO Auto-generated catch block
 			return new ObjectResult(Result.FAIL, false);
 		}
 		return new ObjectResult(Result.OK, true);

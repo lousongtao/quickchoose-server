@@ -66,7 +66,7 @@ public class IndentController {
 	public @ResponseBody GetIndentResult queryIndent(
 			@RequestParam(value = "page", required = false, defaultValue = "0") String pageStr,
 			@RequestParam(value = "start", required = false, defaultValue = "0") String startStr,
-			@RequestParam(value = "limit", required = false, defaultValue = "10") String limitStr,
+			@RequestParam(value = "limit", required = false, defaultValue = "100") String limitStr,
 			@RequestParam(value="starttime", required = false) String starttime,
 			@RequestParam(value="endtime", required = false) String endtime,
 			@RequestParam(value="status", required = false) String status,
