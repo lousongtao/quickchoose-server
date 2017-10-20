@@ -1,18 +1,26 @@
 package com.shuishou.digitalmenu.menu.models;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table
-public class Category1 {
+public class Category1 implements Serializable {
 
 	@Id
 	@GeneratedValue
@@ -28,10 +36,13 @@ public class Category1 {
 	@Column
 	private int sequence;
 
-	@OneToMany
-	@JoinColumn(name="category1_id")
+//	@JsonManagedReference
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="category1")
+	@OrderBy("sequence")
+//	@JoinColumn(name="category1_id")
 	private List<Category2> category2s;
 	
+	public Category1(){}
 	
 	public List<Category2> getCategory2s() {
 		return category2s;

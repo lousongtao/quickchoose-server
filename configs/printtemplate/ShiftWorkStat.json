@@ -17,6 +17,14 @@
 		"type": 0
 	},
 	{
+		"text": "操作员：{$userName}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
 		"text": "开始时间：{$startTime}   ",
 		"size": 9,
 		"bold": false,

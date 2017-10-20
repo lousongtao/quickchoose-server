@@ -1,8 +1,8 @@
 package com.shuishou.digitalmenu.indent.views;
 
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class MakeOrderResult extends GridResult {
+public class MakeOrderResult extends ObjectResult {
 
 	public int data;
 	public MakeOrderResult(String result, boolean success, int sequence) {

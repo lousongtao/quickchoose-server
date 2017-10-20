@@ -18,10 +18,6 @@ public class LoginResult {
 	
 	private final String userName;
 
-	/**
-	 * the session id.
-	 */
-	private final String sessionId;
 
 	/**
 	 * constructor.
@@ -33,10 +29,9 @@ public class LoginResult {
 	 * @param sessionId
 	 *            the session id.
 	 */
-	public LoginResult(String result, String userId, String userName, String sessionId) {
+	public LoginResult(String result, String userId, String userName) {
 		this.result = result;
 		this.userId = userId;
-		this.sessionId = sessionId;
 		this.userName = userName;
 	}
 
@@ -54,12 +49,6 @@ public class LoginResult {
 		return userId;
 	}
 
-	/**
-	 * @return the sessionId
-	 */
-	public String getSessionId() {
-		return sessionId;
-	}
 
 	public String getUserName() {
 		return userName;

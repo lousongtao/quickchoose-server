@@ -1,5 +1,8 @@
 package com.shuishou.digitalmenu.common.services;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -8,10 +11,15 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.UserData;
@@ -35,11 +43,13 @@ import com.shuishou.digitalmenu.indent.models.Indent;
 import com.shuishou.digitalmenu.indent.models.IndentDetail;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Service
 public class CommonService implements ICommonService {
+	private Logger logger = Logger.getLogger(CommonService.class);
+	
 	@Autowired
 	private IConfirmCodeDataAccessor confirmCodeDA;
 	
@@ -61,6 +71,10 @@ public class CommonService implements ICommonService {
 	@Autowired
 	private IIndentDataAccessor indentDA;
 	
+	@Autowired
+	private HttpServletRequest request;
+	
+	
 	@Override
 	@Transactional
 	public CheckConfirmCodeResult checkConfirmCode(String code) {
@@ -80,7 +94,7 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public GridResult saveConfirmCode(long userId, String code) {
+	public ObjectResult saveConfirmCode(long userId, String code) {
 		ConfirmCode cc = new ConfirmCode();
 		cc.setCode(code);
 		confirmCodeDA.deleteCode();
@@ -90,7 +104,7 @@ public class CommonService implements ICommonService {
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_CONFIRMCODE.toString(), "User "+ selfUser + " change confirm code " + code);
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
@@ -113,48 +127,48 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public GridResult saveDesk(long userId, String deskname, int sequence) {
+	public ObjectResult saveDesk(long userId, String deskname, int sequence) {
 		Desk desk = new Desk();
 		desk.setName(deskname);
 		desk.setSequence(sequence);
 		deskDA.insertDesk(desk);
-		
+		int i = 1/0;
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_DESK.toString(), "User "+ selfUser + " add desk "+ deskname);
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
 	@Transactional
-	public GridResult updateDesk(long userId, int id, String name) {
+	public ObjectResult updateDesk(long userId, int id, String name) {
 		Desk desk = deskDA.getDeskById(id);
 		String oldname = desk.getName();
 		if (desk == null)
-			return new GridResult("No desk, id = "+ id, false);
+			return new ObjectResult("No desk, id = "+ id, false);
 		desk.setName(name);
 		deskDA.updateDesk(desk);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_DESK.toString(), "User "+ selfUser + " update desk name from "+ oldname + " to "+ name);
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
 	@Transactional
-	public GridResult deleteDesk(long userId, int id) {
+	public ObjectResult deleteDesk(long userId, int id) {
 		Desk desk = deskDA.getDeskById(id);
 		if (desk == null)
-			return new GridResult("No desk found, id = "+ id, false);
+			return new ObjectResult("No desk found, id = "+ id, false);
 		deskDA.deleteDesk(desk);
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_DESK.toString(), "User "+ selfUser + " delete desk " + desk.getName());
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
@@ -177,7 +191,7 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public GridResult savePrinter(long userId, String name, String printerName, int copy, byte printStyle) {
+	public ObjectResult savePrinter(long userId, String name, String printerName, int copy, byte printStyle) {
 		Printer p = new Printer();
 		p.setName(name);
 		p.setPrinterName(printerName);
@@ -189,22 +203,22 @@ public class CommonService implements ICommonService {
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " add printer "+ printerName);
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
 	@Transactional
-	public GridResult deletePrinter(long userId, int id) {
+	public ObjectResult deletePrinter(long userId, int id) {
 		Printer p = printerDA.getPrinterById(id);
 		if (p == null)
-			return new GridResult("No printer found, id = "+ id, false);
+			return new ObjectResult("No printer found, id = "+ id, false);
 		printerDA.deletePrinter(p);
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " delete printer " + p.getName());
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -341,7 +355,7 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public GridResult saveDiscountTemplate(long userId, String name, double rate) {
+	public ObjectResult saveDiscountTemplate(long userId, String name, double rate) {
 		DiscountTemplate t = new DiscountTemplate();
 		t.setName(name);
 		t.setRate(rate);
@@ -352,22 +366,38 @@ public class CommonService implements ICommonService {
 		logService.write(selfUser, LogData.LogType.CHANGE_DISCOUNTTEMPLATE.toString(), 
 				"User "+ selfUser + " add discount template "+ name);
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
 	@Transactional
-	public GridResult deleteDiscountTemplate(long userId, int id) {
+	public ObjectResult deleteDiscountTemplate(long userId, int id) {
 		DiscountTemplate t = discountTemplateDA.getDiscountTemplateById(id);
 		if (t == null)
-			return new GridResult("No Discount Template found, id = "+ id, false);
+			return new ObjectResult("No Discount Template found, id = "+ id, false);
 		discountTemplateDA.deleteDiscountTemplate(t);
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_DISCOUNTTEMPLATE.toString(), "User "+ selfUser + " delete discount template " + t.getName());
 
-		return new GridResult(Result.OK, true);
+		return new ObjectResult(Result.OK, true);
+	}
+
+	@Override
+	public ObjectResult uploadErrorLog(String machineCode, MultipartFile logfile) {
+		String fileName = logfile.getOriginalFilename();
+		String pathName = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_ERRORLOG;
+		File path = new File(pathName);
+		if (!path.exists())
+			path.mkdirs();
+		File f = new File(pathName + "/" + fileName);
+		try {
+			logfile.transferTo(f);
+		} catch (IllegalStateException | IOException e) {
+			return new ObjectResult(Result.FAIL, false);
+		}
+		return new ObjectResult(Result.OK, true);
 	}
 
 }

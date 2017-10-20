@@ -22,7 +22,7 @@ import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.GetPermissionResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.common.ConstantValue;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Controller
@@ -112,12 +112,12 @@ public class AccountController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/change_password", method = { RequestMethod.POST })
-	public @ResponseBody GridResult changePassword(@RequestParam(value = "userId", required = true) long userId,
+	public @ResponseBody ObjectResult changePassword(@RequestParam(value = "userId", required = true) long userId,
 			@RequestParam(value = "accountId", required = true) int accountId,
 			@RequestParam(value = "oldPassword", required = true) String oldPassword,
 			@RequestParam(value = "newPassword", required = true) String newPassword) throws Exception {
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CREATE_USER)){
-			return new GridResult("no_permission", false);
+			return new ObjectResult("no_permission", false);
 		}
 		return accountService.changePassword(userId, accountId, oldPassword, newPassword);
 	}

@@ -7,9 +7,9 @@ import java.util.List;
 import javax.persistence.Column;
 
 import com.shuishou.digitalmenu.common.models.Desk;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 
-public class GetIndentResult extends GridResult{
+public class GetIndentResult extends ObjectResult{
 
 	public static final class Indent{
 		public int id;

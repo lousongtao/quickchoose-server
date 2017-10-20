@@ -1,18 +1,30 @@
 package com.shuishou.digitalmenu.menu.models;
 
+import java.io.Serializable;
 import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.shuishou.digitalmenu.common.ConstantValue;
 
 @Entity
 @Table
-public class Dish {
+public class Dish implements Serializable{
 
 	@Id
 	@GeneratedValue
@@ -28,6 +40,8 @@ public class Dish {
 	@Column(nullable = false)
 	private int sequence;
 	
+//	@JsonBackReference
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "category2_id")
 	private Category2 category2;
@@ -54,7 +68,85 @@ public class Dish {
 	@Column
 	private String abbreviation;
 	
+	/**
+	 * 点菜时动作     1.	默认值, 直接点菜     2.	强制选择特定子类         3.	提示信息后点菜       4.	提示信息后不点菜, 即只提示信息
+	 */
+	@Column(name="choose_mode", nullable = false)
+	private int chooseMode = ConstantValue.DISH_CHOOSEMODE_DEFAULT;
 	
+	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="dish", orphanRemoval = true)
+	private DishChoosePopinfo choosePopInfo;
+	
+	/**
+	 * initial this property as a null list;
+	 * if I need to add/remove or delete all elements from the list, remember not to replace this list as a new list,
+	 * if do so, hibernate will error, 
+	 */
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="dish", orphanRemoval= true)
+	private List<DishChooseSubitem> chooseSubItems = new ArrayList<>();
+
+	@Column(name = "subitem_amount")
+	private int subitemAmount = 0;
+	
+	//set whether merge to one record while customer choose this dish more than one time
+	@Column(name="automerge_whilechoose")
+	private boolean autoMergeWhileChoose = true;
+	
+	
+	
+	public boolean isAutoMergeWhileChoose() {
+		return autoMergeWhileChoose;
+	}
+
+	public void setAutoMergeWhileChoose(boolean autoMergeWhileChoose) {
+		this.autoMergeWhileChoose = autoMergeWhileChoose;
+	}
+
+	public int getSubitemAmount() {
+		return subitemAmount;
+	}
+
+	public void setSubitemAmount(int subitemAmount) {
+		this.subitemAmount = subitemAmount;
+	}
+
+	public DishChoosePopinfo getChoosePopInfo() {
+		return choosePopInfo;
+	}
+
+	public void setChoosePopInfo(DishChoosePopinfo choosePopInfo) {
+		this.choosePopInfo = choosePopInfo;
+	}
+
+	public List<DishChooseSubitem> getChooseSubItems() {
+		return chooseSubItems;
+	}
+
+	public void setChooseSubItems(List<DishChooseSubitem> chooseSubItems) {
+		this.chooseSubItems.clear();
+		if (chooseSubItems != null)
+			this.chooseSubItems.addAll(chooseSubItems);;
+	}
+	
+	public void addChooseSubItems(DishChooseSubitem chooseSubItem) {
+		this.chooseSubItems.add(chooseSubItem);
+	}
+	
+	public void removeAllChooseSubItems(){
+			chooseSubItems.clear();
+	}
+	
+	public void removeChooseSubItem(DishChooseSubitem chooseSubItem){
+			chooseSubItems.remove(chooseSubItem);
+	}
+
+	public int getChooseMode() {
+		return chooseMode;
+	}
+
+	public void setChooseMode(int chooseMode) {
+		this.chooseMode = chooseMode;
+	}
 
 	public String getAbbreviation() {
 		return abbreviation;

@@ -64,7 +64,7 @@
 		"type": 0
 	},
 	{
-		"text": "{$amountMsg}",
+		"text": "此单据包含菜品: {$amountOnThisTicket}",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -80,7 +80,7 @@
 		"type": 0
 	},
 	{
-		"text": "{$totalAmountMsg}",
+		"text": "此桌台菜品总数: {$amountOnThisTable}",
 		"size": 9,
 		"bold": false,
 		"align": 0,

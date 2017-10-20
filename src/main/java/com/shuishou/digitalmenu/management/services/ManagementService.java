@@ -30,7 +30,7 @@ import com.shuishou.digitalmenu.management.views.CurrentDutyResult;
 import com.shuishou.digitalmenu.management.views.ShiftWorkResult;
 import com.shuishou.digitalmenu.printertool.PrintJob;
 import com.shuishou.digitalmenu.printertool.PrintQueue;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Service
@@ -101,11 +101,15 @@ public class ManagementService implements IManagementService{
 
 	@Override
 	@Transactional
-	public CurrentDutyResult startShiftWork(int userId) {
+	public CurrentDutyResult startShiftWork(int userId, boolean printLastDutyTicket) {
 		UserData user = userDA.getUserById(userId);
 		if (user == null){
 			return new CurrentDutyResult(Result.FAIL, false);
 		}
+		//firstly, load last duty record
+		ShiftWork lastSW = shiftWorkDA.getLastShiftWork();
+		if (lastSW.getEndTime() == null)
+			lastSW.setEndTime(new Date());
 		ShiftWork sw = new ShiftWork();
 		sw.setUserName(user.getUsername());
 		sw.setUserId(userId);
@@ -117,12 +121,17 @@ public class ManagementService implements IManagementService{
 		result.data.currentDutyId = (int)user.getId();
 		result.data.currentDutyName = user.getUsername();
 		result.data.startTime = ConstantValue.DFYMDHMS.format(sw.getStartTime());
+		if (printLastDutyTicket){
+			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+			printShiftTicket(tempfilePath + "/ShiftWorkStat.json", lastSW.getStartTime(), lastSW.getEndTime(), lastSW.getUserName());
+		}
+			
 		return result;
 	}
 
 	@Override
 	@Transactional
-	public CurrentDutyResult endShiftWork(int userId, Date startTime, boolean printShiftTicket) {
+	public CurrentDutyResult endShiftWork(int userId, boolean printShiftTicket) {
 		UserData user = userDA.getUserById(userId);
 		if (user == null){
 			return new CurrentDutyResult("cannot find user by id "+ userId, false);
@@ -137,14 +146,14 @@ public class ManagementService implements IManagementService{
 				"User " + user.getUsername() + " end work.");
 		if (printShiftTicket){
 			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-			printShiftTicket(tempfilePath + "/ShiftWorkStat.json", startTime, sw.getEndTime());
+			printShiftTicket(tempfilePath + "/ShiftWorkStat.json", sw.getStartTime(), sw.getEndTime(), user.getUsername());
 		}
 		
 		return new CurrentDutyResult(Result.OK, true);
 	}
 	
 	@Transactional
-	private void printShiftTicket(String tempfile, Date startTime, Date endTime){
+	private void printShiftTicket(String tempfile, Date startTime, Date endTime, String userName){
 		List<Printer> printers = printerDA.queryPrinters();
 		if (printers == null || printers.isEmpty())
 			return;
@@ -168,7 +177,7 @@ public class ManagementService implements IManagementService{
 			for(Indent indent : paidIndents){
 				customerAmount += indent.getCustomerAmount();
 				indnetAmount++;
-				totalPrice += indent.getPaidPrice();
+				totalPrice += indent.getTotalPrice();
 				paidPrice += indent.getPaidPrice();
 				if (indent.getPayWay() == ConstantValue.INDENT_PAYWAY_CASH){
 					cashMoney += indent.getPaidPrice();
@@ -198,6 +207,7 @@ public class ManagementService implements IManagementService{
 		Map<String,String> keys = new HashMap<String, String>();
 		keys.put("restaurant", "HAO SZECHUAN 好吃嘴 北桥总店");
 		keys.put("printType", "交班单");
+		keys.put("userName", userName);
 		keys.put("startTime", ConstantValue.DFYMDHMS.format(startTime));
 		keys.put("endTime", ConstantValue.DFYMDHMS.format(endTime));
 		keys.put("workHours", workPeriod);
@@ -230,17 +240,17 @@ public class ManagementService implements IManagementService{
 
 	@Override
 	@Transactional
-	public GridResult printShiftWork(int userId, int shiftWorkId) {
+	public ObjectResult printShiftWork(int userId, int shiftWorkId) {
 		UserData user = userDA.getUserById(userId);
 		if (user == null){
 			return new CurrentDutyResult("cannot find user by id "+ userId, false);
 		}
 		ShiftWork sw = shiftWorkDA.getShiftWorkById(shiftWorkId);
 		if (sw == null){
-			return new GridResult("cannot find shift work record by id "+ shiftWorkId, false);
+			return new ObjectResult("cannot find shift work record by id "+ shiftWorkId, false);
 		}
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-		printShiftTicket(tempfilePath + "/ShiftWorkStat.json", sw.getStartTime(), sw.getEndTime());
-		return new GridResult(Result.OK, true);
+		printShiftTicket(tempfilePath + "/ShiftWorkStat.json", sw.getStartTime(), sw.getEndTime(), user.getUsername());
+		return new ObjectResult(Result.OK, true);
 	}
 }

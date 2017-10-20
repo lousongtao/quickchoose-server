@@ -135,6 +135,12 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 		String hql = "from Indent where status = " + ConstantValue.INDENT_STATUS_OPEN;
 		return sessionFactory.getCurrentSession().createQuery(hql).list();
 	}
+	
+	@Override
+	public List<Indent> getUnpaidIndent(String deskName) {
+		String hql = "from Indent where status = " + ConstantValue.INDENT_STATUS_OPEN + " and deskName='"+deskName+"'";
+		return sessionFactory.getCurrentSession().createQuery(hql).list();
+	}
 
 	/**
 	 * query the indent records which are paid between the period

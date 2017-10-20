@@ -20,7 +20,7 @@ import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.management.services.IManagementService;
 import com.shuishou.digitalmenu.management.views.CurrentDutyResult;
 import com.shuishou.digitalmenu.management.views.ShiftWorkResult;
-import com.shuishou.digitalmenu.views.GridResult;
+import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Controller
@@ -42,7 +42,7 @@ public class ManagementController {
 	}
 	
 	@RequestMapping(value="/management/printshiftwork", method = (RequestMethod.POST))
-	public @ResponseBody GridResult printShiftWork(
+	public @ResponseBody ObjectResult printShiftWork(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "shiftWorkId", required = true) int shiftWorkId) throws Exception{
 		return managementService.printShiftWork(userId, shiftWorkId);
@@ -81,13 +81,14 @@ public class ManagementController {
 	@RequestMapping(value="/management/endshiftwork", method = (RequestMethod.POST))
 	public @ResponseBody CurrentDutyResult endWork(
 			@RequestParam(value = "userId", required = true) int userId,
-			@RequestParam(value = "startTime", required = true) String sStartTime,
 			@RequestParam(value = "printShiftTicket", required = true) boolean printShiftTicket) throws Exception{
-		return managementService.endShiftWork(userId, ConstantValue.DFYMDHMS.parse(sStartTime), printShiftTicket);
+		return managementService.endShiftWork(userId, printShiftTicket);
 	}
 	
 	@RequestMapping(value="/management/startshiftwork", method = (RequestMethod.POST))
-	public @ResponseBody CurrentDutyResult startWork(@RequestParam(value = "userId", required = true) int userId) throws Exception{
-		return managementService.startShiftWork(userId);
+	public @ResponseBody CurrentDutyResult startWork(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "printLastDutyTicket", required = true) boolean printLastDutyTicket) throws Exception{
+		return managementService.startShiftWork(userId, printLastDutyTicket);
 	}
 }
