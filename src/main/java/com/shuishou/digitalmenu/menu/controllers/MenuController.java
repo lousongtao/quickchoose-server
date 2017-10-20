@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.account.models.Permission;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
@@ -38,7 +39,7 @@ import com.shuishou.digitalmenu.views.Result;
 import com.shuishou.digitalmenu.views.SimpleValueResult;
 
 @Controller
-public class MenuController {
+public class MenuController extends BaseController {
 
 	/**
 	 * the logger.

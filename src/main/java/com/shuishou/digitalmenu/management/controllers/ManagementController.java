@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
 import com.shuishou.digitalmenu.account.views.GetAccountsResult;
@@ -24,7 +25,7 @@ import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Controller
-public class ManagementController {
+public class ManagementController extends BaseController {
 	private Logger log = Logger.getLogger("ManagementController");
 
 	@Autowired

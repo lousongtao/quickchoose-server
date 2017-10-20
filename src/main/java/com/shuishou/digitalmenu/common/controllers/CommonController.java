@@ -1,13 +1,17 @@
 package com.shuishou.digitalmenu.common.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
 import com.shuishou.digitalmenu.common.ConstantValue;
@@ -22,7 +26,7 @@ import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Controller
-public class CommonController {
+public class CommonController extends BaseController {
 
 	@Autowired
 	private ICommonService commonService;
@@ -32,6 +36,8 @@ public class CommonController {
 	
 	@Autowired
 	private IPermissionService permissionService;
+	
+	
 	
 	@RequestMapping(value="/common/checkconfirmcode", method = (RequestMethod.POST))
 	public @ResponseBody CheckConfirmCodeResult checkConfirmCode(
