@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table
 public class IndentDetail {
@@ -17,7 +19,7 @@ public class IndentDetail {
 	@Column(nullable = false, unique = true)
 	private int id;
 	
-	
+	@JsonIgnore
 	@ManyToOne
 	private Indent indent;
 	
@@ -38,6 +40,19 @@ public class IndentDetail {
 	
 	@Column(name="additional_requirements")
 	private String additionalRequirements;
+	
+	@Column
+	private double weight;
+	
+	
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
 
 	public Indent getIndent() {
 		return indent;

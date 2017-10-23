@@ -26,14 +26,14 @@ public interface IMenuService {
 	public ObjectResult addDish(long userId, String chineseName, String englishName, int sequence, 
 			double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation, 
 			MultipartFile image, int category2Id, int chooseMode, DishChoosePopinfo popinfo, 
-			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge);
+			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType);
 	
 	public ObjectResult updateCategory1(long userId, int id, String chineseName, String englishName, int sequence);
 	public ObjectResult updateCategory2(long userId, int id, String chineseName, String englishName, int sequence, int category1Id, int printerId);
 	public ObjectResult updateDish(long userId, int id, String chineseName, String englishName, int sequence, 
 			double price, boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, 
 			int category2Id, int chooseMode, DishChoosePopinfo popinfo, 
-			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge);
+			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType);
 	public OperationResult changeDishPrice(long userId, int id, double newprice);
 	public ObjectResult changeDishPicture(long userId, int id, MultipartFile image);
 	public Result changeDishSpecial(long userId, int id, boolean isSpecial);

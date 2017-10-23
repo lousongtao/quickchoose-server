@@ -162,7 +162,7 @@ public class ManagementService implements IManagementService{
 		int hours = (int)(millsecs / (60*60*1000));
 		int minutes = (int)((millsecs - hours * 60 * 60 * 1000)/(60*1000));
 		int seconds = (int)((millsecs - hours * 60 * 60 * 1000 - minutes * 60 * 1000)/1000);
-		String workPeriod = (hours > 0 ? hours+" hs " : "") + minutes + " ms " + seconds + " s";
+		String workPeriod = (hours > 0 ? hours+"h " : "") + minutes + "m " + seconds + "s";
 		List<Indent> paidIndents = indentDA.getIndentsByPaidTime(startTime, endTime);
 		int customerAmount= 0;
 		int indnetAmount = 0;

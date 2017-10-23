@@ -93,7 +93,21 @@ public class Dish implements Serializable{
 	private boolean autoMergeWhileChoose = true;
 	
 	
+	/**
+	 * 购买方式, 普通按照份数购买, 对于麻辣烫等, 需要按照重量购买
+	 */
+	@Column
+	private int purchaseType = ConstantValue.DISH_PURCHASETYPE_UNIT;
 	
+	
+	public int getPurchaseType() {
+		return purchaseType;
+	}
+
+	public void setPurchaseType(int purchaseType) {
+		this.purchaseType = purchaseType;
+	}
+
 	public boolean isAutoMergeWhileChoose() {
 		return autoMergeWhileChoose;
 	}

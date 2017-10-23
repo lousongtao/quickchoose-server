@@ -78,4 +78,8 @@ public class ConstantValue {
 	public static final byte DISH_CHOOSEMODE_POPINFOCHOOSE = 3;
 	public static final byte DISH_CHOOSEMODE_POPINFOQUIT = 4;
 	
+	public static final byte DISH_PURCHASETYPE_UNIT = 1;
+	public static final byte DISH_PURCHASETYPE_WEIGHT = 2;
+	
+	
 }

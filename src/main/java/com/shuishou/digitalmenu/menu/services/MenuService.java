@@ -159,7 +159,7 @@ public class MenuService implements IMenuService {
 			double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation, 
 			MultipartFile image, int category2Id, int chooseMode, 
 			DishChoosePopinfo popinfo, ArrayList<DishChooseSubitem> subitems, int subitemAmount,
-			boolean autoMerge) {
+			boolean autoMerge, int purchaseType) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null){
 			return new ObjectResult("cannot find category2 by id "+ category2Id, false, null);
@@ -189,6 +189,7 @@ public class MenuService implements IMenuService {
 		dish.setChooseMode(chooseMode);
 		dish.setSubitemAmount(subitemAmount);
 		dish.setAutoMergeWhileChoose(autoMerge);
+		dish.setPurchaseType(purchaseType);
 		dishDA.save(dish);
 		
 //		if (image != null && image.getSize() > 0){
@@ -594,7 +595,7 @@ public class MenuService implements IMenuService {
 	public ObjectResult updateDish(long userId, int id, String chineseName, String englishName, int sequence, double price, 
 			boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, int category2Id,
 			int chooseMode, DishChoosePopinfo popinfo, ArrayList<DishChooseSubitem> subitems, int subitemAmount,
-			boolean autoMerge) {
+			boolean autoMerge, int purchaseType) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null)
 			return new ObjectResult("now found Category2 by id "+ category2Id, false, null);
@@ -626,6 +627,7 @@ public class MenuService implements IMenuService {
 		dish.setChooseSubItems(null);
 		dish.setSubitemAmount(subitemAmount);
 		dish.setAutoMergeWhileChoose(autoMerge);
+		dish.setPurchaseType(purchaseType);
 		dishDA.save(dish);
 		
 		//delete sub property if exist

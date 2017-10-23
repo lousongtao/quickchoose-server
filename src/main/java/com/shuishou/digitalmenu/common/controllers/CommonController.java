@@ -45,7 +45,7 @@ public class CommonController extends BaseController {
 		return commonService.checkConfirmCode(code);
 	}
 	
-	@RequestMapping(value="/common/getconfirmcode", method = (RequestMethod.GET))
+	@RequestMapping(value="/common/getconfirmcode", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody GetConfirmCodeResult getConfirmCode() throws Exception{
 		return commonService.getConfirmCode();
 	}

@@ -129,9 +129,14 @@ public class IndentService implements IIndentService {
 			detail.setDishChineseName(dish.getChineseName());
 			detail.setDishEnglishName(dish.getEnglishName());
 			detail.setDishPrice(dish.getPrice());
+			if (o.has("weight"))
+				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("addtionalRequirements"))
 				detail.setAdditionalRequirements(o.getString("addtionalRequirements"));
-			totalprice += detail.getAmount() * dish.getPrice();
+			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
+				totalprice += detail.getAmount() * dish.getPrice();
+			else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
+				totalprice += detail.getAmount() * dish.getPrice() * detail.getWeight();
 			indent.addItem(detail);
 //			indentDetailDA.save(detail);
 		}
@@ -166,12 +171,24 @@ public class IndentService implements IIndentService {
 				keys.put("printTime", ConstantValue.DFYMDHMS.format(new Date()));
 				List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 				for(IndentDetail d : indent.getItems()){
+					Dish dish = dishDA.getDishById(d.getDishId());
 					Map<String, String> mg = new HashMap<String, String>();
 					mg.put("name", d.getDishChineseName());
 					mg.put("price", d.getDishPrice()+"");
 					mg.put("amount", d.getAmount()+"");
-					mg.put("totalPrice", (d.getDishPrice() * d.getAmount()) + "");
-					mg.put("requirement", d.getAdditionalRequirements());
+					
+					String requirement = "";
+					if (d.getAdditionalRequirements() != null)
+						requirement += d.getAdditionalRequirements();
+					//按重量卖的dish, 把重量加入requirement
+					if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
+						requirement += "\n" + d.getWeight();
+					if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT){
+						mg.put("totalPrice", (d.getWeight() * d.getDishPrice() * d.getAmount()) + "");
+					} else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT){
+						mg.put("totalPrice", (d.getDishPrice() * d.getAmount()) + "");
+					}
+					mg.put("requirement", requirement);
 					goods.add(mg);
 					
 				}
@@ -223,21 +240,19 @@ public class IndentService implements IIndentService {
 			for(IndentDetail d : mapPrintDish.get(p)){
 				Map<String, String> mg = new HashMap<String, String>();
 				Dish dish = dishDA.getDishById(d.getDishId());
-				if (dish.getChooseMode() == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE
-						|| dish.getChooseMode() == ConstantValue.DISH_CHOOSEMODE_POPINFOQUIT){
+				for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
 					mg.put("name", d.getDishChineseName());
-					mg.put("amount", d.getAmount()+"");
-					mg.put("requirement", d.getAdditionalRequirements());
+					mg.put("amount", "1");
+					String requirement = "";
+					if (d.getAdditionalRequirements() != null)
+						requirement += d.getAdditionalRequirements();
+					//按重量卖的dish, 把重量加入requirement
+					if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
+						requirement += "\n" + d.getWeight();
+					mg.put("requirement", requirement);
+					
 					amount++;
 					goods.add(mg);
-				} else {
-					for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
-						mg.put("name", d.getDishChineseName());
-						mg.put("amount", "1");
-						mg.put("requirement", d.getAdditionalRequirements());
-						amount++;
-						goods.add(mg);
-					}
 				}
 			}
 			keyMap.put("amountOnThisTicket", amount + "");
@@ -279,7 +294,13 @@ public class IndentService implements IIndentService {
 		for (int i = 0; i < Math.abs(changedAmount); i++) {//每个菜品单独打印一行, 重复的打印多行
 			mg.put("name", detail.getDishChineseName());
 			mg.put("amount", "1");
-			mg.put("requirement", detail.getAdditionalRequirements());
+			String requirement = "";
+			if (detail.getAdditionalRequirements() != null)
+				requirement += detail.getAdditionalRequirements();
+			//按重量卖的dish, 把重量加入requirement
+			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
+				requirement += "\n" + detail.getWeight();
+			mg.put("requirement", requirement);
 			goods.add(mg);
 		}
 		keyMap.put("amountOnThisTicket", Math.abs(changedAmount) + "");
@@ -332,23 +353,19 @@ public class IndentService implements IIndentService {
 			for (IndentDetail d : mapPrintDish.get(p)) {
 				Map<String, String> mg = new HashMap<String, String>();
 				Dish dish = dishDA.getDishById(d.getDishId());
-				if (dish.getChooseMode() == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE
-						|| dish.getChooseMode() == ConstantValue.DISH_CHOOSEMODE_POPINFOQUIT){
+				for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
 					mg.put("name", d.getDishChineseName());
-					mg.put("amount", d.getAmount()+"");
-					mg.put("requirement", d.getAdditionalRequirements());
+					mg.put("amount", "1");
+					String requirement = "";
+					if (d.getAdditionalRequirements() != null)
+						requirement += d.getAdditionalRequirements();
+					//按重量卖的dish, 把重量加入requirement
+					if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
+						requirement += "\n" + d.getWeight();
+					mg.put("requirement", requirement);
 					amount++;
 					goods.add(mg);
-				} else {
-					for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
-						mg.put("name", d.getDishChineseName());
-						mg.put("amount", "1");
-						mg.put("requirement", d.getAdditionalRequirements());
-						amount++;
-						goods.add(mg);
-					}
 				}
-				
 			}
 			keyMap.put("amountOnThisTicket", amount + "");
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -494,37 +511,37 @@ public class IndentService implements IIndentService {
 		List<Indent> indents = indentDA.getIndents(start, limit, starttime, endtime, bStatus, deskname, orderbys);
 		if (indents == null || indents.isEmpty())
 			return new GetIndentResult(Result.OK, true, null, 0);
-		ArrayList<GetIndentResult.Indent> resultinfos = new ArrayList<GetIndentResult.Indent>(indents.size());
-		
-		for (int i = 0; i < indents.size(); i++) {
-			Indent indenti = indents.get(i);
-			GetIndentResult.Indent resultindent = new GetIndentResult.Indent();
-			resultindent.id = indenti.getId();
-			resultindent.dailySequence = indenti.getDailySequence();
-			resultindent.deskName = indenti.getDeskName();
-			resultindent.status = indenti.getStatus();
-			resultindent.startTime = ConstantValue.DFYMDHMS.format(indenti.getStartTime());
-			if (indenti.getEndTime() != null)
-				resultindent.endTime = ConstantValue.DFYMDHMS.format(indenti.getEndTime());
-			resultindent.paidPrice = indenti.getPaidPrice();
-			resultindent.totalPrice = indenti.getTotalPrice();
-			resultindent.payWay = indenti.getPayWay();
-			resultindent.customerAmount = indenti.getCustomerAmount();
-			resultinfos.add(resultindent);
-			for (int j = 0; j < indenti.getItems().size(); j++) {
-				GetIndentResult.IndentDetail det = new GetIndentResult.IndentDetail();
-				det.id = indenti.getItems().get(j).getId();
-				det.additionalRequirements = indenti.getItems().get(j).getAdditionalRequirements();
-				det.amount = indenti.getItems().get(j).getAmount();
-				det.dishChineseName = indenti.getItems().get(j).getDishChineseName();
-				det.dishEnglishName = indenti.getItems().get(j).getDishEnglishName();
-				det.dishId = indenti.getItems().get(j).getDishId();
-				det.dishPrice = indenti.getItems().get(j).getDishPrice();
-				resultindent.items.add(det);
-			}
-		}
+//		ArrayList<GetIndentResult.Indent> resultinfos = new ArrayList<GetIndentResult.Indent>(indents.size());
+//		
+//		for (int i = 0; i < indents.size(); i++) {
+//			Indent indenti = indents.get(i);
+//			GetIndentResult.Indent resultindent = new GetIndentResult.Indent();
+//			resultindent.id = indenti.getId();
+//			resultindent.dailySequence = indenti.getDailySequence();
+//			resultindent.deskName = indenti.getDeskName();
+//			resultindent.status = indenti.getStatus();
+//			resultindent.startTime = ConstantValue.DFYMDHMS.format(indenti.getStartTime());
+//			if (indenti.getEndTime() != null)
+//				resultindent.endTime = ConstantValue.DFYMDHMS.format(indenti.getEndTime());
+//			resultindent.paidPrice = indenti.getPaidPrice();
+//			resultindent.totalPrice = indenti.getTotalPrice();
+//			resultindent.payWay = indenti.getPayWay();
+//			resultindent.customerAmount = indenti.getCustomerAmount();
+//			resultinfos.add(resultindent);
+//			for (int j = 0; j < indenti.getItems().size(); j++) {
+//				GetIndentResult.IndentDetail det = new GetIndentResult.IndentDetail();
+//				det.id = indenti.getItems().get(j).getId();
+//				det.additionalRequirements = indenti.getItems().get(j).getAdditionalRequirements();
+//				det.amount = indenti.getItems().get(j).getAmount();
+//				det.dishChineseName = indenti.getItems().get(j).getDishChineseName();
+//				det.dishEnglishName = indenti.getItems().get(j).getDishEnglishName();
+//				det.dishId = indenti.getItems().get(j).getDishId();
+//				det.dishPrice = indenti.getItems().get(j).getDishPrice();
+//				resultindent.items.add(det);
+//			}
+//		}
 		int count = indentDA.getIndentCount(starttime, endtime, bStatus, deskname);
-		return new GetIndentResult(Result.OK, true, resultinfos, count);
+		return new GetIndentResult(Result.OK, true, (ArrayList<Indent>)indents, count);
 	}
 
 	@Override
@@ -624,9 +641,13 @@ public class IndentService implements IIndentService {
 			indent = detail.getIndent();
 			double totalprice = 0.0d;
 			for(IndentDetail d : indent.getItems()){
-				totalprice += d.getAmount() * d.getDishPrice();
+				Dish dish = dishDA.getDishById(d.getDishId());
+				if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
+					totalprice += d.getAmount() * d.getDishPrice();
+				else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
+					totalprice += d.getAmount() * d.getDishPrice() * d.getWeight();
 			}
-			indent.setTotalPrice(totalprice);
+			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 			indentDA.update(indent);
 //			ArrayList<IndentDetail> listPrintDetails = new ArrayList<>();
 //			listPrintDetails.add(detail);
@@ -641,7 +662,8 @@ public class IndentService implements IIndentService {
 				return new OperateIndentResult("cannot find IndentDetail by IndentId:" + indentId + " + dishId:" + dishId, false);
 			indent.getItems().remove(detail);//must remove from the collection firstly, otherwise hibernate will rebuild the detail object by cascade
 			indentDetailDA.delete(detail);
-			detail.getIndent().setTotalPrice(detail.getIndent().getTotalPrice() - detail.getAmount() * detail.getDishPrice());
+			double totalprice = detail.getIndent().getTotalPrice() - detail.getAmount() * detail.getDishPrice();
+			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 			indentDA.update(detail.getIndent());
 //			ArrayList<IndentDetail> listPrintDetails = new ArrayList<>();
 //			listPrintDetails.add(detail);
@@ -798,9 +820,16 @@ public class IndentService implements IIndentService {
 			detail.setDishChineseName(dish.getChineseName());
 			detail.setDishEnglishName(dish.getEnglishName());
 			detail.setDishPrice(dish.getPrice());
+			if (o.has("weight"))
+				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("addtionalRequirements"))
 				detail.setAdditionalRequirements(o.getString("addtionalRequirements"));
-			indent.setTotalPrice(indent.getTotalPrice() + detail.getAmount() * dish.getPrice());
+			double totalprice = 0;
+			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
+				totalprice = indent.getTotalPrice() + detail.getAmount() * dish.getPrice();
+			else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
+				totalprice = indent.getTotalPrice() + detail.getAmount() * dish.getPrice() * detail.getWeight();
+			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 			indent.addItem(detail);
 			indentDetailDA.save(detail);
 			listPrintDetails.add(detail);

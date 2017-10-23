@@ -122,45 +122,45 @@ public class MenuController extends BaseController {
 		return result;
 	}
 	
+//	@RequestMapping(value="/menu/add_dish", method = {RequestMethod.POST})
+//	public @ResponseBody Result addDish(
+//			@RequestParam(value="userId", required = true) long userId, 
+//			@RequestParam(value = "chineseName", required = true) String chineseName, 
+//			@RequestParam(value = "englishName", required = true) String englishName, 
+//			@RequestParam(value = "sequence", required = true) int sequence,
+//			@RequestParam(value = "price", required = true) double price,
+//			@RequestParam(value = "isNew", required = false, defaultValue = "false") boolean isNew,
+//			@RequestParam(value = "isSpecial", required = false, defaultValue = "false") boolean isSpecial,
+//			@RequestParam(value = "hotLevel", required = true) int hotLevel,
+//			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
+//			@RequestParam(value = "dishPicture", required = false) MultipartFile image,
+//			@RequestParam(value = "autoMerge", required = true) boolean autoMerge,
+//			@RequestParam(value = "chooseAction", required = true) int chooseAction,
+//			@RequestParam(value = "dishChoosePopinfo", required = false) String sDishChoosePopinfo,
+//			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,
+//			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
+//			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
+//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+//			return new Result("no_permission");
+//		}
+//		DishChoosePopinfo popinfo = null;
+//		ArrayList<DishChooseSubitem> subitems= null;
+//		if (sDishChoosePopinfo != null && sDishChoosePopinfo.length() > 0){
+//			popinfo = new Gson().fromJson(sDishChoosePopinfo, DishChoosePopinfo.class);
+//		}
+//		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
+//			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
+//			
+//		}
+//		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, 
+//				isSpecial, hotLevel, abbreviation, image, category2Id, chooseAction, 
+//				popinfo, subitems, subitemAmount, autoMerge);
+//		
+//		return result;
+//	}
+	
 	@RequestMapping(value="/menu/add_dish", method = {RequestMethod.POST})
 	public @ResponseBody Result addDish(
-			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName, 
-			@RequestParam(value = "sequence", required = true) int sequence,
-			@RequestParam(value = "price", required = true) double price,
-			@RequestParam(value = "isNew", required = false, defaultValue = "false") boolean isNew,
-			@RequestParam(value = "isSpecial", required = false, defaultValue = "false") boolean isSpecial,
-			@RequestParam(value = "hotLevel", required = true) int hotLevel,
-			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
-			@RequestParam(value = "dishPicture", required = false) MultipartFile image,
-			@RequestParam(value = "autoMerge", required = true) boolean autoMerge,
-			@RequestParam(value = "chooseAction", required = true) int chooseAction,
-			@RequestParam(value = "dishChoosePopinfo", required = false) String sDishChoosePopinfo,
-			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,
-			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
-			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
-			return new Result("no_permission");
-		}
-		DishChoosePopinfo popinfo = null;
-		ArrayList<DishChooseSubitem> subitems= null;
-		if (sDishChoosePopinfo != null && sDishChoosePopinfo.length() > 0){
-			popinfo = new Gson().fromJson(sDishChoosePopinfo, DishChoosePopinfo.class);
-		}
-		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
-			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
-			
-		}
-		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, 
-				isSpecial, hotLevel, abbreviation, image, category2Id, chooseAction, 
-				popinfo, subitems, subitemAmount, autoMerge);
-		
-		return result;
-	}
-	
-	@RequestMapping(value="/menu/add_dish3", method = {RequestMethod.POST})
-	public @ResponseBody Result addDish3(
 			@RequestParam(value="userId", required = true) long userId, 
 			@RequestParam(value = "chineseName", required = true) String chineseName, 
 			@RequestParam(value = "englishName", required = true) String englishName, 
@@ -176,6 +176,7 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "dishChoosePopinfo_en", required = false) String sDishChoosePopinfo_en,
 			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
 			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
+			@RequestParam(value = "purchaseType", required = false, defaultValue = "1") int purchaseType,
 			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -194,26 +195,23 @@ public class MenuController extends BaseController {
 		}
 		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, 
 				isSpecial, hotLevel, abbreviation, null, category2Id, chooseMode, popinfo, subitems, subitemAmount,
-				autoMerge);
+				autoMerge, purchaseType);
 		
 		return result;
 	}
 	
-	@RequestMapping(value="/menu/add_dish2", method = {RequestMethod.POST})
-	public @ResponseBody Result addDish2(
-			@RequestParam(value = "address", required = false) String address,
-			@RequestParam(value = "photoName", required = false) MultipartFile image
-			) throws Exception{
-
-//		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, pictureName, category2Id);
-		
-//		return result;
-		if (image != null){
-			System.out.println("get address = " + address);
-			System.out.println("get image data, size = " + image.getSize());
-		}
-		return null;
-	}
+//	@RequestMapping(value="/menu/add_dish2", method = {RequestMethod.POST})
+//	public @ResponseBody Result addDish2(
+//			@RequestParam(value = "address", required = false) String address,
+//			@RequestParam(value = "photoName", required = false) MultipartFile image
+//			) throws Exception{
+//
+//		if (image != null){
+//			System.out.println("get address = " + address);
+//			System.out.println("get image data, size = " + image.getSize());
+//		}
+//		return null;
+//	}
 	
 	@RequestMapping(value="/menu/update_dish", method = {RequestMethod.POST})
 	public @ResponseBody Result updateDish(
@@ -234,6 +232,7 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "dishChoosePopinfo_en", required = false) String sDishChoosePopinfo_en,
 			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
 			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
+			@RequestParam(value = "purchaseType", required = false, defaultValue = "1") int purchaseType,
 			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -253,7 +252,7 @@ public class MenuController extends BaseController {
 		}
 		
 		Result result = menuService.updateDish(userId, id, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, 
-				abbreviation, category2Id, chooseMode, popinfo, subitems, subitemAmount, autoMerge);
+				abbreviation, category2Id, chooseMode, popinfo, subitems, subitemAmount, autoMerge, purchaseType);
 		
 		return result;
 	}
