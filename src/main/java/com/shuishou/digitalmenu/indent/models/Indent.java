@@ -16,8 +16,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.common.models.Desk;
 
 @Entity
@@ -32,18 +35,18 @@ public class Indent {
 	@Column(name="desk_name")
 	private String deskName;
 	
-	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8:00")
 	@Column(nullable = false)
 	private Date startTime;
 	
 	@Column(name = "customer_amount", nullable = false)
 	private int customerAmount;
 	
-	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8:00")
 	@Column
 	private Date endTime;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="indent")
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="indent")
 	private List<IndentDetail> items;
 	
 	@Column(name = "total_price", nullable = false)
@@ -53,7 +56,7 @@ public class Indent {
 	private double paidPrice;//实际付款金额
 	
 	@Column(name = "pay_way")
-	private byte payWay;//付款方式
+	private String payWay;//付款方式
 	
 	@Column(name = "member_card")
 	private String memberCard;
@@ -81,11 +84,11 @@ public class Indent {
 		this.customerAmount = customerAmount;
 	}
 
-	public byte getPayWay() {
+	public String getPayWay() {
 		return payWay;
 	}
 
-	public void setPayWay(byte payWay) {
+	public void setPayWay(String payWay) {
 		this.payWay = payWay;
 	}
 

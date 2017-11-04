@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -12,7 +11,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table
-public class Desk {
+public class PayWay {
 
 	@Id
 	@GeneratedValue
@@ -22,34 +21,11 @@ public class Desk {
 	@Column(name = "name", nullable = false)
 	private String name;
 	
-	@Column
-	private int sequence;
+	public PayWay(){}
 	
-	@OneToOne
-	private Desk mergeTo;
-	
-	public Desk(){}
-	
-	public Desk(int id, String name){
+	public PayWay(int id, String name){
 		this.id = id;
 		this.name = name;
-	}
-	
-
-	public Desk getMergeTo() {
-		return mergeTo;
-	}
-
-	public void setMergeTo(Desk mergeTo) {
-		this.mergeTo = mergeTo;
-	}
-
-	public int getSequence() {
-		return sequence;
-	}
-
-	public void setSequence(int sequence) {
-		this.sequence = sequence;
 	}
 
 	public int getId() {
@@ -59,6 +35,7 @@ public class Desk {
 	public void setId(int id) {
 		this.id = id;
 	}
+
 
 	public String getName() {
 		return name;
@@ -70,7 +47,7 @@ public class Desk {
 
 	@Override
 	public String toString() {
-		return "Desk [name=" + name + "]";
+		return "PayWay [name=" + name + "]";
 	}
 
 	@Override
@@ -89,7 +66,7 @@ public class Desk {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Desk other = (Desk) obj;
+		PayWay other = (PayWay) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

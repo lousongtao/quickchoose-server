@@ -12,7 +12,7 @@ public class ObjectListResult<T> extends Result {
 	 * success or not.
 	 */
 	public final boolean success;
-	
+	private int count;
 	public List<T> data;
 
 	/**
@@ -32,5 +32,12 @@ public class ObjectListResult<T> extends Result {
 		super(result);
 		this.success = success;
 		this.data = data;
+	}
+	
+	public ObjectListResult(String result, boolean success, List<T> data, int count) {
+		super(result);
+		this.success = success;
+		this.data = data;
+		this.count = count;
 	}
 }

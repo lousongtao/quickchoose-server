@@ -13,12 +13,14 @@ import java.util.UUID;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.models.IPermissionDataAccessor;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.IUserPermissionDataAccessor;
@@ -27,9 +29,9 @@ import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.account.models.UserPermission;
 import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
-import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
@@ -158,7 +160,7 @@ public class AccountService implements IAccountService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public GetAccountsResult getAccounts() {
+	public ObjectListResult getAccounts() {
 
 		// do list.
 		String listStmt = "select u from UserData u";
@@ -166,21 +168,12 @@ public class AccountService implements IAccountService {
 		
 		@SuppressWarnings("unchecked")
 		List<UserData> users = (List<UserData>) listQuery.list();
-
-		// build result.
-		List<GetAccountsResult.AccountInfo> accounts = new LinkedList<>();
-		for (UserData user : users) {
-			List<UserPermission> permissions = user.getPermissions();
-			String sPermission = "";
-			for (int i = 0; i < permissions.size(); i++) {
-				sPermission += permissions.get(i).getPermission().getName();
-				if (i != permissions.size() - 1){
-					sPermission += ConstantValue.SPLITTAG_PERMISSION;
-				}
-			}
-			accounts.add(new GetAccountsResult.AccountInfo(Long.toString(user.getId()), user.getUsername(), sPermission));
+		for (int i = 0; i < users.size(); i++) {
+			UserData user = users.get(i);
+			Hibernate.initialize(user);
+			Hibernate.initialize(user.permissions);
 		}
-		return new GetAccountsResult(Result.OK, true, accounts, (int) (long) users.size());
+		return new ObjectListResult(Result.OK, true, users);
 	}
 
 	@Override
@@ -299,7 +292,7 @@ public class AccountService implements IAccountService {
 		UserData user = userDA.getUserById(id);
 		if (user == null)
 			return new ObjectResult("not_found_account", false);
-		userPermissionDA.deleteByUserId(id);
+//		userPermissionDA.deleteByUserId(id);
 		userDA.deleteUser(user);
 
 		// write log.

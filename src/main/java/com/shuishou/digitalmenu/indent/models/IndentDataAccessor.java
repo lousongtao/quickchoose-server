@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
-import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.models.BaseDataAccessor;
 
 @Repository
@@ -94,7 +94,6 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 	public int getIndentCount(Date starttime, Date endtime, Byte[] status, String deskname) {
 		String countStmt = "select count(l) from Indent l";
 		List<String> condList = Lists.newArrayList();
-		List<String> orderbyList = Lists.newArrayList();
 		if (starttime != null){
 			condList.add("l.startTime >= :starttime");
 		}

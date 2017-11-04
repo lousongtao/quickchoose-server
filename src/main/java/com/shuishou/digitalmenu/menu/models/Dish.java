@@ -17,10 +17,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.shuishou.digitalmenu.common.ConstantValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.shuishou.digitalmenu.ConstantValue;
 
 @Entity
 @Table
@@ -52,15 +56,19 @@ public class Dish implements Serializable{
 	@Column
 	private String pictureName;
 	
+	@JsonProperty("isNew")
 	@Column
 	private boolean isNew = false;
 	
+	@JsonProperty("isSpecial")
 	@Column
 	private boolean isSpecial = false;
+	
 	
 	@Column
 	private int hotLevel = 0;
 	
+	@JsonProperty("isSoldOut")
 	@Column
 	private boolean isSoldOut = false;
 	
@@ -74,7 +82,7 @@ public class Dish implements Serializable{
 	@Column(name="choose_mode", nullable = false)
 	private int chooseMode = ConstantValue.DISH_CHOOSEMODE_DEFAULT;
 	
-	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="dish", orphanRemoval = true)
+	@OneToOne(cascade=CascadeType.ALL, mappedBy="dish", orphanRemoval = true)
 	private DishChoosePopinfo choosePopInfo;
 	
 	/**
@@ -82,7 +90,7 @@ public class Dish implements Serializable{
 	 * if I need to add/remove or delete all elements from the list, remember not to replace this list as a new list,
 	 * if do so, hibernate will error, 
 	 */
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="dish", orphanRemoval= true)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="dish", orphanRemoval= true)
 	private List<DishChooseSubitem> chooseSubItems = new ArrayList<>();
 
 	@Column(name = "subitem_amount")

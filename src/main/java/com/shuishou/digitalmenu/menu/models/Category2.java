@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -38,7 +41,7 @@ public class Category2 implements Serializable{
 	@Column(nullable = false)
 	private int sequence;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="category2")
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="category2")
 	@OrderBy("sequence")
 	private List<Dish> dishes;
 	

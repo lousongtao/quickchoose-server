@@ -13,7 +13,7 @@ INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('8', 'EDIT_PRINTER
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('9', 'UPDATE_ORDER');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('10', 'EDIT_DISCOUNTTEMPLATE');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('11', 'QUERY_SHIFTWORK');
-
+INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('11', 'EDIT_PAYWAY');
 
 
 
@@ -30,3 +30,4 @@ INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('9', '1');
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('10', '1');
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('11', '1');
+INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('12', '1');

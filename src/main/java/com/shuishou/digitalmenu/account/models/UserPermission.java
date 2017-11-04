@@ -8,6 +8,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="User_Permission")
 public class UserPermission {
@@ -17,6 +22,7 @@ public class UserPermission {
 	@Column(nullable = false, unique = true)
 	private long id;
 	
+	@JsonIgnore
 	@ManyToOne(optional = false)
 	//@Column(name = "user_id")
 	private UserData user;

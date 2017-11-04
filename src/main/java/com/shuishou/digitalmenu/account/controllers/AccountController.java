@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shuishou.digitalmenu.BaseController;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.models.Permission;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.account.services.IAccountService;
@@ -22,7 +23,7 @@ import com.shuishou.digitalmenu.account.services.IPermissionService;
 import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.GetPermissionResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
-import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
@@ -85,12 +86,12 @@ public class AccountController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/account/accounts", method = { RequestMethod.GET })
-	public @ResponseBody GetAccountsResult getAccountList(
+	public @ResponseBody ObjectListResult getAccountList(
 			@RequestParam(value = "userId", required = true) long userId)
 			throws Exception {
 		
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_USER)){
-			return new GetAccountsResult("no_permission", false, null, 0);
+			return new ObjectListResult("no_permission", false, null);
 		}
 
 		return accountService.getAccounts();
@@ -214,7 +215,7 @@ public class AccountController extends BaseController {
 
 	
 	@RequestMapping(value = "/account/querypermission", method={RequestMethod.GET})
-	public @ResponseBody GetPermissionResult queryPermission() throws Exception{
+	public @ResponseBody ObjectListResult queryPermission() throws Exception{
 		return permissionService.queryAllPermissions();
 	}
 

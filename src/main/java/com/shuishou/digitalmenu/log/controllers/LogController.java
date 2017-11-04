@@ -6,6 +6,7 @@ package com.shuishou.digitalmenu.log.controllers;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shuishou.digitalmenu.BaseController;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.services.IAccountService;
-import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.log.models.LogData;
+import com.shuishou.digitalmenu.log.models.LogData.LogType;
 import com.shuishou.digitalmenu.log.services.ILogService;
-import com.shuishou.digitalmenu.log.views.GetLogTypesResult;
-import com.shuishou.digitalmenu.log.views.GetLogsResult;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 
 @Controller
 public class LogController extends BaseController {
@@ -59,8 +61,8 @@ public class LogController extends BaseController {
 	 * @return the account list.
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/log/logs", method = { RequestMethod.GET })
-	public @ResponseBody GetLogsResult getLogList(@RequestParam(value = "userId", required = true) long userId,
+	@RequestMapping(value = "/log/logs", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody ObjectListResult getLogList(@RequestParam(value = "userId", required = true) long userId,
 			@RequestParam(value = "message", required = false, defaultValue = "") String message,
 			@RequestParam(value = "page", required = false, defaultValue = "0") String pageStr,
 			@RequestParam(value = "start", required = false, defaultValue = "0") String startStr,
@@ -73,10 +75,6 @@ public class LogController extends BaseController {
 		int limit = Integer.parseInt(limitStr);
 		Date beginTime = null;
 		Date endTime = null;
-//		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");// low case of M
-															// instance minute,
-															// for MONTH must
-															// use capital M
 		if (beginTimeStr != null && beginTimeStr.length() > 0) {
 			beginTime = ConstantValue.DFYMD.parse(beginTimeStr);
 		}
@@ -92,10 +90,15 @@ public class LogController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/log/log_types", method = { RequestMethod.GET })
-	public @ResponseBody GetLogTypesResult getLogTypeList(
+	@RequestMapping(value = "/log/log_types", method = { RequestMethod.GET,  RequestMethod.POST })
+	public @ResponseBody ObjectListResult getLogTypeList(
 			@RequestParam(value = "userId", required = true) long userId) throws Exception {
-		return new GetLogTypesResult("ok", true);
+		ArrayList<String> data = new ArrayList<String>();
+		LogType[] logTypes = LogData.LogType.values();
+		for (LogType lt : logTypes) {
+			data.add(lt.toString());
+		}
+		return new ObjectListResult("ok", true, data);
 	}
 
 }

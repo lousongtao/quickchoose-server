@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -21,28 +22,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.UserData;
-import com.shuishou.digitalmenu.common.ConstantValue;
-import com.shuishou.digitalmenu.common.models.ConfirmCode;
+import com.shuishou.digitalmenu.common.models.Configs;
 import com.shuishou.digitalmenu.common.models.Desk;
 import com.shuishou.digitalmenu.common.models.DiscountTemplate;
-import com.shuishou.digitalmenu.common.models.IConfirmCodeDataAccessor;
+import com.shuishou.digitalmenu.common.models.IConfigsDataAccessor;
 import com.shuishou.digitalmenu.common.models.IDeskDataAccessor;
 import com.shuishou.digitalmenu.common.models.IDiscountTemplateDataAccessor;
+import com.shuishou.digitalmenu.common.models.IPayWayDataAccessor;
 import com.shuishou.digitalmenu.common.models.IPrinterDataAccessor;
+import com.shuishou.digitalmenu.common.models.PayWay;
 import com.shuishou.digitalmenu.common.models.Printer;
-import com.shuishou.digitalmenu.common.views.CheckConfirmCodeResult;
-import com.shuishou.digitalmenu.common.views.GetConfirmCodeResult;
 import com.shuishou.digitalmenu.common.views.GetDeskResult;
 import com.shuishou.digitalmenu.common.views.GetDeskWithIndentResult;
-import com.shuishou.digitalmenu.common.views.GetDiscountTemplateResult;
-import com.shuishou.digitalmenu.common.views.GetPrinterResult;
 import com.shuishou.digitalmenu.indent.models.IIndentDataAccessor;
 import com.shuishou.digitalmenu.indent.models.Indent;
 import com.shuishou.digitalmenu.indent.models.IndentDetail;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
+import com.shuishou.digitalmenu.menu.models.Category2;
+import com.shuishou.digitalmenu.menu.models.Category2DataAccessor;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
@@ -51,7 +53,7 @@ public class CommonService implements ICommonService {
 	private Logger logger = Logger.getLogger(CommonService.class);
 	
 	@Autowired
-	private IConfirmCodeDataAccessor confirmCodeDA;
+	private IConfigsDataAccessor configsDA;
 	
 	@Autowired
 	private IDeskDataAccessor deskDA;
@@ -72,37 +74,74 @@ public class CommonService implements ICommonService {
 	private IIndentDataAccessor indentDA;
 	
 	@Autowired
+	private IPayWayDataAccessor payWayDA;
+	
+	@Autowired
+	private Category2DataAccessor category2DA;
+	
+	@Autowired
 	private HttpServletRequest request;
 	
+	@Override
+	@Transactional
+	public ObjectResult queryConfigMap(){
+		List<Configs> configs = configsDA.queryConfigs();
+		HashMap<String, String> maps = new HashMap<>();
+		if (configs != null){
+			for(Configs c : configs){
+				maps.put(c.getName(), c.getValue());
+			}
+		}
+		return new ObjectResult(Result.OK, true, maps);
+	}
 	
-	@Override
-	@Transactional
-	public CheckConfirmCodeResult checkConfirmCode(String code) {
-		ConfirmCode cc = confirmCodeDA.getCode();
-		if (code.equals(cc.getCode()))
-			return new CheckConfirmCodeResult(Result.OK, true, true);
-		return new CheckConfirmCodeResult(Result.FAIL, false, false);
-	}
-
-	@Override
-	@Transactional
-	public GetConfirmCodeResult getConfirmCode() {
-		ConfirmCode cc = confirmCodeDA.getCode();
-		String code = cc == null ? "" : cc.getCode();
-		return new GetConfirmCodeResult(Result.OK, true, code);
-	}
+//	@Override
+//	@Transactional
+//	public CheckConfirmCodeResult checkConfirmCode(String code) {
+//		ConfirmCode cc = confirmCodeDA.getCode();
+//		if (code.equals(cc.getCode()))
+//			return new CheckConfirmCodeResult(Result.OK, true, true);
+//		return new CheckConfirmCodeResult(Result.FAIL, false, false);
+//	}
+//
+//	@Override
+//	@Transactional
+//	public GetConfirmCodeResult getConfirmCode() {
+//		ConfirmCode cc = confirmCodeDA.getCode();
+//		String code = cc == null ? "" : cc.getCode();
+//		return new GetConfirmCodeResult(Result.OK, true, code);
+//	}
 
 	@Override
 	@Transactional
 	public ObjectResult saveConfirmCode(long userId, String code) {
-		ConfirmCode cc = new ConfirmCode();
-		cc.setCode(code);
-		confirmCodeDA.deleteCode();
-		confirmCodeDA.saveCode(cc);
-		
+		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
+		if (c == null){
+			c = new Configs();
+			c.setName(ConstantValue.CONFIGS_CONFIRMCODE);
+		}
+		c.setValue(code);
+		configsDA.saveConfigs(c);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_CONFIRMCODE.toString(), "User "+ selfUser + " change confirm code " + code);
+
+		return new ObjectResult(Result.OK, true);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectResult saveOpenCashdrawerCode(long userId, String code) {
+		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_OPENCASHDRAWERCODE);
+		if (c == null){
+			c = new Configs();
+			c.setName(ConstantValue.CONFIGS_OPENCASHDRAWERCODE);
+		}
+		c.setValue(code);
+		configsDA.saveConfigs(c);
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_OPENCASHDRAWERCODE.toString(), "User "+ selfUser + " change open cashdrawer " + code);
 
 		return new ObjectResult(Result.OK, true);
 	}
@@ -132,7 +171,6 @@ public class CommonService implements ICommonService {
 		desk.setName(deskname);
 		desk.setSequence(sequence);
 		deskDA.insertDesk(desk);
-		int i = 1/0;
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_DESK.toString(), "User "+ selfUser + " add desk "+ deskname);
@@ -142,12 +180,13 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public ObjectResult updateDesk(long userId, int id, String name) {
+	public ObjectResult updateDesk(long userId, int id, String name, int sequence) {
 		Desk desk = deskDA.getDeskById(id);
 		String oldname = desk.getName();
 		if (desk == null)
 			return new ObjectResult("No desk, id = "+ id, false);
 		desk.setName(name);
+		desk.setSequence(sequence);
 		deskDA.updateDesk(desk);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
@@ -173,30 +212,20 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public GetPrinterResult getPrinters() {
+	public ObjectListResult getPrinters() {
 		List<Printer> printers = printerDA.queryPrinters();
-		GetPrinterResult result = new GetPrinterResult(Result.OK, true);
-		result.data = new ArrayList<GetPrinterResult.Printer>();
-		for (int i = 0; i < printers.size(); i++) {
-			GetPrinterResult.Printer p = new GetPrinterResult.Printer();
-			p.id = printers.get(i).getId();
-			p.name = printers.get(i).getName();
-			p.printerName = printers.get(i).getPrinterName();
-			p.copy = printers.get(i).getCopy();
-			p.printStyle = printers.get(i).getPrintStyle();
-			result.data.add(p);
-		}
-		return result;
+		return new ObjectListResult(Result.OK, true, printers);
 	}
 
 	@Override
 	@Transactional
-	public ObjectResult savePrinter(long userId, String name, String printerName, int copy, byte printStyle) {
+	public ObjectResult savePrinter(long userId, String name, String printerName, int type) {
 		Printer p = new Printer();
 		p.setName(name);
 		p.setPrinterName(printerName);
-		p.setCopy(copy);
-		p.setPrintStyle(printStyle);
+		p.setType(type);
+//		p.setCopy(copy);
+//		p.setPrintStyle(printStyle);
 		printerDA.insertPrinter(p);
 		
 		// write log.
@@ -213,7 +242,14 @@ public class CommonService implements ICommonService {
 		if (p == null)
 			return new ObjectResult("No printer found, id = "+ id, false);
 		printerDA.deletePrinter(p);
-		
+		//clear the connection with Category2
+		List<Category2> c2s = category2DA.getAllCategory2();
+		for(Category2 c2 : c2s ){
+			if (c2.getPrinter() != null && c2.getPrinter().getId() == id){
+				c2.setPrinter(null);
+				category2DA.save(c2);
+			}
+		}
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " delete printer " + p.getName());
@@ -339,18 +375,9 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public GetDiscountTemplateResult getDiscountTemplates() {
+	public ObjectListResult getDiscountTemplates() {
 		List<DiscountTemplate> templates = discountTemplateDA.queryDiscountTemplates();
-		GetDiscountTemplateResult result = new GetDiscountTemplateResult(Result.OK, true);
-		result.data = new ArrayList<GetDiscountTemplateResult.DiscountTemplate>();
-		for (int i = 0; i < templates.size(); i++) {
-			GetDiscountTemplateResult.DiscountTemplate p = new GetDiscountTemplateResult.DiscountTemplate();
-			p.id = templates.get(i).getId();
-			p.name = templates.get(i).getName();
-			p.rate = templates.get(i).getRate();
-			result.data.add(p);
-		}
-		return result;
+		return new ObjectListResult(Result.OK, true, templates);
 	}
 
 	@Override
@@ -397,6 +424,43 @@ public class CommonService implements ICommonService {
 		} catch (IllegalStateException | IOException e) {
 			return new ObjectResult(Result.FAIL, false);
 		}
+		return new ObjectResult(Result.OK, true);
+	}
+
+	@Override
+	@Transactional
+	public ObjectListResult getPayWays() {
+		List<PayWay> listPayWay = payWayDA.queryPayWays();
+		return new ObjectListResult(Result.OK, true, listPayWay);
+	}
+
+	@Override
+	@Transactional
+	public ObjectResult savePayWay(long userId, String name) {
+		PayWay payWay = new PayWay();
+		payWay.setName(name);
+		payWayDA.insertPayWay(payWay);
+		
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_PAYWAY.toString(), 
+				"User "+ selfUser + " add pay way "+ name);
+
+		return new ObjectResult(Result.OK, true);
+	}
+
+	@Override
+	@Transactional
+	public ObjectResult deletePayWay(long userId, int id) {
+		PayWay payWay = payWayDA.getPayWayById(id);
+		if (payWay == null)
+			return new ObjectResult("No Payway found, id = "+ id, false);
+		payWayDA.deletePayWay(payWay);
+		
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_PAYWAY.toString(), "User "+ selfUser + " delete payway " + payWay.getName());
+
 		return new ObjectResult(Result.OK, true);
 	}
 

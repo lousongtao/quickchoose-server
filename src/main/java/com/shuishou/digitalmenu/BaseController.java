@@ -14,5 +14,6 @@ public class BaseController {
 	@ExceptionHandler(value = Throwable.class)
     public void defaultErrorHandler(Throwable e)  {
         logger.error("", e);
+        e.printStackTrace();
     }
 }

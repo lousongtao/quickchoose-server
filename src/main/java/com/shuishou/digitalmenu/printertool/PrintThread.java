@@ -4,16 +4,15 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jfinal.kit.JsonKit;
 import com.jfinal.kit.PathKit;
+import com.shuishou.digitalmenu.ConstantValue;
 
 /**
  * 
@@ -28,7 +27,7 @@ import com.jfinal.kit.PathKit;
  */
 @Component
 public class PrintThread implements InitializingBean{
-	
+	private Logger logger = Logger.getLogger(PrintThread.class);
 	
 
 	public void afterPropertiesSet() {
@@ -38,14 +37,18 @@ public class PrintThread implements InitializingBean{
 					try {
 						PrintJob printJob = PrintQueue.take();
 
-						System.out.println("begin print job...");
+						logger.debug("begin print job... Time : " + ConstantValue.DFYMDHMS.format(new Date()) 
+							+", PrinterName:" + printJob.getPrinterName() 
+							+ ", Param : " + printJob.getParam()
+							+ ", Template : " + printJob.getTemplateFile());
 						new DriverPos().print(readTxt(printJob.getTemplateFile(), "utf-8"),
 								JsonKit.toJson(printJob.getParam()), printJob.getPrinterName());
-						System.out.println("end print job...");
+						logger.debug("end print job...");
 					} catch (InterruptedException e) {
+						logger.error("Print Error", e);
 						e.printStackTrace();
-					} 
-					catch (IOException e) {
+					} catch (IOException e) {
+						logger.error("Print Error", e);
 						e.printStackTrace();
 					}
 				}

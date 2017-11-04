@@ -237,7 +237,9 @@ public class DriverPos {
 
 		pagerBody.setContent(addBlank(goodMap.get(goodTitle.getVariable())+"", goodTitle.getWidth()))
 					.setFeeLine(false)
-					.isBold(false);
+					.setFontSize(goodTitle.getSize())
+					.isBold(goodTitle.isBold());
+		
 		return pagerBody;
 	}
 

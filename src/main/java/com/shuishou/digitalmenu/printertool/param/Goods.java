@@ -16,6 +16,10 @@ public class Goods {
     private int width;
     // 占位符 格式${time}
     private String variable;
+    
+    private boolean bold;
+    
+    private int size;
 
     public String getName() {
         return name;
@@ -48,4 +52,22 @@ public class Goods {
     public void setVariable(String variable) {
         this.variable = variable;
     }
+
+	public boolean isBold() {
+		return bold;
+	}
+
+	public void setBold(boolean bold) {
+		this.bold = bold;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+    
+    
 }

@@ -15,6 +15,7 @@ import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.print.Doc;
@@ -24,10 +25,16 @@ import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.attribute.DocAttributeSet;
 import javax.print.attribute.HashAttributeSet;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Media;
+import javax.print.attribute.standard.MediaTray;
 import javax.print.attribute.standard.PrinterName;
 import javax.print.event.PrintServiceAttributeEvent;
 import javax.print.event.PrintServiceAttributeListener;
 import javax.swing.ImageIcon;
+
+import org.apache.log4j.Logger;
 
 import com.jfinal.kit.LogKit;
 import com.jfinal.kit.PathKit;
@@ -45,9 +52,14 @@ import com.jfinal.kit.StrKit;
 
  */
 public class Printer implements Printable {
-	
+	private Logger logger = Logger.getLogger(Printer.class);
 	private PrintPager printPager;
 	
+	/**
+	 * 把要打印的内容转化到行集里, 凑够一页就定义成一个集合, 这个是页的集合
+	 */
+	private ArrayList<ArrayList<PrintItem>> pageslist = new ArrayList<>();
+			
 	public Printer() {
 	}
 	
@@ -76,35 +88,64 @@ public class Printer implements Printable {
 			HashAttributeSet hs = new HashAttributeSet();
 			hs.add(new PrinterName(printerName, null));
 			// 获取打印服务对象
-
+			PrintRequestAttributeSet attr_set = new HashPrintRequestAttributeSet();
 			PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, hs);
 			if (printService.length > 0) {
 				PrintService ps = printService[0];
 				pj.setPrintService(ps);
+				Media[] res = (Media[]) ps.getSupportedAttributeValues(Media.class, null, null);
+				
+				for (Media media : res) {
+				    if (media instanceof MediaTray){
+				    	MediaTray tray = (MediaTray)media;
+				    	//TODO: 使用佳博打印机, 有source选项Document[Cut], 不清楚其他打印机是不是相同. 使用该选项, 到文档结束才会切纸.
+				    	if (tray.toString().equals("Document[Cut]")){
+				    		System.out.println(media + ", value = " + tray.getValue() + ", name = "+ tray.getName());
+				    		attr_set.add(tray);
+				    	}
+				    }
+				}
 			}
 			
 	        pj.setPrintable(this, pf);
 	        for (int i = 0; i < printSize; i++) {
-				pj.print(); 
+				pj.print(attr_set); 
 			}
 		} catch (Exception e){
 			e.printStackTrace();
-			LogKit.error("打印异常", e);
+			logger.error("打印异常", e);
 		}
 	}
 	
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-		if (pageIndex>0) return NO_SUCH_PAGE;
 		Graphics2D g2 = (Graphics2D)graphics;
 		g2.setColor(Color.black);
 		int offSetY = printPager.offsetY;
 		int offSetX = printPager.offsetX;
 		g2.translate(offSetX, offSetY);
-		//处理内容项
+		if (pageslist.isEmpty()){
+			//处理内容项
 
-		offSetY = printBody(g2, pageFormat, offSetX, offSetY);
+			printBody(g2, pageFormat, offSetX, offSetY);
+		}
 		
+		if (pageIndex>=pageslist.size()) 
+			return NO_SUCH_PAGE;
+		
+		float[] dash = { 2.0f };
+		// 设置打印线的属性。虚线="线+缺口+线+缺口+线+缺口……" 
+
+		// 1.线宽 2.不同的线端 3.当两条线连接时，连接处的形状 4.缺口的宽度(默认10.0f) 5.虚线的宽度 6.偏移量
+
+		g2.setStroke(new BasicStroke(0.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dash, 0.0f));
+		
+		ArrayList<PrintItem> printitemList = pageslist.get(pageIndex);
+		for (int j = 0; j < printitemList.size(); j++) {
+			PrintItem item = printitemList.get(j);
+			g2.setFont(item.font);
+			g2.drawString(item.s, item.x, item.y);
+		}
 		return PAGE_EXISTS;
 	}
 	
@@ -124,6 +165,9 @@ public class Printer implements Printable {
 
 	 */
 	private int printBody(Graphics2D g2, PageFormat pageFormat,int offSetX, int offSetY){
+		
+		ArrayList<PrintItem> itemInPageList = new ArrayList<>();
+		
 		List<_PagerBody> list = printPager.list;
 		
 		float[] dash = { 2.0f };
@@ -136,29 +180,30 @@ public class Printer implements Printable {
 		if (list!=null && list.size()>0) {
 			
 			for (_PagerBody body : list) {
-				if (body.getImg()!=null) {
-					PagerImages qrcode = body.getImg();
-					if (StrKit.notBlank(qrcode.getPath())) {
-						ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(PathKit.getWebRootPath()+"/img/"+qrcode.getPath()));
-						int drawWidth = (int)pageFormat.getImageableWidth();
-						if (body.getAlign().equals(PrintAlignment.center)) {
-							offSetX = (drawWidth-qrcode.getWidth())/2;
-						} else if (body.getAlign().equals(PrintAlignment.right)) {
-							offSetX = drawWidth-body.getImg().getWidth() - 20;
-						}
-						g2.drawImage(icon.getImage(), offSetX, offSetY, qrcode.getWidth(), qrcode.getHeight(), icon.getImageObserver());
-					}
-					if (body.isFeeLine()) {
-						offSetX = printPager.offsetX;
-						// 5=行间距
-
-						offSetY+=qrcode.getHeight() + 5;
-					}else{
-						offSetX+=qrcode.getWidth()+printPager.offsetX;
-						offSetY+=qrcode.getHeight()/2 + 5;
-					}
-					continue;
-				}
+				//目前不支持二维码, 这里暂时注释
+//				if (body.getImg()!=null) {
+//					PagerImages qrcode = body.getImg();
+//					if (StrKit.notBlank(qrcode.getPath())) {
+//						ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(PathKit.getWebRootPath()+"/img/"+qrcode.getPath()));
+//						int drawWidth = (int)pageFormat.getImageableWidth();
+//						if (body.getAlign().equals(PrintAlignment.center)) {
+//							offSetX = (drawWidth-qrcode.getWidth())/2;
+//						} else if (body.getAlign().equals(PrintAlignment.right)) {
+//							offSetX = drawWidth-body.getImg().getWidth() - 20;
+//						}
+//						g2.drawImage(icon.getImage(), offSetX, offSetY, qrcode.getWidth(), qrcode.getHeight(), icon.getImageObserver());
+//					}
+//					if (body.isFeeLine()) {
+//						offSetX = printPager.offsetX;
+//						// 5=行间距
+//
+//						offSetY+=qrcode.getHeight() + 5;
+//					}else{
+//						offSetX+=qrcode.getWidth()+printPager.offsetX;
+//						offSetY+=qrcode.getHeight()/2 + 5;
+//					}
+//					continue;
+//				}
 				//设置字体
 
 				Font font = new Font(printPager.fontFamily,body.getFontStyle(),body.getFontSize());
@@ -182,7 +227,14 @@ public class Printer implements Printable {
 				for (String string : content) {
 					//绘制文本
 
-					g2.drawString(string, offSetX, offSetY+5);
+//					g2.drawString(string, offSetX, offSetY+5);
+					PrintItem item = new PrintItem(string, offSetX, offSetY + 5, font);
+					itemInPageList.add(item);
+					if (offSetY > printPager.pagerHeight){
+						pageslist.add(itemInPageList);
+						itemInPageList = new ArrayList<>();
+						offSetY = 0;
+					}
 					//换行
 
 					if(content.length>1){
@@ -203,6 +255,9 @@ public class Printer implements Printable {
 
 //			g2.drawLine(printPager.offsetX, offSetY, printPager.pagerWidth, offSetY);
 
+		}
+		if (!itemInPageList.isEmpty()){
+			pageslist.add(itemInPageList);
 		}
 		return offSetY;
 	}
@@ -256,5 +311,18 @@ public class Printer implements Printable {
 			tempStrs[0] = str==null ? " " : str;
 		}
 		return tempStrs;
+	}
+}
+
+class PrintItem{
+	public String s;
+	public int x;
+	public int y;
+	public Font font;
+	public PrintItem(String s, int x, int y, Font font){
+		this.s = s;
+		this.x = x;
+		this.y = y;
+		this.font = font;
 	}
 }

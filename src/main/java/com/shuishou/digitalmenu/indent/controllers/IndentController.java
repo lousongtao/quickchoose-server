@@ -13,15 +13,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shuishou.digitalmenu.BaseController;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
 import com.shuishou.digitalmenu.account.views.GetAccountsResult;
-import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.indent.services.IIndentService;
 import com.shuishou.digitalmenu.indent.views.GetIndentDetailResult;
 import com.shuishou.digitalmenu.indent.views.GetIndentResult;
 import com.shuishou.digitalmenu.indent.views.MakeOrderResult;
 import com.shuishou.digitalmenu.indent.views.OperateIndentResult;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 
 
@@ -64,10 +65,10 @@ public class IndentController extends BaseController {
 	}
 	
 	@RequestMapping(value="/indent/queryindent", method = {RequestMethod.GET,RequestMethod.POST})
-	public @ResponseBody GetIndentResult queryIndent(
+	public @ResponseBody ObjectListResult queryIndent(
 			@RequestParam(value = "page", required = false, defaultValue = "0") String pageStr,
 			@RequestParam(value = "start", required = false, defaultValue = "0") String startStr,
-			@RequestParam(value = "limit", required = false, defaultValue = "100") String limitStr,
+			@RequestParam(value = "limit", required = false, defaultValue = "300") String limitStr,
 			@RequestParam(value="starttime", required = false) String starttime,
 			@RequestParam(value="endtime", required = false) String endtime,
 			@RequestParam(value="status", required = false) String status,
@@ -80,7 +81,7 @@ public class IndentController extends BaseController {
 		return indentService.queryIndent(start, limit, starttime, endtime, status, deskname,orderby);
 	}
 	
-	@RequestMapping(value="/indent/queryindentdetail", method = (RequestMethod.GET))
+	@RequestMapping(value="/indent/queryindentdetail", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody GetIndentDetailResult queryIndentDetail(
 			@RequestParam(value = "userId", required = true) long userId,
 			@RequestParam(value="indentId", required = false) int indentId) throws Exception{
@@ -104,7 +105,7 @@ public class IndentController extends BaseController {
 			@RequestParam(value="id", required = true) int indentId,
 			@RequestParam(value="operatetype", required = true) byte operateType,
 			@RequestParam(value="paidPrice", required = false, defaultValue = "0") double paidPrice,
-			@RequestParam(value="payWay", required = false, defaultValue = "0") byte payWay,
+			@RequestParam(value="payWay", required = false, defaultValue = ConstantValue.INDENT_PAYWAY_CASH) String payWay,
 			@RequestParam(value="memberCard", required = false, defaultValue = "0") String memberCard) throws Exception{
 		
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
@@ -155,15 +156,15 @@ public class IndentController extends BaseController {
 		return indentService.printIndent(userId, indentId);
 	}
 	
-	@RequestMapping(value="/indent/printindentdetail", method = (RequestMethod.POST))
-	public @ResponseBody ObjectResult printIndentDetail(
-			@RequestParam(value = "userId", required = true) int userId,
-			@RequestParam(value="indentDetailId", required = true) int indentDetailId) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
-			return new OperateIndentResult("no_permission", false);
-		}
-		return indentService.printIndentDetail(userId, indentDetailId);
-	}
+//	@RequestMapping(value="/indent/printindentdetail", method = (RequestMethod.POST))
+//	public @ResponseBody ObjectResult printIndentDetail(
+//			@RequestParam(value = "userId", required = true) int userId,
+//			@RequestParam(value="indentDetailId", required = true) int indentDetailId) throws Exception{
+//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
+//			return new OperateIndentResult("no_permission", false);
+//		}
+//		return indentService.printIndentDetail(userId, indentDetailId);
+//	}
 	
 	@RequestMapping(value="/indent/changedesks", method = (RequestMethod.POST))
 	public @ResponseBody ObjectResult changeDesks(

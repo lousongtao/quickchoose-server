@@ -6,7 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.shuishou.digitalmenu.common.ConstantValue;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.shuishou.digitalmenu.ConstantValue;
 
 @Entity
 @Table
@@ -23,8 +26,8 @@ public class Printer {
 	@Column(name = "printer_name", nullable = false)
 	private String printerName;
 	
-	@Column(name = "copy", nullable = false)
-	private int copy;
+//	@Column(name = "copy", nullable = false)
+//	private int copy;
 	
 	/**
 	 * distinct printers as counter, kitchen
@@ -33,8 +36,8 @@ public class Printer {
 	@Column(name = "type")
 	private int type = ConstantValue.PRINTER_TYPE_COUNTER;
 	
-	@Column(name = "print_style", nullable = false)
-	private byte printStyle; //0: 连续打印, 1: 单菜打印
+//	@Column(name = "print_style", nullable = false)
+//	private byte printStyle; //0: 连续打印, 1: 单菜打印
 	
 	public Printer(){}
 	
@@ -68,22 +71,22 @@ public class Printer {
 		this.printerName = printerName;
 	}
 
-	public int getCopy() {
-		return copy;
-	}
-
-	public void setCopy(int copy) {
-		this.copy = copy;
-	}
-
-
-	public byte getPrintStyle() {
-		return printStyle;
-	}
-
-	public void setPrintStyle(byte printStyle) {
-		this.printStyle = printStyle;
-	}
+//	public int getCopy() {
+//		return copy;
+//	}
+//
+//	public void setCopy(int copy) {
+//		this.copy = copy;
+//	}
+//
+//
+//	public byte getPrintStyle() {
+//		return printStyle;
+//	}
+//
+//	public void setPrintStyle(byte printStyle) {
+//		this.printStyle = printStyle;
+//	}
 
 	public String getName() {
 		return name;

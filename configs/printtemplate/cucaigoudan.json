@@ -52,6 +52,8 @@
 	{
 		"name": "数量",
 		"width": 6,
+		"size":9,
+		"bold": false,
 		"variable": "amount"
 	}],
 

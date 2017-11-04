@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.UserData;
-import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.common.models.IPayWayDataAccessor;
 import com.shuishou.digitalmenu.common.models.IPrinterDataAccessor;
+import com.shuishou.digitalmenu.common.models.PayWay;
 import com.shuishou.digitalmenu.common.models.Printer;
 import com.shuishou.digitalmenu.indent.models.IIndentDataAccessor;
 import com.shuishou.digitalmenu.indent.models.Indent;
@@ -27,9 +29,9 @@ import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.management.models.IShiftWorkDataAccessor;
 import com.shuishou.digitalmenu.management.models.ShiftWork;
 import com.shuishou.digitalmenu.management.views.CurrentDutyResult;
-import com.shuishou.digitalmenu.management.views.ShiftWorkResult;
 import com.shuishou.digitalmenu.printertool.PrintJob;
 import com.shuishou.digitalmenu.printertool.PrintQueue;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
@@ -54,6 +56,9 @@ public class ManagementService implements IManagementService{
 	@Autowired
 	private HttpServletRequest request;
 	
+	@Autowired
+	private IPayWayDataAccessor paywayDA;
+	
 	@Override
 	@Transactional
 	public CurrentDutyResult getCurrentDuty() {
@@ -75,27 +80,15 @@ public class ManagementService implements IManagementService{
 
 	@Override
 	@Transactional
-	public ShiftWorkResult getShiftWorkList(int userId, int start, int limit, String shiftName, Date startTime, Date endTime) {
+	public ObjectListResult getShiftWorkList(int userId, int start, int limit, String shiftName, Date startTime, Date endTime) {
 		List<ShiftWork> sws = shiftWorkDA.queryShiftWork(start, limit, shiftName, startTime, endTime);
 		if (sws == null || sws.isEmpty())
-			return new ShiftWorkResult(Result.OK, true);
+			return new ObjectListResult(Result.OK, true);
 
-		ShiftWorkResult.ShiftWork swInfo = null;
-		List<ShiftWorkResult.ShiftWork> swInfos = new ArrayList<ShiftWorkResult.ShiftWork>();
-		
-		for (int i = 0; i < sws.size(); i++) {
-			ShiftWork sw = sws.get(i);
-			swInfo = new ShiftWorkResult.ShiftWork();
-			swInfo.id = sw.getId();
-			swInfo.userName = sw.getUserName();
-			swInfo.startTime = ConstantValue.DFYMDHMS.format(sw.getStartTime());
-			if (sw.getEndTime() != null){
-				swInfo.endTime = ConstantValue.DFYMDHMS.format(sw.getEndTime());
-			}
-			swInfos.add(swInfo);
-		}
-		ShiftWorkResult result = new ShiftWorkResult(Result.OK, true);
-		result.data = swInfos;
+		int count = shiftWorkDA.queryShiftWorkCount(start, limit, shiftName, startTime, endTime);
+		if (count >= 300)
+			return new ObjectListResult("Record is over 300, please change the filter", false, null, count);
+		ObjectListResult result = new ObjectListResult(Result.OK, true, sws);
 		return result;
 	}
 
@@ -157,6 +150,7 @@ public class ManagementService implements IManagementService{
 		List<Printer> printers = printerDA.queryPrinters();
 		if (printers == null || printers.isEmpty())
 			return;
+		List<PayWay> otherPayWays = paywayDA.queryPayWays();
 		//calculate period
 		long millsecs = endTime.getTime() - startTime.getTime();
 		int hours = (int)(millsecs / (60*60*1000));
@@ -172,6 +166,12 @@ public class ManagementService implements IManagementService{
 		double memberMoney = 0;
 		double totalPrice = 0;
 		double paidPrice = 0;
+		HashMap<String, Double> mapOtherPay = new HashMap<>();//other pay way money
+		if (otherPayWays != null && !otherPayWays.isEmpty()){
+			for(PayWay pw : otherPayWays){
+				mapOtherPay.put(pw.getName(), new Double(0.0));
+			}
+		}
 		Map<String, Map<String, String>> mapDishAmount = new HashMap<String, Map<String, String>>();
 		if (paidIndents != null){
 			for(Indent indent : paidIndents){
@@ -179,12 +179,18 @@ public class ManagementService implements IManagementService{
 				indnetAmount++;
 				totalPrice += indent.getTotalPrice();
 				paidPrice += indent.getPaidPrice();
-				if (indent.getPayWay() == ConstantValue.INDENT_PAYWAY_CASH){
+				if (ConstantValue.INDENT_PAYWAY_CASH.equals(indent.getPayWay())){
 					cashMoney += indent.getPaidPrice();
-				} else if (indent.getPayWay() == ConstantValue.INDENT_PAYWAY_CARD){
+				} else if (ConstantValue.INDENT_PAYWAY_BANKCARD.equals(indent.getPayWay())){
 					bankcardMoney += indent.getPaidPrice();
-				} else if (indent.getPayWay() == ConstantValue.INDENT_PAYWAY_MEMBER){
+				} else if (ConstantValue.INDENT_PAYWAY_MEMBER.equals(indent.getPayWay())){
 					memberMoney += indent.getPaidPrice();
+				} else {
+					//do double check for other payway, maybe there are some payway not existing in the list, which will make get(payway) == null
+					if (mapOtherPay.get(indent.getPayWay()) == null){
+						mapOtherPay.put(indent.getPayWay(), new Double(0.0));
+					}
+					mapOtherPay.put(indent.getPayWay(), mapOtherPay.get(indent.getPayWay()) + indent.getPaidPrice());
 				}
 				List<IndentDetail> details = indent.getItems();
 				for(IndentDetail d : details){
@@ -205,8 +211,6 @@ public class ManagementService implements IManagementService{
 			}
 		}
 		Map<String,String> keys = new HashMap<String, String>();
-		keys.put("restaurant", "HAO SZECHUAN 好吃嘴 北桥总店");
-		keys.put("printType", "交班单");
 		keys.put("userName", userName);
 		keys.put("startTime", ConstantValue.DFYMDHMS.format(startTime));
 		keys.put("endTime", ConstantValue.DFYMDHMS.format(endTime));
@@ -221,19 +225,18 @@ public class ManagementService implements IManagementService{
 		keys.put("paidPrice", String.format("%.2f",paidPrice));
 		keys.put("gst", String.format("%.2f",(double)(totalPrice/11)));
 		keys.put("printTime", ConstantValue.DFYMDHMS.format(new Date()));
-
+		for(String key : mapOtherPay.keySet()){
+			keys.put(key, String.format("%.2f",mapOtherPay.get(key)));
+		}
 		List<Map<String, String>> goods = new ArrayList<Map<String, String>>(mapDishAmount.values());
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("keys", keys);
 		params.put("goods", goods);
 		for(Printer p : printers){
-			if (!"counter".equals(p.getName()))
-				continue;
-			int copy = p.getCopy();
-			for(int i = 0; i< copy; i++){
-				
+			if (p.getType() == ConstantValue.PRINTER_TYPE_COUNTER){
 				PrintJob job = new PrintJob(tempfile, params, p.getPrinterName());
 				PrintQueue.add(job);
+				break;
 			}
 		}
 	}

@@ -19,6 +19,7 @@ public class OperateIndentResult extends ObjectResult {
 		public int id;
 		public int dishId;
 		public int amount;
+		public double weight;
 		public double dishPrice;//单个dish价格, 不考虑amount
 		public String dishChineseName;
 		public String dishEnglishName;

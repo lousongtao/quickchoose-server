@@ -1,7 +1,7 @@
 {
 	"header": [
 	{
-		"text": "{$restaurant}",
+		"text": "HAO SZECHUAN 好吃嘴 北桥总店",
 		"size": 10,
 		"bold": true,
 		"align": 1,
@@ -9,7 +9,7 @@
 		"type": 0
 	},
 	{
-		"text": "               {$printType}",
+		"text": "               交班单",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -101,11 +101,35 @@
 		"size": 9,
 		"bold": false,
 		"align": 0,
-		"line": false,
+		"line": true,
 		"type": 0
 	},
 	{
 		"text": "会员：{$memberMoney}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": false,
+		"type": 0
+	},
+	{
+		"text": "掌上澳洲：{$掌上澳洲}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "支付宝：{$支付宝}   ",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": false,
+		"type": 0
+	},
+	{
+		"text": "PayPal：{$PayPal}   ",
 		"size": 9,
 		"bold": false,
 		"align": 0,
@@ -183,6 +207,48 @@
 		"line": true,
 		"type": 0
 	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	],
+	
+	"msg": [{
+		"text": "--------------------------------",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},	
 	{
 		"text": "-",
 		"size": 9,

@@ -8,18 +8,15 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import com.shuishou.digitalmenu.account.models.UserData;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @author zhing the log data.
@@ -27,7 +24,6 @@ import com.shuishou.digitalmenu.account.models.UserData;
 @Entity
 @Table(name = "log", indexes = { @Index(name = "idx_type", columnList = "type"),
 		@Index(name = "idx_time", columnList = "time") })
-@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Log")
 public class LogData {
 
 	public static enum LogType {
@@ -37,20 +33,17 @@ public class LogData {
 		ACCOUNT_MODIFY("ACCOUNT_MODIFY"), 
 		ACCOUNT_DELETE("ACCOUNT_DELETE"),
 
-		CATEGORY1_ADD("CATEGORY1_ADD"),
-		CATEGORY1_MODIFY("CATEGORY1_MODIFY"),
-		CATEGORY1_DELETE("CATEGORY1_DELETE"),
-		CATEGORY2_ADD("CATEGORY2_ADD"),
-		CATEGORY2_MODIFY("CATEGORY2_MODIFY"),
-		CATEGORY2_DELETE("CATEGORY2_DELETE"),
-		DISH_ADD("DISH_ADD"),
-		DISH_MODIFY("DISH_MODIFY"),
-		DISH_DELETE("DISH_DELETE"),
+		CATEGORY1_CHANGE("CATEGORY1_CHANGE"),
+		CATEGORY2_CHANGE("CATEGORY2_CHANGE"),
+		DISH_CHANGE("DISH_CHANGE"),
+		FLAVOR_CHANGE("FLAVOR_CHANGE"),
 		
 		CHANGE_CONFIRMCODE("CHANGE_CONFIRMCODE"),
+		CHANGE_OPENCASHDRAWERCODE("CHANGE_OPENCASHDRAWERCODE"),
 		CHANGE_DESK("CHANGE_DESK"),
 		CHANGE_PRINTER("CHANGE_PRINTER"),
 		CHANGE_DISCOUNTTEMPLATE("CHANGE_DISCOUNTTEMPLATE"),
+		CHANGE_PAYWAY("CHANGE_PAYWAY"),
 		
 		INDENT_CANCEL("INDENT_CANCEL"),
 		INDENT_PAY("INDENT_PAY"),
@@ -88,9 +81,12 @@ public class LogData {
 	/**
 	 * the operator.
 	 */
-	@ManyToOne(optional = true, fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
-	private UserData user;
+//	@ManyToOne(optional = true, fetch = FetchType.EAGER)
+//	@JoinColumn(name = "user_id")
+//	private UserData user;
+	
+	@Column
+	private String userName;
 
 	/**
 	 * the type.
@@ -101,6 +97,7 @@ public class LogData {
 	/**
 	 * the time.
 	 */
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone = "GMT+8:00")
 	@Column(name = "time", nullable = false)
 	private Date time = new Date();
 
@@ -117,26 +114,35 @@ public class LogData {
 		return id;
 	}
 
-	/**
-	 * @return the user
-	 */
-	public UserData getUser() {
-		return user;
-	}
+//	/**
+//	 * @return the user
+//	 */
+//	public UserData getUser() {
+//		return user;
+//	}
+//
+//	/**
+//	 * @param user
+//	 *            the user to set
+//	 */
+//	public void setUser(UserData user) {
+//		this.user = user;
+//	}
 
-	/**
-	 * @param user
-	 *            the user to set
-	 */
-	public void setUser(UserData user) {
-		this.user = user;
-	}
-
+	
 	/**
 	 * @return the type
 	 */
 	public String getType() {
 		return type;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**

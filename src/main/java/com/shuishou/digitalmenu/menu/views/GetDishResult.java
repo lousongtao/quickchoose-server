@@ -2,7 +2,7 @@ package com.shuishou.digitalmenu.menu.views;
 
 import java.util.List;
 
-import com.shuishou.digitalmenu.common.ConstantValue;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.views.ObjectResult;
 
 public class GetDishResult extends ObjectResult {

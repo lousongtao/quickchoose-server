@@ -12,8 +12,7 @@ import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.Permission;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.account.models.UserPermission;
-import com.shuishou.digitalmenu.account.views.GetPermissionResult;
-import com.shuishou.digitalmenu.account.views.GetPermissionResult.PermissionInfo;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.Result;
 
 @Service
@@ -39,13 +38,13 @@ public class PermissionService implements IPermissionService {
 
 	@Override
 	@Transactional
-	public GetPermissionResult queryAllPermissions() {
+	public ObjectListResult queryAllPermissions() {
 		List<Permission> permissions = permissionAccessor.queryAllPermission();
-		List<PermissionInfo> pis = new ArrayList<PermissionInfo>();
-		for(Permission p : permissions){
-			pis.add(new PermissionInfo(p.getId()+"", p.getName()));
-		}
-		return new GetPermissionResult(Result.OK, true, pis);
+//		List<PermissionInfo> pis = new ArrayList<PermissionInfo>();
+//		for(Permission p : permissions){
+//			pis.add(new PermissionInfo(p.getId()+"", p.getName()));
+//		}
+		return new ObjectListResult(Result.OK, true, permissions);
 	}
 
 }

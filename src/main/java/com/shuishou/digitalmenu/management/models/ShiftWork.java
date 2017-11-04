@@ -8,6 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="shift_work")
 public class ShiftWork {
@@ -22,9 +27,11 @@ public class ShiftWork {
 	@Column(name="user_id", nullable = false)
 	private int userId;
 	
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone = "GMT+8:00")
 	@Column(name="start_time", nullable = false)
 	private Date startTime;
 	
+	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone = "GMT+8:00")
 	@Column(name="end_time")
 	private Date endTime;
 	

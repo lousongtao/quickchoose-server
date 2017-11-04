@@ -18,7 +18,7 @@ public class GetPermissionResult extends ObjectResult{
 	
 	public List<PermissionInfo> permissions;
 	
-	public GetPermissionResult(String result, boolean success, List<PermissionInfo> permissions) {
+	private GetPermissionResult(String result, boolean success, List<PermissionInfo> permissions) {
 		super(result, success);
 		this.permissions = permissions;
 	}

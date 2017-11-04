@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shuishou.digitalmenu.BaseController;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
 import com.shuishou.digitalmenu.account.views.GetAccountsResult;
-import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.management.services.IManagementService;
 import com.shuishou.digitalmenu.management.views.CurrentDutyResult;
-import com.shuishou.digitalmenu.management.views.ShiftWorkResult;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
@@ -50,15 +50,15 @@ public class ManagementController extends BaseController {
 	}
 	
 	@RequestMapping(value="/management/getshiftwork", method = {RequestMethod.GET, RequestMethod.POST})
-	public @ResponseBody ShiftWorkResult getShiftWork(
+	public @ResponseBody ObjectListResult getShiftWork(
 			@RequestParam(value = "userId", required = true) int userId,
-			@RequestParam(value = "start", required = true) int start,
-			@RequestParam(value = "limit", required = true) int limit,
+			@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "limit", required = false, defaultValue = "300") int limit,
 			@RequestParam(value = "userName", required = false) String userName,
 			@RequestParam(value = "startTime", required = false) String sStartTime,
 			@RequestParam(value = "endTime", required = false) String sEndTime) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_SHIFTWORK)){
-			return new ShiftWorkResult("no_permission", false);
+			return new ObjectListResult("no_permission", false);
 		}
 		Date startTime = null;
 		Date endTime = null;

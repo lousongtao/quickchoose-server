@@ -17,7 +17,8 @@ import com.google.common.collect.Lists;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.log.models.ILogDataAccessor;
 import com.shuishou.digitalmenu.log.models.LogData;
-import com.shuishou.digitalmenu.log.views.GetLogsResult;
+import com.shuishou.digitalmenu.views.ObjectListResult;
+import com.shuishou.digitalmenu.views.Result;
 
 @Service("logService")
 @Transactional(readOnly = true)
@@ -33,7 +34,7 @@ public class LogService implements ILogService {
 	@Transactional(readOnly = false)
 	public LogData write(UserData user, String type, String message) {
 		LogData log = new LogData();
-		log.setUser(user);
+		log.setUserName(user.getUsername());
 		log.setType(type);
 		log.setMessage(message);
 		logDA.persistLog(log);
@@ -43,7 +44,7 @@ public class LogService implements ILogService {
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public GetLogsResult queryLog(int start, int limit, String username, Date beginTime, Date endTime, String type,
+	public ObjectListResult queryLog(int start, int limit, String username, Date beginTime, Date endTime, String type,
 			String message) {
 		String countStmt = "select count(l) from LogData l";
 		String listStmt = "select l from LogData l";
@@ -88,17 +89,18 @@ public class LogService implements ILogService {
 			listQuery.setTimestamp("endTime", endTime);
 		}
 		int count = (int) (long) countQuery.setCacheable(true).uniqueResult();
+		if (count >= 300){
+			return new ObjectListResult("Record is over 300, please change the filter", false, null, count);
+		}
 
 		@SuppressWarnings("unchecked")
-		List<LogData> logs = listQuery.setFirstResult(start).setMaxResults(limit).setCacheable(true).
-		// setCacheRegion("log.query").
-				list();
-		List<GetLogsResult.LogInfo> loginfos = new ArrayList<GetLogsResult.LogInfo>();
-		for (LogData log : logs) {
-			loginfos.add(new GetLogsResult.LogInfo(log.getId(), log.getUser().getId(), log.getUser().getUsername(),
-					log.getType(), log.getTime(), log.getMessage()));
-		}
-		return new GetLogsResult("ok", true, loginfos, count);
+		List<LogData> logs = listQuery.setFirstResult(start).setMaxResults(limit).setCacheable(true).list();
+//		List<GetLogsResult.LogInfo> loginfos = new ArrayList<GetLogsResult.LogInfo>();
+//		for (LogData log : logs) {
+//			loginfos.add(new GetLogsResult.LogInfo(log.getId(), log.getUser().getId(), log.getUser().getUsername(),
+//					log.getType(), log.getTime(), log.getMessage()));
+//		}
+		return new ObjectListResult(Result.OK, true, logs, count);
 	}
 
 }

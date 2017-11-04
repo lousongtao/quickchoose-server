@@ -19,10 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.shuishou.digitalmenu.BaseController;
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.models.Permission;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
-import com.shuishou.digitalmenu.common.ConstantValue;
 import com.shuishou.digitalmenu.menu.models.Category1;
 import com.shuishou.digitalmenu.menu.models.DishChoosePopinfo;
 import com.shuishou.digitalmenu.menu.models.DishChooseSubitem;
@@ -55,6 +55,20 @@ public class MenuController extends BaseController {
 	@Autowired
 	private IMenuService menuService;
 	
+	@RequestMapping(value = "/menu/addflavor", method = {RequestMethod.POST})
+	public @ResponseBody Result addFlavor(
+			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "chineseName", required = true) String chineseName, 
+			@RequestParam(value = "englishName", required = true) String englishName) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		
+		Result result = menuService.addFlavor(userId, chineseName, englishName);
+		
+		return result;
+	}
+	
 	@RequestMapping(value = "/menu/add_category1", method = {RequestMethod.POST})
 	public @ResponseBody Result addCategory1(
 			@RequestParam(value = "userId", required = true) long userId,
@@ -68,6 +82,22 @@ public class MenuController extends BaseController {
 		Result result = menuService.addCategory1(userId, chineseName, englishName, sequence);
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/menu/updateflavor", method = {RequestMethod.POST})
+	public @ResponseBody Result updateFlavor(
+			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "id", required = true) int id,
+			@RequestParam(value = "chineseName", required = true) String chineseName, 
+			@RequestParam(value = "englishName", required = true) String englishName) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		
+		Result result = menuService.updateFlavor(userId, id, chineseName, englishName);
+		
+		return result;
+		
 	}
 	
 	@RequestMapping(value = "/menu/update_category1", method = {RequestMethod.POST})
@@ -369,9 +399,9 @@ public class MenuController extends BaseController {
 	}
 	
 	@RequestMapping(value="/menu/queryalldish", method = {RequestMethod.GET})
-	public @ResponseBody Result queryAllDish(
+	public @ResponseBody ObjectListResult queryAllDish(
 			@RequestParam(value = "category2Id", required = false) int category2Id) throws Exception{
-		GetDishResult result = menuService.queryAllDish(category2Id);
+		ObjectListResult result = menuService.queryAllDish(category2Id);
 		return result;
 	}
 	
@@ -407,6 +437,16 @@ public class MenuController extends BaseController {
 		} else {
 			return new Result("undefined node type");
 		}
+	}
+	
+	@RequestMapping(value = "/menu/deleteflavor", method = (RequestMethod.POST))
+	public @ResponseBody Result deleteFlavor(
+			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.deleteFlavor(userId, id);
 	}
 	
 	@RequestMapping(value = "/menu/delete_category1", method = (RequestMethod.POST))
@@ -445,7 +485,7 @@ public class MenuController extends BaseController {
 		return result;
 	}
 	
-	@RequestMapping(value="/menu/querydishbyname", method = {RequestMethod.POST})
+	@RequestMapping(value="/menu/querydishbyname", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody Result queryDishByName(
 			@RequestParam(value = "dishName", required = true) String dishName) throws Exception{
 		ObjectResult result = menuService.queryDishByName(dishName);

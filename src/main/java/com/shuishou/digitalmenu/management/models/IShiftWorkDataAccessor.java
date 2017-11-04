@@ -10,6 +10,7 @@ public interface IShiftWorkDataAccessor {
 	ShiftWork getShiftWorkById(int shiftWorkId);
 	
 	List<ShiftWork> queryShiftWork(int start, int limit,String shiftName, Date startTime, Date endTime);
+	int queryShiftWorkCount(int start, int limit,String shiftName, Date startTime, Date endTime);
 	
 	void insertShitWork(ShiftWork sw);
 	

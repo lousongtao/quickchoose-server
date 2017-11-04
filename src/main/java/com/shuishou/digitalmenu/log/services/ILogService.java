@@ -9,7 +9,7 @@ import java.util.Date;
 
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.log.models.LogData;
-import com.shuishou.digitalmenu.log.views.GetLogsResult;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 
 
 /**
@@ -38,5 +38,5 @@ public interface ILogService {
    * @param message
    * @return
    */
-  GetLogsResult queryLog(int start, int limit, String username, Date beginTime, Date endTime, String type, String message);
+  ObjectListResult queryLog(int start, int limit, String username, Date beginTime, Date endTime, String type, String message);
 }

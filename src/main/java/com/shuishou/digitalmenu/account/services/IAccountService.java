@@ -7,6 +7,7 @@ package com.shuishou.digitalmenu.account.services;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
+import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
 
@@ -48,7 +49,7 @@ public interface IAccountService {
    * query user record
    * @return
    */
-  GetAccountsResult getAccounts();
+  ObjectListResult getAccounts();
 
   /**
    * add user record

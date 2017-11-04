@@ -40,7 +40,7 @@ public class GetAccountsResult extends ObjectResult {
 	 * @param total
 	 *            the total count.
 	 */
-	public GetAccountsResult(String result, boolean success, List<AccountInfo> accounts, int total) {
+	private GetAccountsResult(String result, boolean success, List<AccountInfo> accounts, int total) {
 		super(result, success);
 		this.accounts = accounts;
 		this.total = total;

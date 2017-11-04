@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -26,7 +27,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 		@NamedQuery(name = "getUserByUsername", query = "select u from UserData u where u.username = :username"), })
 @Entity
 @Table(name = "user", indexes = { @Index(name = "username_idx", columnList = "username") })
-@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL, region = "Account")
 public class UserData {
 
 	/**
@@ -49,8 +49,8 @@ public class UserData {
 	@Column(name = "hashed_password", length = 40, nullable = false)
 	private String hashedPassword;
 
-	@OneToMany(cascade={CascadeType.ALL})
-	@JoinColumn(name="user_id")
+	@OneToMany(cascade={CascadeType.ALL}, mappedBy="user")
+//	@JoinColumn(name="user_id")
 	public List<UserPermission> permissions;
 
 	/*
