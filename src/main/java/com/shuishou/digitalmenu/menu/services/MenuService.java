@@ -739,7 +739,9 @@ public class MenuService implements IMenuService {
 		double oldprice = dish.getPrice();
 		dish.setPrice(newprice);
 		dishDA.save(dish);
-		
+		Hibernate.initialize(dish);
+		Hibernate.initialize(dish.getChoosePopInfo());
+		Hibernate.initialize(dish.getChooseSubItems());
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
@@ -791,6 +793,9 @@ public class MenuService implements IMenuService {
 			logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
 					"User " + selfUser + " change dish picture, id = " + id +".");
 		}
+		Hibernate.initialize(dish);
+		Hibernate.initialize(dish.getChoosePopInfo());
+		Hibernate.initialize(dish.getChooseSubItems());
 		return new ObjectResult(Result.OK, true, dish);
 	}
 
@@ -834,7 +839,9 @@ public class MenuService implements IMenuService {
 			return new ObjectResult("not found dish by id "+ id, false);
 		dish.setSoldOut(isSoldOut);
 		dishDA.save(dish);
-		
+		Hibernate.initialize(dish);
+		Hibernate.initialize(dish.getChoosePopInfo());
+		Hibernate.initialize(dish.getChooseSubItems());
 		//add record to menu_version
 		MenuVersion mv = new MenuVersion();
 		mv.setDishId(id);

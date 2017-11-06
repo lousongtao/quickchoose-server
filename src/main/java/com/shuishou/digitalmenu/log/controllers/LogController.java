@@ -66,7 +66,7 @@ public class LogController extends BaseController {
 			@RequestParam(value = "message", required = false, defaultValue = "") String message,
 			@RequestParam(value = "page", required = false, defaultValue = "0") String pageStr,
 			@RequestParam(value = "start", required = false, defaultValue = "0") String startStr,
-			@RequestParam(value = "limit", required = false, defaultValue = "10") String limitStr,
+			@RequestParam(value = "limit", required = false, defaultValue = "300") String limitStr,
 			@RequestParam(value = "username", required = false, defaultValue = "") String username,
 			@RequestParam(value = "type", required = false, defaultValue = "") String type,
 			@RequestParam(value = "beginTime", required = false, defaultValue = "") String beginTimeStr,
