@@ -40,7 +40,7 @@ public class IndentController extends BaseController {
 	
 	/**
 	 * 
-	 * @param indents String of a JSONArray, including dishid, amount, additionalRequirements
+	 * @param indents : a string of a JSONArray, including dishid, amount, additionalRequirements
 	 * @param deskid
 	 * @return
 	 * @throws Exception
@@ -50,10 +50,33 @@ public class IndentController extends BaseController {
 			@RequestParam(value="confirmCode", required = true) String confirmCode,
 			@RequestParam(value="indents", required = true) String indents,
 			@RequestParam(value="deskid", required = true) int deskid,
-			@RequestParam(value="customerAmount", required = true) int customerAmount) throws Exception{
+			@RequestParam(value="customerAmount", required = true) int customerAmount,
+			@RequestParam(value="comments", required = false, defaultValue = "") String comments) throws Exception{
 		JSONArray jsonOrder = new JSONArray(indents);
 		
-		return indentService.saveIndent(confirmCode, jsonOrder, deskid, customerAmount);
+		return indentService.saveIndent(confirmCode, jsonOrder, deskid, customerAmount, comments);
+	}
+	
+	/**
+	 * split an order and pay it 
+	 * 
+	 * @param indents: a string of a JSONArray, including dishid, amount, additionalRequirements
+	 * @param deskid
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/indent/splitindentandpay", method = (RequestMethod.POST))
+	public @ResponseBody ObjectResult splitOrderAndPay(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "confirmCode", required = true) String confirmCode,
+			@RequestParam(value = "originIndentId", required = true) int originIndentId,
+			@RequestParam(value = "indents", required = true) String indents,
+			@RequestParam(value = "paidPrice", required = false, defaultValue = "0") double paidPrice,
+			@RequestParam(value = "payWay", required = false, defaultValue = ConstantValue.INDENT_PAYWAY_CASH) String payWay,
+			@RequestParam(value = "memberCard", required = false, defaultValue = "0") String memberCard) throws Exception{
+		JSONArray jsonOrder = new JSONArray(indents);
+		
+		return indentService.splitIndent(userId, confirmCode, jsonOrder, originIndentId, paidPrice, payWay, memberCard);
 	}
 	
 	@RequestMapping(value="/indent/cleardesk", method = (RequestMethod.POST))
@@ -64,6 +87,20 @@ public class IndentController extends BaseController {
 		return indentService.clearDesk(userId, deskId);
 	}
 	
+	/**
+	 * 
+	 * @param pageStr
+	 * @param startStr
+	 * @param limitStr : java UI is not good to develop table page bar, so set this value is 300. if records are more, warn operator to set more filter
+	 * @param starttime : just compare the indent's starttime
+	 * @param endtime : just compare the indent's starttime
+	 * @param status use string to express status. take care the letter's case; Paid/Unpaid/Other
+	 * @param deskname
+	 * @param orderby
+	 * @param orderbydesc
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="/indent/queryindent", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody ObjectListResult queryIndent(
 			@RequestParam(value = "page", required = false, defaultValue = "0") String pageStr,
@@ -73,12 +110,13 @@ public class IndentController extends BaseController {
 			@RequestParam(value="endtime", required = false) String endtime,
 			@RequestParam(value="status", required = false) String status,
 			@RequestParam(value="deskname", required = false) String deskname,
-			@RequestParam(value="orderby", required = false) String orderby) throws Exception{
+			@RequestParam(value="orderby", required = false) String orderby,
+			@RequestParam(value="orderbydesc", required = false) String orderbydesc) throws Exception{
 		
 		int page = Integer.parseInt(pageStr);
 		int start = Integer.parseInt(startStr);
 		int limit = Integer.parseInt(limitStr);
-		return indentService.queryIndent(start, limit, starttime, endtime, status, deskname,orderby);
+		return indentService.queryIndent(start, limit, starttime, endtime, status, deskname,orderby,orderbydesc);
 	}
 	
 	@RequestMapping(value="/indent/queryindentdetail", method = {RequestMethod.GET,RequestMethod.POST})

@@ -10,8 +10,9 @@ import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 
 public interface IIndentService {
-	MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount);
-	ObjectListResult queryIndent(int start, int limit, String sstarttime, String sendtime, String status, String deskname, String orderby);
+	MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount, String comments);
+	ObjectResult splitIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId, double paidPrice, String payWay, String memberCard);
+	ObjectListResult queryIndent(int start, int limit, String sstarttime, String sendtime, String status, String deskname, String orderby, String orderbydesc);
 	GetIndentDetailResult queryIndentDetail(int indentId);
 	OperateIndentResult operateIndent(int userId, int indentId, byte operationType, double paidPrice, String payWay, String memberCard);
 	OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType);

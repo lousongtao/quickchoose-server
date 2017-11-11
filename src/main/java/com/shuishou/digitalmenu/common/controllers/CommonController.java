@@ -148,6 +148,12 @@ public class CommonController extends BaseController {
 		return commonService.deletePrinter(userId,id);
 	}
 	
+	@RequestMapping(value="/common/testconnection", method =  {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result testPrinterConnection(
+			@RequestParam(value="id", required = true) int id) throws Exception{
+		return commonService.testPrinterConnection(id);
+	}
+	
 	@RequestMapping(value="/common/getdiscounttemplates", method =  {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody ObjectListResult getDiscountTemplates() throws Exception{
 		return commonService.getDiscountTemplates();

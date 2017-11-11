@@ -1,6 +1,7 @@
 package com.shuishou.digitalmenu.menu.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,10 +33,10 @@ public class Category2 implements Serializable{
 	@Column(unique = true, nullable = false)
 	private int id;
 	
-	@Column(name="chinese_name", nullable = false)
+	@Column(name="chinese_name", nullable = false, unique = true)
 	private String chineseName;
 	
-	@Column(name = "english_name", nullable = false)
+	@Column(name = "english_name", nullable = false, unique = true)
 	private String englishName;
 	
 	@Column(nullable = false)
@@ -49,8 +50,8 @@ public class Category2 implements Serializable{
 	@ManyToOne
 	private Category1 category1;
 	
-	@ManyToOne
-	private Printer printer;
+	@OneToMany(cascade={CascadeType.ALL}, mappedBy="category2")
+	private List<Category2Printer> category2PrinterList;
 	
 	
 
@@ -107,14 +108,19 @@ public class Category2 implements Serializable{
 		this.dishes = dishes;
 	}
 	
-	
-
-	public Printer getPrinter() {
-		return printer;
+	public void addCategory2Printer(Category2Printer cp){
+		if (category2PrinterList == null)
+			category2PrinterList = new ArrayList<Category2Printer>();
+		category2PrinterList.add(cp);
 	}
 
-	public void setPrinter(Printer printer) {
-		this.printer = printer;
+
+	public List<Category2Printer> getCategory2PrinterList() {
+		return category2PrinterList;
+	}
+
+	public void setCategory2PrinterList(List<Category2Printer> category2PrinterList) {
+		this.category2PrinterList = category2PrinterList;
 	}
 
 	@Override

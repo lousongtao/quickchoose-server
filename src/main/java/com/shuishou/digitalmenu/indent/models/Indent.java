@@ -68,6 +68,9 @@ public class Indent {
 	@Column(nullable = false, name="daily_sequence")
 	private int dailySequence = -1;
 	
+	@Column
+	private String comments;
+	
 	public int getId() {
 		return id;
 	}
@@ -163,11 +166,7 @@ public class Indent {
 		this.status = status;
 	}
 
-	@Override
-	public String toString() {
-		return "Order [desk=" + deskName + ", totalPrice=" + totalPrice + "]";
-	}
-
+	
 	
 	public String getDeskName() {
 		return deskName;
@@ -184,6 +183,16 @@ public class Indent {
 	public void setDailySequence(int dailySequence) {
 		this.dailySequence = dailySequence;
 	}
+	
+	
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 
 	@Override
 	public int hashCode() {
@@ -191,6 +200,11 @@ public class Indent {
 		int result = 1;
 		result = prime * result + id;
 		return result;
+	}
+	
+	@Override
+	public String toString() {
+		return "Order [desk=" + deskName + ", totalPrice=" + totalPrice + "]";
 	}
 
 	@Override

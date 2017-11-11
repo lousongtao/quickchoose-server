@@ -53,6 +53,7 @@ import com.jfinal.kit.StrKit;
  */
 public class Printer implements Printable {
 	private Logger logger = Logger.getLogger(Printer.class);
+	private static ArrayList<Font> fontList = new ArrayList<>();
 	private PrintPager printPager;
 	
 	/**
@@ -206,7 +207,8 @@ public class Printer implements Printable {
 //				}
 				//设置字体
 
-				Font font = new Font(printPager.fontFamily,body.getFontStyle(),body.getFontSize());
+//				Font font = new Font(printPager.fontFamily,body.getFontStyle(),body.getFontSize());
+				Font font = getFontFromStore(printPager.fontFamily,body.getFontStyle(),body.getFontSize());
 				g2.setFont(font);
 				//字体高度  
 
@@ -260,6 +262,17 @@ public class Printer implements Printable {
 			pageslist.add(itemInPageList);
 		}
 		return offSetY;
+	}
+	
+	private Font getFontFromStore(String name, int style, int size){
+		for(Font f : fontList){
+			if (f.getName().equals(name) && f.getStyle() == style && f.getSize() == size){
+				return f;
+			}
+		}
+		Font f = new Font(name, style, size);
+		fontList.add(f);
+		return f;
 	}
 	
 	/**

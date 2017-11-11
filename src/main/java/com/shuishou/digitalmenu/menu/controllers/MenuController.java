@@ -1,11 +1,6 @@
 package com.shuishou.digitalmenu.menu.controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +15,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.ConstantValue;
-import com.shuishou.digitalmenu.account.models.Permission;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
-import com.shuishou.digitalmenu.menu.models.Category1;
 import com.shuishou.digitalmenu.menu.models.DishChoosePopinfo;
 import com.shuishou.digitalmenu.menu.models.DishChooseSubitem;
 import com.shuishou.digitalmenu.menu.services.IMenuService;
 import com.shuishou.digitalmenu.menu.views.CheckMenuVersionResult;
-import com.shuishou.digitalmenu.menu.views.GetCategory1Result;
-import com.shuishou.digitalmenu.menu.views.GetCategory2Result;
-import com.shuishou.digitalmenu.menu.views.GetDishResult;
-import com.shuishou.digitalmenu.menu.views.GetMenuResult;
-import com.shuishou.digitalmenu.menu.views.OperationResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -124,12 +112,14 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
-			@RequestParam(value = "printerId", required = true) int printerId) throws Exception{
+			@RequestParam(value = "printerIds", required = true) String sPrinterId) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.addCategory2(userId, chineseName, englishName, sequence, category1Id, printerId);
+		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
+		
+		Result result = menuService.addCategory2(userId, chineseName, englishName, sequence, category1Id, printerIds);
 		
 		return result;
 	}
@@ -142,12 +132,14 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "englishName", required = true) String englishName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
-			@RequestParam(value = "printerId", required = true) int printerId) throws Exception{
+			@RequestParam(value = "printerIds", required = true) String sPrinterId) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.updateCategory2(userId, id, chineseName, englishName, sequence, category1Id, printerId);
+		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
+		
+		Result result = menuService.updateCategory2(userId, id, chineseName, englishName, sequence, category1Id, printerIds);
 		
 		return result;
 	}
@@ -372,7 +364,7 @@ public class MenuController extends BaseController {
 	}
 	
 	@RequestMapping(value="/menu/querymenu", method = {RequestMethod.GET})
-	public @ResponseBody Result queryMenu(
+	public @ResponseBody ObjectListResult queryMenu(
 			//@RequestParam(value="userId", required = true) long userId 
 			//@RequestParam(value = "node", required = true) String node
 			) throws Exception{
@@ -381,34 +373,34 @@ public class MenuController extends BaseController {
 //		}
 		
 		//GetMenuResult result = menuService.queryMenu(node);
-		GetMenuResult result = menuService.queryAllMenu();
+		ObjectListResult result = menuService.queryAllMenu();
 		return result;
 	}
 	
-	@RequestMapping(value="/menu/queryallcategory1", method = {RequestMethod.GET})
-	public @ResponseBody Result queryAllCategory1() throws Exception{
-		GetCategory1Result result = menuService.queryAllCategory1();
-		return result;
-	}
+//	@RequestMapping(value="/menu/queryallcategory1", method = {RequestMethod.GET})
+//	public @ResponseBody Result queryAllCategory1() throws Exception{
+//		GetCategory1Result result = menuService.queryAllCategory1();
+//		return result;
+//	}
 	
-	@RequestMapping(value="/menu/queryallcategory2", method = {RequestMethod.GET})
-	public @ResponseBody Result queryAllCategory2(
-			@RequestParam(value = "category1Id", required = false) int category1Id) throws Exception{
-		GetCategory2Result result = menuService.queryAllCategory2(category1Id);
-		return result;
-	}
+//	@RequestMapping(value="/menu/queryallcategory2", method = {RequestMethod.GET})
+//	public @ResponseBody Result queryAllCategory2(
+//			@RequestParam(value = "category1Id", required = false) int category1Id) throws Exception{
+//		GetCategory2Result result = menuService.queryAllCategory2(category1Id);
+//		return result;
+//	}
 	
-	@RequestMapping(value="/menu/queryalldish", method = {RequestMethod.GET})
-	public @ResponseBody ObjectListResult queryAllDish(
-			@RequestParam(value = "category2Id", required = false) int category2Id) throws Exception{
-		ObjectListResult result = menuService.queryAllDish(category2Id);
-		return result;
-	}
+//	@RequestMapping(value="/menu/queryalldish", method = {RequestMethod.GET})
+//	public @ResponseBody ObjectListResult queryAllDish(
+//			@RequestParam(value = "category2Id", required = false) int category2Id) throws Exception{
+//		ObjectListResult result = menuService.queryAllDish(category2Id);
+//		return result;
+//	}
 	
 	@RequestMapping(value="/menu/querydishbyid", method = {RequestMethod.POST})
-	public @ResponseBody Result queryDishById(
+	public @ResponseBody ObjectResult queryDishById(
 			@RequestParam(value = "dishId", required = true) int dishId) throws Exception{
-		GetDishResult result = menuService.queryDishById(dishId);
+		ObjectResult result = menuService.queryDishById(dishId);
 		return result;
 	}
 	

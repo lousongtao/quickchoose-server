@@ -1,5 +1,14 @@
 package com.shuishou.digitalmenu.common.services;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,13 +19,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.attribute.HashAttributeSet;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Media;
+import javax.print.attribute.standard.MediaTray;
+import javax.print.attribute.standard.PrinterName;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,9 +63,13 @@ import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.menu.models.Category2;
 import com.shuishou.digitalmenu.menu.models.Category2DataAccessor;
+import com.shuishou.digitalmenu.menu.models.Category2Printer;
+import com.shuishou.digitalmenu.menu.models.ICategory2DataAccessor;
+import com.shuishou.digitalmenu.menu.models.ICategory2PrinterDataAccessor;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
+
 
 @Service
 public class CommonService implements ICommonService {
@@ -77,10 +100,13 @@ public class CommonService implements ICommonService {
 	private IPayWayDataAccessor payWayDA;
 	
 	@Autowired
-	private Category2DataAccessor category2DA;
+	private ICategory2DataAccessor category2DA;
 	
 	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private ICategory2PrinterDataAccessor category2PrinterDA;
 	
 	@Override
 	@Transactional
@@ -245,15 +271,68 @@ public class CommonService implements ICommonService {
 		//clear the connection with Category2
 		List<Category2> c2s = category2DA.getAllCategory2();
 		for(Category2 c2 : c2s ){
-			if (c2.getPrinter() != null && c2.getPrinter().getId() == id){
-				c2.setPrinter(null);
-				category2DA.save(c2);
+			if (c2.getCategory2PrinterList()!= null){
+				for(Category2Printer cp : c2.getCategory2PrinterList()){
+					if (cp.getPrinter().getId() == id){
+						category2PrinterDA.delete(cp);
+						c2.getCategory2PrinterList().remove(cp);
+						category2DA.save(c2);
+					}
+					
+				}
+				
 			}
 		}
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " delete printer " + p.getName());
 
+		return new ObjectResult(Result.OK, true);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectResult testPrinterConnection(int id) {
+		Printer p = printerDA.getPrinterById(id);
+		if (p == null)
+			return new ObjectResult("No printer found, id = "+ id, false);
+		PrinterJob pj = PrinterJob.getPrinterJob();
+
+		HashAttributeSet hs = new HashAttributeSet();
+		hs.add(new PrinterName(p.getPrinterName(), null));
+		// 获取打印服务对象
+		PrintService[] printService = PrintServiceLookup.lookupPrintServices(null, hs);
+		if (printService.length > 0) {
+			PrintService ps = printService[0];
+			try {
+				pj.setPrintService(ps);
+				PageFormat pf = new PageFormat();
+				Paper paper = new Paper();
+				paper.setImageableArea(0, 0, 200, 200);
+				pf.setPaper(paper);
+				pj.setPrintable(new Printable(){
+
+					@Override
+					public int print(Graphics g, PageFormat pageFormat, int pageIndex) throws PrinterException {
+						Graphics2D g2 = (Graphics2D) g;
+						if (pageIndex > 0)
+							return NO_SUCH_PAGE;
+						String txt = ConstantValue.DFYMDHMS.format(new Date());
+						
+						g2.drawString("This is a print test", 0, 20);
+						g2.drawString("Current time is " + txt, 0, 40);
+						
+						return PAGE_EXISTS;
+					}
+					
+				}, pf);
+				pj.print();
+			} catch (PrinterException e) {
+				logger.error("", e);
+				e.printStackTrace();
+				return new ObjectResult(e.getMessage(), false);
+			}
+		}
 		return new ObjectResult(Result.OK, true);
 	}
 
@@ -279,10 +358,12 @@ public class CommonService implements ICommonService {
 				deskinfo.mergeTo =desk.getMergeTo().getName();
 			for(Indent indent : indents){
 				if (indent.getDeskName().equals(desk.getName())){
-					deskinfo.indentId = indent.getId();
-					deskinfo.price = indent.getTotalPrice();
-					deskinfo.customerAmount = indent.getCustomerAmount();
-					deskinfo.startTime = ConstantValue.DFYMDHMS.format(indent.getStartTime());
+					Hibernate.initialize(indent);
+					Hibernate.initialize(indent.getItems());
+					deskinfo.indent = indent;
+//					deskinfo.price = indent.getTotalPrice();
+//					deskinfo.customerAmount = indent.getCustomerAmount();
+//					deskinfo.startTime = ConstantValue.DFYMDHMS.format(indent.getStartTime());
 					break;
 				}
 			}
@@ -301,14 +382,14 @@ public class CommonService implements ICommonService {
 			subDesks.add(deskDA.getDeskById(Integer.parseInt(sid)));
 		}
 		Desk mainDesk = deskDA.getDeskById(mainDeskId);
-		List<Indent> mainIndents = indentDA.getIndents(0, 100, null, null, new Byte[]{ConstantValue.INDENT_STATUS_OPEN}, mainDesk.getName(), null);
+		List<Indent> mainIndents = indentDA.getIndents(0, 100, null, null, new Byte[]{ConstantValue.INDENT_STATUS_OPEN}, mainDesk.getName(), null, null);
 		Indent mainIndent = null;
 		if (!mainIndents.isEmpty()){
 			mainIndent = mainIndents.get(0);
 		}
 		List<Indent> subDesksIndents = new ArrayList<Indent>();
 		for(Desk desk : subDesks){
-			subDesksIndents.addAll(indentDA.getIndents(0, 100, null, null, new Byte[]{ConstantValue.INDENT_STATUS_OPEN}, desk.getName(), null));
+			subDesksIndents.addAll(indentDA.getIndents(0, 100, null, null, new Byte[]{ConstantValue.INDENT_STATUS_OPEN}, desk.getName(), null, null));
 		}
 		//flag the merge info for sub desks
 		for(Desk desk : subDesks){
@@ -336,9 +417,11 @@ public class CommonService implements ICommonService {
 				List<IndentDetail> details = subIndent.getItems();
 				for(IndentDetail detail : details){
 					detail.setIndent(mainIndent);
+					mainIndent.addItem(detail);
 				}
 				totalprice += subIndent.getTotalPrice();
 				customers += subIndent.getCustomerAmount();
+				subIndent.setItems(null);
 				indentDA.delete(subIndent);
 			}
 			mainIndent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
@@ -356,10 +439,12 @@ public class CommonService implements ICommonService {
 		deskinfo.id = mainDesk.getId();
 		deskinfo.name = mainDesk.getName();
 		if (mainIndent != null){
-			deskinfo.indentId = mainIndent.getId();
-			deskinfo.price = mainIndent.getTotalPrice();
-			deskinfo.customerAmount = mainIndent.getCustomerAmount();
-			deskinfo.startTime = ConstantValue.DFYMDHMS.format(mainIndent.getStartTime());
+			Hibernate.initialize(mainIndent);
+			Hibernate.initialize(mainIndent.getItems());
+			deskinfo.indent = mainIndent;
+//			deskinfo.price = mainIndent.getTotalPrice();
+//			deskinfo.customerAmount = mainIndent.getCustomerAmount();
+//			deskinfo.startTime = ConstantValue.DFYMDHMS.format(mainIndent.getStartTime());
 		}
 		
 		deskinfos.add(deskinfo);

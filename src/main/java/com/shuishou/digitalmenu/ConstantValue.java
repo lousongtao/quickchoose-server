@@ -34,12 +34,15 @@ public class ConstantValue {
 	public static final String CATEGORY_DISHIMAGE_BIG = "dishimage_big";
 	public static final String CATEGORY_DISHIMAGE_MIDDLE = "dishimage_middle";
 	public static final String CATEGORY_DISHIMAGE_SMALL = "dishimage_small";
+	public static final String CATEGORY_DISHIMAGE_ORIGIN = "dishimage_origin";
 	public static final String CATEGORY_PRINTTEMPLATE = "printtemplate";
 	
 	public static final int DISHIMAGE_WIDTH_SMALL = 120;
 	public static final int DISHIMAGE_HEIGHT_SMALL = 120;
 	public static final int DISHIMAGE_WIDTH_BIG = 240;
 	public static final int DISHIMAGE_HEIGHT_BIG = 240;
+	public static final int DISHIMAGE_WIDTH_ORIGIN = 540;
+	public static final int DISHIMAGE_HEIGHT_ORIGIN = 540;
 	
 	public static final String CSS_MENUTREENODE_ICON_SIZE = "menutreenode-icon-size";
 	

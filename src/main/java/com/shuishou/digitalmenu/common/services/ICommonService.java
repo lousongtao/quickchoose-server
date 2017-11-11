@@ -33,6 +33,8 @@ public interface ICommonService {
 	
 	ObjectResult deletePrinter(long userId, int id);
 	
+	ObjectResult testPrinterConnection(int id);
+	
 	ObjectListResult getDiscountTemplates();
 	
 	ObjectResult saveDiscountTemplate(long userId, String name, double rate);

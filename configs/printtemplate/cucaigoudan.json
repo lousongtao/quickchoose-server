@@ -52,12 +52,20 @@
 	{
 		"name": "数量",
 		"width": 6,
-		"size":9,
+		"size":12,
 		"bold": false,
 		"variable": "amount"
 	}],
 
 	"msg": [{
+		"text": "{$indentcomments}",
+		"size": 12,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
 		"text": "--------------------------------",
 		"size": 9,
 		"bold": false,

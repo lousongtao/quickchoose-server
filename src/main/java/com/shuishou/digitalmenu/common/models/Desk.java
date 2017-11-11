@@ -19,7 +19,7 @@ public class Desk {
 	@Column(nullable = false, unique = true)
 	private int id;
 	
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 	
 	@Column

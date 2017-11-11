@@ -1,26 +1,23 @@
 package com.shuishou.digitalmenu.menu.services;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,12 +32,14 @@ import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.menu.models.Category1;
 import com.shuishou.digitalmenu.menu.models.Category2;
+import com.shuishou.digitalmenu.menu.models.Category2Printer;
 import com.shuishou.digitalmenu.menu.models.Dish;
 import com.shuishou.digitalmenu.menu.models.DishChoosePopinfo;
 import com.shuishou.digitalmenu.menu.models.DishChooseSubitem;
 import com.shuishou.digitalmenu.menu.models.Flavor;
 import com.shuishou.digitalmenu.menu.models.ICategory1DataAccessor;
 import com.shuishou.digitalmenu.menu.models.ICategory2DataAccessor;
+import com.shuishou.digitalmenu.menu.models.ICategory2PrinterDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IDishChoosePopinfoDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IDishChooseSubitemDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IDishDataAccessor;
@@ -48,11 +47,6 @@ import com.shuishou.digitalmenu.menu.models.IFlavorDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IMenuVersionDataAccessor;
 import com.shuishou.digitalmenu.menu.models.MenuVersion;
 import com.shuishou.digitalmenu.menu.views.CheckMenuVersionResult;
-import com.shuishou.digitalmenu.menu.views.GetCategory1Result;
-import com.shuishou.digitalmenu.menu.views.GetCategory2Result;
-import com.shuishou.digitalmenu.menu.views.GetDishResult;
-import com.shuishou.digitalmenu.menu.views.GetMenuResult;
-import com.shuishou.digitalmenu.menu.views.OperationResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -95,6 +89,9 @@ public class MenuService implements IMenuService {
 	
 	@Autowired
 	private IFlavorDataAccessor flavorDA;
+	
+	@Autowired
+	private ICategory2PrinterDataAccessor category2PrinterDA;
 
 	@Override
 	@Transactional
@@ -122,6 +119,7 @@ public class MenuService implements IMenuService {
 		c1.setEnglishName(englishName);
 		c1.setSequence(sequence);
 		category1DA.save(c1);
+		hibernateInitialCategory1(c1);
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
@@ -135,23 +133,32 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addCategory2(long userId, String chineseName, String englishName, int sequence, int category1Id, int printerId) {
+	public ObjectResult addCategory2(long userId, String chineseName, String englishName, int sequence, int category1Id, ArrayList<Integer> printerIds) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null){
 			return new ObjectResult("cannot find category1 by id : "+ category1Id, false, null);
 		}
-		Printer p = printerDA.getPrinterById(printerId);
-		if (p == null){
-			return new ObjectResult("cannot find Printer by id : "+ printerId, false, null);
-		}
+		
 		Category2 c2 = new Category2();
 		c2.setChineseName(chineseName);
 		c2.setEnglishName(englishName);
 		c2.setSequence(sequence);
 		c2.setCategory1(c1);
-		c2.setPrinter(p);
-		
 		category2DA.save(c2);
+		for(Integer i : printerIds){
+			Printer p = printerDA.getPrinterById(i);
+			if (p == null){
+				return new ObjectResult("cannot find Printer by id : "+ i, false, null);
+			}
+			Category2Printer cp = new Category2Printer();
+			cp.setPrinter(p);
+			cp.setCategory2(c2);
+			c2.addCategory2Printer(cp);
+			category2PrinterDA.save(cp);
+		}
+		
+		
+		hibernateInitialCategory2(c2);
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
@@ -183,8 +190,6 @@ public class MenuService implements IMenuService {
 		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_SUBITEM && (subitems == null || subitems.isEmpty())){
 			return new ObjectResult("no subitems", false, null);
 		}
-//		Map<String, String> resultInfoMap = new HashMap<String, String>();//return to client side
-//		resultInfoMap.put("type", ConstantValue.TYPE_DISHINFO);
 		
 		Dish dish = new Dish();
 		dish.setChineseName(chineseName);
@@ -201,25 +206,6 @@ public class MenuService implements IMenuService {
 		dish.setAutoMergeWhileChoose(autoMerge);
 		dish.setPurchaseType(purchaseType);
 		dishDA.save(dish);
-		
-//		if (image != null && image.getSize() > 0){
-//			//save image as a file in server harddisk
-//			//generate a name for this dish. name formular: category1.englishname + '-' + category2.englishname + '-' + dish.englishname
-//			String fileName = "DISH-"+dish.getId() + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1);
-//			try {
-//				dish.setPictureName(fileName);
-//				
-//				//generate small picture from original picture
-//				String fileNameBig = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_BIG + "/" + fileName;
-//				String fileNameSmall = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_SMALL + "/" + fileName;
-//				makeZoomImage(image.getInputStream(), fileNameBig, ConstantValue.DISHIMAGE_WIDTH_BIG, ConstantValue.DISHIMAGE_HEIGHT_BIG);
-//				makeZoomImage(image.getInputStream(), fileNameSmall, ConstantValue.DISHIMAGE_WIDTH_SMALL, ConstantValue.DISHIMAGE_HEIGHT_SMALL);
-//				resultInfoMap.put("dishicon", fileName);
-//			} catch (IOException e) {
-//				logger.error("Exception when create image file for dish : " + dish, e);
-//				e.printStackTrace();
-//			} 
-//		}
 		
 		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE 
 				|| chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOQUIT){
@@ -239,175 +225,26 @@ public class MenuService implements IMenuService {
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(), "User " + selfUser + " add Dish : " + dish);
 		
-//		resultInfoMap.put("id", String.valueOf(dish.getId()));
-		
-//		dish = dishDA.getDishById(dish.getId());
-		
+		hibernateInitialDish(dish);
 		return new ObjectResult(Result.OK, true, dish);
 	}
-
-	/**
-	 * this can be used only for combobox, not for tree because 'id' is a resist word 
-	 */
-	@Override
-	@Transactional
-	public GetCategory1Result queryAllCategory1(){
-		List<Category1> c1s = category1DA.getAllCategory1();
-		List<GetCategory1Result.Category1Info> c1InfoList = new ArrayList<GetCategory1Result.Category1Info>();
-		for (int i = 0; i < c1s.size(); i++) {
-			GetCategory1Result.Category1Info c1info = new GetCategory1Result.Category1Info(
-					c1s.get(i).getId(),
-					c1s.get(i).getChineseName(), 
-					c1s.get(i).getEnglishName(), 
-					c1s.get(i).getSequence());
-			c1InfoList.add(c1info);
-		}
-		return new GetCategory1Result(Result.OK,true, c1InfoList);
-	}
-	
-	/**
-	 * this can be used only for combobox, not for tree because 'id' is a resist word
-	 */
-	@Override
-	@Transactional
-	public GetCategory2Result queryAllCategory2(int category1Id){
-		List<Category2> c2s = null;
-		if (category1Id > 0){
-			c2s = category2DA.getCategory2ByParent(category1Id);
-		} else {
-			c2s = category2DA.getAllCategory2();
-		}
-		List<GetCategory2Result.Category2Info> c2InfoList = null;
-		if (c2s != null){
-			c2InfoList = new ArrayList<GetCategory2Result.Category2Info>();
-			for (int i = 0; i < c2s.size(); i++) {
-				GetCategory2Result.Category2Info c2info = new GetCategory2Result.Category2Info(
-						c2s.get(i).getId(),
-						c2s.get(i).getChineseName(), 
-						c2s.get(i).getEnglishName(), 
-						c2s.get(i).getSequence(), 
-						c2s.get(i).getCategory1().getId(),
-						c2s.get(i).getPrinter() == null ? 0 : c2s.get(i).getPrinter().getId());
-				c2InfoList.add(c2info);
-			}
-		}
-		return new GetCategory2Result(Result.OK,true, c2InfoList);
-	}
 	
 	@Override
 	@Transactional
-	public ObjectListResult queryAllDish(int category2Id){
-		List<Dish> dishes = null;
-		if (category2Id > 0){
-			dishes = dishDA.getDishesByParentId(category2Id);
-		} else {
-//			dishes = dishDA.getDishesByParentId(category2Id);
-		}
-		return new ObjectListResult(Result.OK, true, dishes);
-	}
-	
-	@Override
-	@Transactional
-	public GetDishResult queryDishById(int dishId){
+	public ObjectResult queryDishById(int dishId){
 		Dish dish = dishDA.getDishById(dishId);
 		if (dish == null)
-			return new GetDishResult("cannot find dish by id "+ dishId, false, null);
-		List<GetDishResult.DishInfo> dishInfoList = null;
-		if (dish != null){
-			dishInfoList = new ArrayList<GetDishResult.DishInfo>();
-			GetDishResult.DishInfo dishinfo = new GetDishResult.DishInfo();
-			dishinfo.id = dish.getId();
-			dishinfo.chineseName = dish.getChineseName();
-			dishinfo.englishName = dish.getEnglishName();
-			dishinfo.sequence = dish.getSequence();
-			dishinfo.price = dish.getPrice();
-			dishinfo.sequence = dish.getSequence();
-			dishinfo.isSoldOut = dish.isSoldOut();
-			dishInfoList.add(dishinfo);
-		}
-		return new GetDishResult(Result.OK, true, dishInfoList);
-	}
-	
-	private GetMenuResult queryCategory2ByCategory1Id(int c1Id){
-		Category1 c1 = category1DA.getCategory1ById(c1Id);
-		if (c1 == null)
-			return new GetMenuResult("cannot get category1 by id "+ c1Id, false, null);
-		List<Category2> c2s = c1.getCategory2s();
-		List<GetMenuResult.Category2Info> c2InfoList = new ArrayList<GetMenuResult.Category2Info>();
-		for (int j = 0; j < c2s.size(); j++) {
-			GetMenuResult.Category2Info c2info = new GetMenuResult.Category2Info(
-					c2s.get(j).getId(),
-					c2s.get(j).getChineseName(), 
-					c2s.get(j).getEnglishName(), 
-					c2s.get(j).getSequence(), 
-					c1.getId(),
-					new ArrayList<GetMenuResult.DishInfo>(),
-					c2s.get(j).getPrinter() == null ? 0 : c2s.get(j).getPrinter().getId());
-			if (c2s.get(j).getDishes() == null || c2s.get(j).getDishes().isEmpty())
-				c2info.loaded = true;
-			c2InfoList.add(c2info);
-		}
-		return new GetMenuResult(Result.OK, true, c2InfoList);
-	}
-	
-	private ObjectListResult queryDishByCategory2Id(int c2Id){
-		Category2 c2 = category2DA.getCategory2ById(c2Id);
-		if (c2 == null)
-			return new ObjectListResult("cannot get category2 by id "+ c2Id, false, null);
-		List<Dish> dishes = c2.getDishes();
-		return new ObjectListResult(Result.OK, true, dishes);
-//		List<GetMenuResult.DishInfo> dishInfoList = new ArrayList<GetMenuResult.DishInfo>();
-//		for (int k = 0; k < dishes.size(); k++) {
-//			GetMenuResult.DishInfo dishInfo = new GetMenuResult.DishInfo();
-//			dishInfo.objectid = dishes.get(k).getId();
-//			dishInfo.chineseName = dishes.get(k).getChineseName();
-//			dishInfo.englishName = dishes.get(k).getEnglishName();
-//			dishInfo.sequence = dishes.get(k).getSequence();
-//			dishInfo.price = dishes.get(k).getPrice();
-//			dishInfo.parentID = c2.getId();
-//			dishInfo.isNew = dishes.get(k).isNew();
-//			dishInfo.isSpecial = dishes.get(k).isSpecial();
-//			dishInfo.hotLevel = dishes.get(k).getHotLevel();
-//			dishInfo.pictureName = dishes.get(k).getPictureName();
-//			dishInfo.displayText = dishInfo.chineseName;
-//			dishInfoList.add(dishInfo);
-//		}
-//		return new GetMenuResult(Result.OK, true, dishInfoList);
+			return new ObjectResult("cannot find dish by id "+ dishId, false, null);
+		hibernateInitialDish(dish);
+		return new ObjectResult(Result.OK, true, dish);
 	}
 	
 	@Override
 	@Transactional
-	public GetMenuResult queryMenu(String node) {
-		if ("root".equals(node) || "NaN".equals(node)){
-//			return queryAllCategory1();
-		} else if (node.startsWith("C1")){
-			return queryCategory2ByCategory1Id(Integer.parseInt(node.substring(3)));
-		} else if (node.startsWith("C2")){
-//			return queryDishByCategory2Id(Integer.parseInt(node.substring(3)));
-		}
-		return new GetMenuResult("wrong node", false, null);
-	}
-	
-	@Override
-	@Transactional
-	public GetMenuResult queryAllMenu() {
-		logger.info("start query menu " + ConstantValue.DFYMDHMS.format(System.currentTimeMillis()));
+	public ObjectListResult queryAllMenu() {
 		List<Category1> c1s = category1DA.getAllCategory1();
-		Hibernate.initialize(c1s);
-		for (int i = 0; i < c1s.size(); i++) {
-			Category1 c1 = c1s.get(i);
-			List<Category2> c2s = c1.getCategory2s();
-			Hibernate.initialize(c2s);
-			for (int j = 0; j < c2s.size(); j++) {
-				List<Dish> dishes = c2s.get(j).getDishes();
-				Hibernate.initialize(dishes);
-				for (int k = 0; k < dishes.size(); k++) {
-					Hibernate.initialize(dishes.get(k).getChoosePopInfo());
-					Hibernate.initialize(dishes.get(k).getChooseSubItems());
-				}
-			}
-		}
-		return new GetMenuResult(Result.OK,true, c1s);
+		hibernateInitialCategory1(c1s);
+		return new ObjectListResult(Result.OK,true, c1s);
 	}
 
 	@Override
@@ -535,7 +372,7 @@ public class MenuService implements IMenuService {
 		c1.setEnglishName(englishName);
 		c1.setSequence(sequence);
 		category1DA.save(c1);
-		
+		hibernateInitialCategory1(c1);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY1_CHANGE.toString(),
@@ -548,30 +385,45 @@ public class MenuService implements IMenuService {
 	@Override
 	@Transactional
 	public ObjectResult updateCategory2(long userId, int id, String chineseName, String englishName, int sequence,
-			int category1Id, int printerId) {
+			int category1Id, ArrayList<Integer> printerIds) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null)
 			return new ObjectResult("not found Category1 by id "+ category1Id, false, null);
 		Category2 c2 = category2DA.getCategory2ById(id);
 		if (c2 == null)
 			return new ObjectResult("not found Category2 by id "+ id, false, null);
-		Printer p = printerDA.getPrinterById(printerId);
-		if (p == null){
-			return new ObjectResult("cannot find Printer by id : "+ printerId, false, null);
+		//delete all relations with printer and rebuild the relation
+		List<Category2Printer> cps = c2.getCategory2PrinterList();
+		c2.setCategory2PrinterList(null);
+		for(Category2Printer cp : cps){
+			category2PrinterDA.delete(cp);
 		}
+		for (Integer i : printerIds) {
+			Printer p = printerDA.getPrinterById(i);
+			if (p == null) {
+				return new ObjectResult("cannot find Printer by id : " + i, false, null);
+			}
+			Category2Printer cp = new Category2Printer();
+			cp.setPrinter(p);
+			cp.setCategory2(c2);
+			c2.addCategory2Printer(cp);
+			category2PrinterDA.save(cp);
+		}
+		
 		c2.setChineseName(chineseName);
 		c2.setEnglishName(englishName);
 		c2.setSequence(sequence);
 		c2.setCategory1(c1);
-		c2.setPrinter(p);
 		category2DA.save(c2);
 		
+		hibernateInitialCategory2(c2);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY2_CHANGE.toString(),
 				"User " + selfUser + " update Category2, id = " + id 
 				+ ", chineseName = " + chineseName + ", englishName = "
-				+englishName + ", sequence = "+sequence+", Category1 = "+ c1+".");
+				+englishName + ", sequence = "+sequence+", Category1 = "+ c1
+				+", Category2Printer = " + c2.getCategory2PrinterList()+".");
 		return new ObjectResult(Result.OK, true, c2);
 	}
 
@@ -649,6 +501,7 @@ public class MenuService implements IMenuService {
 				"User " + selfUser + " update Category2, id = " + id 
 				+ ", chineseName = " + chineseName + ", englishName = "
 				+englishName + ", sequence = "+sequence+", price = " + price + ", Category2 = "+ c2+".");
+		hibernateInitialDish(dish);
 		return new ObjectResult(Result.OK, true, dish);		
 	}
 	
@@ -656,33 +509,42 @@ public class MenuService implements IMenuService {
      * 图片缩放,w，h为缩放的目标宽度和高度
      * src为源文件目录，dest为缩放后保存目录
      * 如果图片原始尺寸小于设定尺寸, 不进行缩放 
+     * 如果要保存高质量图片, 要逐级的缩减图片,而不是直接套用目标的size
      */
-    public static void makeZoomImage(BufferedImage bufImg,String dest,int w,int h) throws IOException {
+    public static void makeZoomImage(BufferedImage bufImg,String dest,int targetWidth,int targetHeight) throws IOException {
         
-        double wr=0,hr=0;
-        File destFile = new File(dest);
-
-        Image Itemp = bufImg.getScaledInstance(w, h, Image.SCALE_SMOOTH);//设置缩放目标图片模板
+    	int type = (bufImg.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
         
-        wr=w*1.0 / bufImg.getWidth();     //获取缩放比例
-        hr=h*1.0 / bufImg.getHeight();
-
-        if(wr > 1.0){
-        	wr = 1.0;
-        }
-        if (hr > 1.0){
-        	hr = 1.0;
-        }
-        if (wr > hr){
-        	wr = hr;
-        } else {
-        	hr = wr;
-        }
+    	if (targetWidth > bufImg.getWidth())
+    		targetWidth = bufImg.getWidth();
+    	if (targetHeight > bufImg.getHeight())
+    		targetHeight = bufImg.getHeight();
+    	
+    	int w = bufImg.getWidth(), h = bufImg.getHeight();
+    	BufferedImage ret = bufImg;
+    	do{
+    		if (w > targetWidth){
+    			w /= 2;
+    			if (w <targetWidth){
+    				w = targetWidth;
+    			}
+    		}
+    		if (h > targetHeight){
+    			h /= 2;
+    			if (h < targetHeight){
+    				h = targetHeight;
+    			}
+    		}
+    		BufferedImage tmp = new BufferedImage(Math.max(w, 1), Math.max(h, 1), type);
+    		Graphics2D g2 = tmp.createGraphics();
+    		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    		g2.drawImage(ret, 0, 0, w, h, null);
+    		g2.dispose();
+    		ret = tmp;
+    	} while(w != targetWidth || h != targetHeight);
+    	
         
-        AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(wr, hr), null);
-        Itemp = ato.filter(bufImg, null);
-        
-        ImageIO.write((BufferedImage) Itemp,dest.substring(dest.lastIndexOf(".")+1), destFile); //写入缩减后的图片
+        ImageIO.write(ret,dest.substring(dest.lastIndexOf(".")+1), new File(dest)); //写入缩减后的图片
         
     }
 	/*
@@ -732,22 +594,20 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public OperationResult changeDishPrice(long userId, int id, double newprice) {
+	public ObjectResult changeDishPrice(long userId, int id, double newprice) {
 		Dish dish = dishDA.getDishById(id);
 		if (dish == null)
-			return new OperationResult("not found dish by id "+ id, false, null);
+			return new ObjectResult("not found dish by id "+ id, false, null);
 		double oldprice = dish.getPrice();
 		dish.setPrice(newprice);
 		dishDA.save(dish);
-		Hibernate.initialize(dish);
-		Hibernate.initialize(dish.getChoosePopInfo());
-		Hibernate.initialize(dish.getChooseSubItems());
+		hibernateInitialDish(dish);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
 				"User " + selfUser + " change dish price, id = " + id 
 				+ ", old price = " + oldprice + ", new price = " + newprice +".");
-		return new OperationResult(Result.OK, true, null);		
+		return new ObjectResult(Result.OK, true, null);		
 	}
 
 	@Override
@@ -759,16 +619,17 @@ public class MenuService implements IMenuService {
 		if (image != null && image.getSize() > 0){
 			//save image as a file in server harddisk
 			//generate a name for this dish. name formular: category1.englishname + '-' + category2.englishname + '-' + dish.englishname
-			String filePath = request.getSession().getServletContext().getRealPath("/")+"..\\" + ConstantValue.CATEGORY_DISHIMAGE_BIG + "/";
 			String fileName = null;
 			if (dish.getPictureName() != null){
-				File file = new File(filePath + fileName);
+				File file = new File(request.getSession().getServletContext().getRealPath("/")+"..\\" + ConstantValue.CATEGORY_DISHIMAGE_BIG + "/" + dish.getPictureName());
 				if (file.exists())
 					file.delete();
-//				//如果fileName已经存在, 就生成一个新的文件名. 如果继续使用旧文件名, 浏览器不会去下载更新后的图片
-//				int random = (int)(Math.random() * 1000);
-//				fileName = dish.getPictureName();
-//				fileName = "DISH-"+dish.getId() + "-" + random + fileName.substring(fileName.length() - 4);
+				file = new File(request.getSession().getServletContext().getRealPath("/")+"..\\" + ConstantValue.CATEGORY_DISHIMAGE_SMALL + "/" + dish.getPictureName());
+				if (file.exists())
+					file.delete();
+				file = new File(request.getSession().getServletContext().getRealPath("/")+"..\\" + ConstantValue.CATEGORY_DISHIMAGE_ORIGIN + "/" + dish.getPictureName());
+				if (file.exists())
+					file.delete();
 			} 
 
 			////重新生成文件名, 避免扩展名不一致的情况
@@ -781,8 +642,10 @@ public class MenuService implements IMenuService {
 				//generate small picture from original picture
 				String fileNameBig = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_BIG + "/" + fileName;
 				String fileNameSmall = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_SMALL + "/" + fileName;
+				String fileNameOrigin = request.getSession().getServletContext().getRealPath("/")+"../" + ConstantValue.CATEGORY_DISHIMAGE_ORIGIN + "/" + fileName;
 				makeZoomImage(image.getInputStream(), fileNameBig, ConstantValue.DISHIMAGE_WIDTH_BIG, ConstantValue.DISHIMAGE_HEIGHT_BIG);
 				makeZoomImage(image.getInputStream(), fileNameSmall, ConstantValue.DISHIMAGE_WIDTH_SMALL, ConstantValue.DISHIMAGE_HEIGHT_SMALL);
+				makeZoomImage(image.getInputStream(), fileNameOrigin, ConstantValue.DISHIMAGE_WIDTH_ORIGIN, ConstantValue.DISHIMAGE_HEIGHT_ORIGIN);
 			} catch (IOException e) {
 				logger.error("Exception when create image file for dish : " + dish, e);
 				e.printStackTrace();
@@ -793,9 +656,7 @@ public class MenuService implements IMenuService {
 			logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
 					"User " + selfUser + " change dish picture, id = " + id +".");
 		}
-		Hibernate.initialize(dish);
-		Hibernate.initialize(dish.getChoosePopInfo());
-		Hibernate.initialize(dish.getChooseSubItems());
+		hibernateInitialDish(dish);
 		return new ObjectResult(Result.OK, true, dish);
 	}
 
@@ -839,9 +700,7 @@ public class MenuService implements IMenuService {
 			return new ObjectResult("not found dish by id "+ id, false);
 		dish.setSoldOut(isSoldOut);
 		dishDA.save(dish);
-		Hibernate.initialize(dish);
-		Hibernate.initialize(dish.getChoosePopInfo());
-		Hibernate.initialize(dish.getChooseSubItems());
+		hibernateInitialDish(dish);
 		//add record to menu_version
 		MenuVersion mv = new MenuVersion();
 		mv.setDishId(id);
@@ -900,9 +759,46 @@ public class MenuService implements IMenuService {
 		if (dishes.size() > 1){
 			return new ObjectResult("find more than one dish by name " + dishName, false);
 		}
-		Hibernate.initialize(dishes.get(0));
-		Hibernate.initialize(dishes.get(0).getChoosePopInfo());
-		Hibernate.initialize(dishes.get(0).getChooseSubItems());
+		hibernateInitialDish(dishes.get(0));
 		return new ObjectResult(Result.OK, true, dishes.get(0));
+	}
+	
+	@Transactional
+	public void hibernateInitialCategory1(Category1 c1){
+		Hibernate.initialize(c1);
+		if (c1.getCategory2s() != null){
+			for(Category2 c2 : c1.getCategory2s()){
+				hibernateInitialCategory2(c2);
+			}
+		}
+	}
+	
+	@Transactional
+	public void hibernateInitialCategory1(List<Category1> c1s){
+		for(Category1 c1 : c1s){
+			hibernateInitialCategory1(c1);
+		}
+	}
+	
+	@Transactional
+	public void hibernateInitialCategory2(Category2 c2){
+		Hibernate.initialize(c2);
+		if (c2.getCategory2PrinterList() != null){
+			for(Category2Printer cp : c2.getCategory2PrinterList()){
+				Hibernate.initialize(cp);
+			}
+		}
+		if (c2.getDishes() != null){
+			for(Dish dish : c2.getDishes()){
+				hibernateInitialDish(dish);
+			}
+		}
+	}
+	
+	@Transactional
+	public void hibernateInitialDish(Dish dish){
+		Hibernate.initialize(dish);
+		Hibernate.initialize(dish.getChoosePopInfo());
+		Hibernate.initialize(dish.getChooseSubItems());
 	}
 }
