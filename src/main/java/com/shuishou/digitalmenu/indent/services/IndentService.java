@@ -43,8 +43,6 @@ import com.shuishou.digitalmenu.indent.models.IIndentDataAccessor;
 import com.shuishou.digitalmenu.indent.models.IIndentDetailDataAccessor;
 import com.shuishou.digitalmenu.indent.models.Indent;
 import com.shuishou.digitalmenu.indent.models.IndentDetail;
-import com.shuishou.digitalmenu.indent.views.GetIndentDetailResult;
-import com.shuishou.digitalmenu.indent.views.GetIndentResult;
 import com.shuishou.digitalmenu.indent.views.MakeOrderResult;
 import com.shuishou.digitalmenu.indent.views.OperateIndentResult;
 import com.shuishou.digitalmenu.log.models.LogData;
@@ -132,14 +130,14 @@ public class IndentService implements IIndentService {
 			if (dish == null)
 				return new MakeOrderResult("cannot find dish by id "+ dishid, false, -1);
 			if (dish.isSoldOut()){
-				return new MakeOrderResult("dish "+ dish.getEnglishName() + " is Sold Out, cannot make order", false, -1);
+				return new MakeOrderResult("dish "+ dish.getSecondLanguageName() + " is Sold Out, cannot make order", false, -1);
 			}
 			IndentDetail detail = new IndentDetail();
 			detail.setIndent(indent);
 			detail.setDishId(dishid);
 			detail.setAmount(o.getInt("amount"));
-			detail.setDishChineseName(dish.getChineseName());
-			detail.setDishEnglishName(dish.getEnglishName());
+			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
+			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 			detail.setDishPrice(dish.getPrice());
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
@@ -208,8 +206,8 @@ public class IndentService implements IIndentService {
 			detail.setIndent(indent);
 			detail.setDishId(dishid);
 			detail.setAmount(amount);
-			detail.setDishChineseName(dish.getChineseName());
-			detail.setDishEnglishName(dish.getEnglishName());
+			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
+			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 			detail.setDishPrice(dish.getPrice());
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
@@ -249,8 +247,16 @@ public class IndentService implements IIndentService {
 		
 		indentDA.update(originIndent);
 		//if originIndent is already null for items, then paid it
+		//if there are merge desks, clear them status
 		if (originIndent.getItems().isEmpty()){
 			operateIndent(userId, originIndentId, ConstantValue.INDENT_OPERATIONTYPE_PAY, 0, ConstantValue.INDENT_PAYWAY_CASH, null);
+			List<Desk> desks = deskDA.queryDesks();
+			for(Desk d : desks){
+				if (d.getMergeTo() != null && d.getMergeTo().getId() == desk.getId()){
+					d.setMergeTo(null);
+					deskDA.updateDesk(desk);
+				}
+			}
 		}
 		Hibernate.initialize(originIndent.getItems());
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
@@ -284,7 +290,7 @@ public class IndentService implements IIndentService {
 				for(IndentDetail d : indent.getItems()){
 					Dish dish = dishDA.getDishById(d.getDishId());
 					Map<String, String> mg = new HashMap<String, String>();
-					mg.put("name", d.getDishChineseName());
+					mg.put("name", d.getDishFirstLanguageName());
 					mg.put("price", String.format("%.2f",d.getDishPrice()));
 					mg.put("amount", d.getAmount()+"");
 					
@@ -355,7 +361,7 @@ public class IndentService implements IIndentService {
 				Map<String, String> mg = new HashMap<String, String>();
 				Dish dish = dishDA.getDishById(d.getDishId());
 				for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
-					mg.put("name", d.getDishChineseName());
+					mg.put("name", d.getDishFirstLanguageName());
 					mg.put("amount", "1");
 					String requirement = "";
 					if (d.getAdditionalRequirements() != null)
@@ -407,7 +413,7 @@ public class IndentService implements IIndentService {
 		List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 		Map<String, String> mg = new HashMap<String, String>();
 		for (int i = 0; i < Math.abs(changedAmount); i++) {//每个菜品单独打印一行, 重复的打印多行
-			mg.put("name", detail.getDishChineseName());
+			mg.put("name", detail.getDishFirstLanguageName());
 			mg.put("amount", "1");
 			String requirement = "";
 			if (detail.getAdditionalRequirements() != null)
@@ -476,7 +482,7 @@ public class IndentService implements IIndentService {
 				Map<String, String> mg = new HashMap<String, String>();
 				Dish dish = dishDA.getDishById(d.getDishId());
 				for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
-					mg.put("name", d.getDishChineseName());
+					mg.put("name", d.getDishFirstLanguageName());
 					mg.put("amount", "1");
 					String requirement = "";
 					if (d.getAdditionalRequirements() != null)
@@ -516,7 +522,7 @@ public class IndentService implements IIndentService {
 //					List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 //					for(IndentDetail d : indent.getItems()){
 //						Map<String, String> mg = new HashMap<String, String>();
-//						mg.put("name", d.getDishChineseName());
+//						mg.put("name", d.getDishFirstLanguageName());
 //						mg.put("price", d.getDishPrice()+"");
 //						mg.put("amount", d.getAmount()+"");
 //						mg.put("totalPrice", (d.getDishPrice() * d.getAmount()) + "");
@@ -538,7 +544,7 @@ public class IndentService implements IIndentService {
 //						keys.put("sequence", indent.getDailySequence()+"");
 //						keys.put("time", ConstantValue.DFYMDHMS.format(indent.getStartTime()));
 //						keys.put("totalPrice", String.format("%.2f", indent.getTotalPrice()));
-//						keys.put("dishname", d.getDishChineseName());
+//						keys.put("dishname", d.getDishFirstLanguageName());
 //						keys.put("amount", d.getAmount()+"");
 //						keys.put("requirement", d.getAdditionalRequirements());
 //						Map<String, Object> params = new HashMap<String, Object>();
@@ -570,7 +576,7 @@ public class IndentService implements IIndentService {
 //					keys.put("sequence", indent.getDailySequence()+"");
 //					keys.put("time", ConstantValue.DFYMDHMS.format(indent.getStartTime()));
 //					keys.put("totalPrice", String.format("%.2f", indent.getTotalPrice()));
-//					keys.put("dishname", detail.getDishChineseName());
+//					keys.put("dishname", detail.getDishFirstLanguageName());
 //					keys.put("amount", detail.getAmount()+"");
 //					keys.put("requirement", detail.getAdditionalRequirements());
 //					Map<String, Object> params = new HashMap<String, Object>();
@@ -730,8 +736,8 @@ public class IndentService implements IIndentService {
 //			IndentDetail detail = new IndentDetail();
 //			detail.setAmount(amount);
 //			detail.setDishId(dishId);
-//			detail.setDishChineseName(dish.getChineseName());
-//			detail.setDishEnglishName(dish.getEnglishName());
+//			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
+//			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 //			detail.setDishPrice(dish.getPrice());
 //			detail.setIndent(indent);
 //			indent.addItem(detail);
@@ -798,8 +804,8 @@ public class IndentService implements IIndentService {
 				OperateIndentResult.IndentDetail dinfo = new OperateIndentResult.IndentDetail();
 				dinfo.additionalRequirements = d.getAdditionalRequirements();
 				dinfo.amount = d.getAmount();
-				dinfo.dishChineseName = d.getDishChineseName();
-				dinfo.dishEnglishName = d.getDishEnglishName();
+				dinfo.dishFirstLanguageName = d.getDishFirstLanguageName();
+				dinfo.dishSecondLanguageName = d.getDishSecondLanguageName();
 				dinfo.dishId = d.getDishId();
 				dinfo.dishPrice = d.getDishPrice();
 				dinfo.id = d.getId();
@@ -821,29 +827,6 @@ public class IndentService implements IIndentService {
 		
 	}
 
-	@Override
-	@Transactional
-	public GetIndentDetailResult queryIndentDetail(int indentId) {
-		Indent indent = indentDA.getIndentById(indentId);
-		if (indent == null){
-			return new GetIndentDetailResult(Result.FAIL, false, null);
-		}
-		List<IndentDetail> details = indent.getItems();
-		if (details == null || details.isEmpty())
-			return new GetIndentDetailResult(Result.OK, true, null);
-		List<GetIndentDetailResult.IndentDetail> resultinfos = new ArrayList<GetIndentDetailResult.IndentDetail>(details.size());
-		for (int i = 0; i < details.size(); i++) {
-			GetIndentDetailResult.IndentDetail resultdetail = new GetIndentDetailResult.IndentDetail();
-			resultdetail.id = details.get(i).getId();
-			resultdetail.amount = details.get(i).getAmount();
-			resultdetail.dishChineseName = details.get(i).getDishChineseName();
-			resultdetail.dishEnglishName = details.get(i).getDishEnglishName();
-			resultdetail.dishPrice = details.get(i).getDishPrice();
-			resultdetail.additionalRequirements = details.get(i).getAdditionalRequirements();
-			resultinfos.add(resultdetail);
-		}
-		return new GetIndentDetailResult(Result.OK, true, resultinfos);
-	}
 
 	@Override
 	@Transactional
@@ -862,20 +845,6 @@ public class IndentService implements IIndentService {
 		return new ObjectResult(Result.OK, true);
 	}
 
-//	@Override
-//	@Transactional
-//	public ObjectResult printIndentDetail(int userId, int indentDetailId) {
-//		IndentDetail detail = indentDetailDA.getIndentDetailById(indentDetailId);
-//		if (detail == null){
-//			return new ObjectResult("No order detail for ID : " + indentDetailId, false);
-//		}
-//		print(detail);
-//		// write log.
-//		UserData selfUser = userDA.getUserById(userId);
-//		logService.write(selfUser, LogData.LogType.INDENTDETAIL_PRINTISH.toString(),
-//				"User " + selfUser + " print IndentDetail, indentId = " + detail.getIndent().getId() + ", dishId = " + detail.getDishId() + ".");
-//		return new ObjectResult(Result.OK, true);
-//	}
 
 	//清除无法使用的桌台数据, 比如已经并桌无法开桌的, 无法结账的
 	@Override
@@ -926,14 +895,14 @@ public class IndentService implements IIndentService {
 			if (dish == null)
 				return new MakeOrderResult("cannot find dish by id "+ dishid, false, -1);
 			if (dish.isSoldOut()){
-				return new MakeOrderResult("dish "+ dish.getEnglishName() + " is Sold Out, cannot make order", false, -1);
+				return new MakeOrderResult("dish "+ dish.getSecondLanguageName() + " is Sold Out, cannot make order", false, -1);
 			}
 			IndentDetail detail = new IndentDetail();
 			detail.setIndent(indent);
 			detail.setDishId(dishid);
 			detail.setAmount(o.getInt("amount"));
-			detail.setDishChineseName(dish.getChineseName());
-			detail.setDishEnglishName(dish.getEnglishName());
+			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
+			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 			detail.setDishPrice(dish.getPrice());
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));

@@ -46,13 +46,13 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "/menu/addflavor", method = {RequestMethod.POST})
 	public @ResponseBody Result addFlavor(
 			@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName) throws Exception{
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.addFlavor(userId, chineseName, englishName);
+		Result result = menuService.addFlavor(userId, firstLanguageName, secondLanguageName);
 		
 		return result;
 	}
@@ -60,14 +60,14 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "/menu/add_category1", method = {RequestMethod.POST})
 	public @ResponseBody Result addCategory1(
 			@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName, 
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.addCategory1(userId, chineseName, englishName, sequence);
+		Result result = menuService.addCategory1(userId, firstLanguageName, secondLanguageName, sequence);
 		
 		return result;
 	}
@@ -76,13 +76,13 @@ public class MenuController extends BaseController {
 	public @ResponseBody Result updateFlavor(
 			@RequestParam(value = "userId", required = true) long userId,
 			@RequestParam(value = "id", required = true) int id,
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName) throws Exception{
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.updateFlavor(userId, id, chineseName, englishName);
+		Result result = menuService.updateFlavor(userId, id, firstLanguageName, secondLanguageName);
 		
 		return result;
 		
@@ -92,14 +92,14 @@ public class MenuController extends BaseController {
 	public @ResponseBody Result updateCategory1(
 			@RequestParam(value = "userId", required = true) long userId,
 			@RequestParam(value = "id", required = true) int id,
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName, 
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
 		
-		Result result = menuService.updateCategory1(userId, id, chineseName, englishName, sequence);
+		Result result = menuService.updateCategory1(userId, id, firstLanguageName, secondLanguageName, sequence);
 		
 		return result;
 		
@@ -108,8 +108,8 @@ public class MenuController extends BaseController {
 	@RequestMapping(value="/menu/add_category2", method = {RequestMethod.POST})
 	public @ResponseBody Result addCategory2(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName, 
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
 			@RequestParam(value = "printerIds", required = true) String sPrinterId) throws Exception{
@@ -119,7 +119,7 @@ public class MenuController extends BaseController {
 		
 		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
 		
-		Result result = menuService.addCategory2(userId, chineseName, englishName, sequence, category1Id, printerIds);
+		Result result = menuService.addCategory2(userId, firstLanguageName, secondLanguageName, sequence, category1Id, printerIds);
 		
 		return result;
 	}
@@ -128,8 +128,8 @@ public class MenuController extends BaseController {
 	public @ResponseBody Result updateCategory2(
 			@RequestParam(value="userId", required = true) long userId, 
 			@RequestParam(value = "id", required = true) int id,
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName, 
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
 			@RequestParam(value = "printerIds", required = true) String sPrinterId) throws Exception{
@@ -139,53 +139,39 @@ public class MenuController extends BaseController {
 		
 		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
 		
-		Result result = menuService.updateCategory2(userId, id, chineseName, englishName, sequence, category1Id, printerIds);
+		Result result = menuService.updateCategory2(userId, id, firstLanguageName, secondLanguageName, sequence, category1Id, printerIds);
 		
 		return result;
 	}
 	
-//	@RequestMapping(value="/menu/add_dish", method = {RequestMethod.POST})
-//	public @ResponseBody Result addDish(
-//			@RequestParam(value="userId", required = true) long userId, 
-//			@RequestParam(value = "chineseName", required = true) String chineseName, 
-//			@RequestParam(value = "englishName", required = true) String englishName, 
-//			@RequestParam(value = "sequence", required = true) int sequence,
-//			@RequestParam(value = "price", required = true) double price,
-//			@RequestParam(value = "isNew", required = false, defaultValue = "false") boolean isNew,
-//			@RequestParam(value = "isSpecial", required = false, defaultValue = "false") boolean isSpecial,
-//			@RequestParam(value = "hotLevel", required = true) int hotLevel,
-//			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
-//			@RequestParam(value = "dishPicture", required = false) MultipartFile image,
-//			@RequestParam(value = "autoMerge", required = true) boolean autoMerge,
-//			@RequestParam(value = "chooseAction", required = true) int chooseAction,
-//			@RequestParam(value = "dishChoosePopinfo", required = false) String sDishChoosePopinfo,
-//			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,
-//			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
-//			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
-//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
-//			return new Result("no_permission");
-//		}
-//		DishChoosePopinfo popinfo = null;
-//		ArrayList<DishChooseSubitem> subitems= null;
-//		if (sDishChoosePopinfo != null && sDishChoosePopinfo.length() > 0){
-//			popinfo = new Gson().fromJson(sDishChoosePopinfo, DishChoosePopinfo.class);
-//		}
-//		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
-//			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
-//			
-//		}
-//		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, 
-//				isSpecial, hotLevel, abbreviation, image, category2Id, chooseAction, 
-//				popinfo, subitems, subitemAmount, autoMerge);
-//		
-//		return result;
-//	}
 	
+	/**
+	 * 
+	 * @param userId
+	 * @param firstLanguageName
+	 * @param secondLanguageName
+	 * @param sequence
+	 * @param price
+	 * @param isNew
+	 * @param isSpecial
+	 * @param hotLevel
+	 * @param abbreviation
+	 * @param autoMerge
+	 * @param chooseMode
+	 * @param allowFlavor
+	 * @param sPopInfo : a string of json format
+	 * @param sDishChooseSubitem: a string of json format
+	 * @param subitemAmount
+	 * @param purchaseType
+	 * @param category2Id
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="/menu/add_dish", method = {RequestMethod.POST})
 	public @ResponseBody Result addDish(
 			@RequestParam(value="userId", required = true) long userId, 
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName, 
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence,
 			@RequestParam(value = "price", required = true) double price,
 			@RequestParam(value = "isNew", required = false, defaultValue = "false") boolean isNew,
@@ -194,8 +180,8 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
 			@RequestParam(value = "autoMerge", required = true) boolean autoMerge,
 			@RequestParam(value = "chooseMode", required = true) int chooseMode,
-			@RequestParam(value = "dishChoosePopinfo_cn", required = false) String sDishChoosePopinfo_cn,
-			@RequestParam(value = "dishChoosePopinfo_en", required = false) String sDishChoosePopinfo_en,
+			@RequestParam(value = "allowFlavor", required = true) boolean allowFlavor,
+			@RequestParam(value = "sPopInfo", required = false) String sPopInfo,
 			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
 			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
 			@RequestParam(value = "purchaseType", required = false, defaultValue = "1") int purchaseType,
@@ -205,42 +191,27 @@ public class MenuController extends BaseController {
 		}
 		DishChoosePopinfo popinfo = null;
 		ArrayList<DishChooseSubitem> subitems= null;
-		if (sDishChoosePopinfo_cn != null && sDishChoosePopinfo_cn.length() > 0
-				&& sDishChoosePopinfo_en != null && sDishChoosePopinfo_en.length() > 0){
-			popinfo = new DishChoosePopinfo();
-			popinfo.setPopInfoCN(sDishChoosePopinfo_cn);
-			popinfo.setPopInfoEN(sDishChoosePopinfo_en);
+		
+		if (sPopInfo != null && sPopInfo.length() > 0){
+			popinfo = new Gson().fromJson(sPopInfo, new TypeToken<DishChoosePopinfo>(){}.getType());
 		}
 		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
 			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
 			
 		}
-		Result result = menuService.addDish(userId, chineseName, englishName, sequence, price, isNew, 
+		Result result = menuService.addDish(userId, firstLanguageName, secondLanguageName, sequence, price, isNew, 
 				isSpecial, hotLevel, abbreviation, null, category2Id, chooseMode, popinfo, subitems, subitemAmount,
-				autoMerge, purchaseType);
+				autoMerge, purchaseType, allowFlavor);
 		
 		return result;
 	}
-	
-//	@RequestMapping(value="/menu/add_dish2", method = {RequestMethod.POST})
-//	public @ResponseBody Result addDish2(
-//			@RequestParam(value = "address", required = false) String address,
-//			@RequestParam(value = "photoName", required = false) MultipartFile image
-//			) throws Exception{
-//
-//		if (image != null){
-//			System.out.println("get address = " + address);
-//			System.out.println("get image data, size = " + image.getSize());
-//		}
-//		return null;
-//	}
 	
 	@RequestMapping(value="/menu/update_dish", method = {RequestMethod.POST})
 	public @ResponseBody Result updateDish(
 			@RequestParam(value="userId", required = true) long userId, 
 			@RequestParam(value = "id", required = true) int id,
-			@RequestParam(value = "chineseName", required = true) String chineseName, 
-			@RequestParam(value = "englishName", required = true) String englishName, 
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence,
 			@RequestParam(value = "price", required = true) double price,
 			@RequestParam(value = "isNew", required = false, defaultValue = "false") boolean isNew,
@@ -249,9 +220,9 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "pictureName", required = false, defaultValue = "") String pictureName,
 			@RequestParam(value = "abbreviation", required = true) String abbreviation, 
 			@RequestParam(value = "autoMerge", required = true) boolean autoMerge,
+			@RequestParam(value = "allowFlavor", required = true) boolean allowFlavor,
 			@RequestParam(value = "chooseMode", required = true) int chooseMode,
-			@RequestParam(value = "dishChoosePopinfo_cn", required = false) String sDishChoosePopinfo_cn,
-			@RequestParam(value = "dishChoosePopinfo_en", required = false) String sDishChoosePopinfo_en,
+			@RequestParam(value = "sPopInfo", required = false) String sPopInfo,
 			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
 			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
 			@RequestParam(value = "purchaseType", required = false, defaultValue = "1") int purchaseType,
@@ -262,19 +233,16 @@ public class MenuController extends BaseController {
 		
 		DishChoosePopinfo popinfo = null;
 		ArrayList<DishChooseSubitem> subitems= null;
-		if (sDishChoosePopinfo_cn != null && sDishChoosePopinfo_cn.length() > 0
-				&& sDishChoosePopinfo_en != null && sDishChoosePopinfo_en.length() > 0){
-			popinfo = new DishChoosePopinfo();
-			popinfo.setPopInfoCN(sDishChoosePopinfo_cn);
-			popinfo.setPopInfoEN(sDishChoosePopinfo_en);
+		if (sPopInfo != null && sPopInfo.length() > 0){
+			popinfo = new Gson().fromJson(sPopInfo, new TypeToken<DishChoosePopinfo>(){}.getType());
 		}
 		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
 			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
 			
 		}
 		
-		Result result = menuService.updateDish(userId, id, chineseName, englishName, sequence, price, isNew, isSpecial, hotLevel, 
-				abbreviation, category2Id, chooseMode, popinfo, subitems, subitemAmount, autoMerge, purchaseType);
+		Result result = menuService.updateDish(userId, id, firstLanguageName, secondLanguageName, sequence, price, isNew, isSpecial, hotLevel, 
+				abbreviation, category2Id, chooseMode, popinfo, subitems, subitemAmount, autoMerge, purchaseType, allowFlavor);
 		
 		return result;
 	}
@@ -364,38 +332,10 @@ public class MenuController extends BaseController {
 	}
 	
 	@RequestMapping(value="/menu/querymenu", method = {RequestMethod.GET})
-	public @ResponseBody ObjectListResult queryMenu(
-			//@RequestParam(value="userId", required = true) long userId 
-			//@RequestParam(value = "node", required = true) String node
-			) throws Exception{
-//		if (!permissionService.checkPermission(userId, Permission.PERMISSION_EDIT_MENU)){
-//			return new Result("no_permission");
-//		}
-		
-		//GetMenuResult result = menuService.queryMenu(node);
+	public @ResponseBody ObjectListResult queryMenu() throws Exception{
 		ObjectListResult result = menuService.queryAllMenu();
 		return result;
 	}
-	
-//	@RequestMapping(value="/menu/queryallcategory1", method = {RequestMethod.GET})
-//	public @ResponseBody Result queryAllCategory1() throws Exception{
-//		GetCategory1Result result = menuService.queryAllCategory1();
-//		return result;
-//	}
-	
-//	@RequestMapping(value="/menu/queryallcategory2", method = {RequestMethod.GET})
-//	public @ResponseBody Result queryAllCategory2(
-//			@RequestParam(value = "category1Id", required = false) int category1Id) throws Exception{
-//		GetCategory2Result result = menuService.queryAllCategory2(category1Id);
-//		return result;
-//	}
-	
-//	@RequestMapping(value="/menu/queryalldish", method = {RequestMethod.GET})
-//	public @ResponseBody ObjectListResult queryAllDish(
-//			@RequestParam(value = "category2Id", required = false) int category2Id) throws Exception{
-//		ObjectListResult result = menuService.queryAllDish(category2Id);
-//		return result;
-//	}
 	
 	@RequestMapping(value="/menu/querydishbyid", method = {RequestMethod.POST})
 	public @ResponseBody ObjectResult queryDishById(

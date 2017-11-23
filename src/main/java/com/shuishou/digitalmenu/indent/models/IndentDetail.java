@@ -35,11 +35,11 @@ public class IndentDetail {
 	@Column(nullable = false, name="dish_price")
 	private double dishPrice;//单个dish价格, 不考虑amount
 	
-	@Column(nullable = false, name="dish_chinesename")
-	private String dishChineseName;
+	@Column(nullable = false, name="dish_firstlanguagename")
+	private String dishFirstLanguageName;
 	
-	@Column(nullable = false, name="dish_englishname")
-	private String dishEnglishName;
+	@Column(name="dish_secondlanguagename")
+	private String dishSecondLanguageName;
 	
 	@Column(name="additional_requirements")
 	private String additionalRequirements;
@@ -98,29 +98,28 @@ public class IndentDetail {
 		this.dishPrice = dishPrice;
 	}
 
-	public String getDishChineseName() {
-		return dishChineseName;
-	}
-
-	public void setDishChineseName(String dishChineseName) {
-		this.dishChineseName = dishChineseName;
-	}
-
-	public String getDishEnglishName() {
-		return dishEnglishName;
-	}
-
-	public void setDishEnglishName(String dishEnglishName) {
-		this.dishEnglishName = dishEnglishName;
-	}
-
-	
 	public String getAdditionalRequirements() {
 		return additionalRequirements;
 	}
 
 	public void setAdditionalRequirements(String additionalRequirements) {
 		this.additionalRequirements = additionalRequirements;
+	}
+
+	public String getDishFirstLanguageName() {
+		return dishFirstLanguageName;
+	}
+
+	public void setDishFirstLanguageName(String dishFirstLanguageName) {
+		this.dishFirstLanguageName = dishFirstLanguageName;
+	}
+
+	public String getDishSecondLanguageName() {
+		return dishSecondLanguageName;
+	}
+
+	public void setDishSecondLanguageName(String dishSecondLanguageName) {
+		this.dishSecondLanguageName = dishSecondLanguageName;
 	}
 
 	@Override
@@ -147,8 +146,8 @@ public class IndentDetail {
 
 	@Override
 	public String toString() {
-		return "OrderDetail [amount=" + amount + ", dishChineseName=" + dishChineseName + "]";
+		return "IndentDetail [amount=" + amount + ", dishFirstLanguageName=" + dishFirstLanguageName + "]";
 	}
-	
+
 	
 }

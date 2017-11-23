@@ -33,11 +33,11 @@ public class Category2 implements Serializable{
 	@Column(unique = true, nullable = false)
 	private int id;
 	
-	@Column(name="chinese_name", nullable = false, unique = true)
-	private String chineseName;
+	@Column(name = "first_language_name", nullable = false, unique = true)
+	private String firstLanguageName;
 	
-	@Column(name = "english_name", nullable = false, unique = true)
-	private String englishName;
+	@Column(name = "second_language_name", unique = true)
+	private String secondLanguageName;
 	
 	@Column(nullable = false)
 	private int sequence;
@@ -63,10 +63,6 @@ public class Category2 implements Serializable{
 		this.category1 = category1;
 	}
 
-	@Override
-	public String toString() {
-		return "Category2 [chineseName=" + chineseName + ", englishName=" + englishName + "]";
-	}
 
 	public int getId() {
 		return id;
@@ -76,20 +72,26 @@ public class Category2 implements Serializable{
 		this.id = id;
 	}
 
-	public String getChineseName() {
-		return chineseName;
+
+	@Override
+	public String toString() {
+		return "Category2 [firstLanguageName=" + firstLanguageName + ", secondLanguageName=" + secondLanguageName + "]";
 	}
 
-	public void setChineseName(String chineseName) {
-		this.chineseName = chineseName;
+	public String getFirstLanguageName() {
+		return firstLanguageName;
 	}
 
-	public String getEnglishName() {
-		return englishName;
+	public void setFirstLanguageName(String firstLanguageName) {
+		this.firstLanguageName = firstLanguageName;
 	}
 
-	public void setEnglishName(String englishName) {
-		this.englishName = englishName;
+	public String getSecondLanguageName() {
+		return secondLanguageName;
+	}
+
+	public void setSecondLanguageName(String secondLanguageName) {
+		this.secondLanguageName = secondLanguageName;
 	}
 
 	public int getSequence() {

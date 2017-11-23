@@ -16,7 +16,7 @@ public class ConstantValue {
 	public static final String PERMISSION_EDIT_MENU = "EDIT_MENU";
 	public static final String PERMISSION_QUERY_ORDER = "QUERY_ORDER";
 	public static final String PERMISSION_UPDATE_ORDER = "UPDATE_ORDER";
-	public static final String PERMISSION_CHANGE_CONFIRMCODE = "CHANGE_CONFIRMCODE";
+	public static final String PERMISSION_CHANGE_CONFIG = "CHANGE_CONFIG";
 	public static final String PERMISSION_QUERY_DESK = "QUERY_DESK";
 	public static final String PERMISSION_EDIT_DESK = "EDIT_DESK";
 	public static final String PERMISSION_EDIT_PRINTER = "EDIT_PRINTER";

@@ -6,7 +6,7 @@ INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('1', 'CREATE_USER'
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('2', 'EDIT_MENU');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('3', 'QUERY_ORDER');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('4', 'QUERY_USER');
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('5', 'CHANGE_CONFIRMCODE');
+INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('5', 'CHANGE_CONFIG');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('6', 'QUERY_DESK');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('7', 'EDIT_DESK');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('8', 'EDIT_PRINTER');
@@ -31,3 +31,7 @@ INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('10', '1');
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('11', '1');
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('12', '1');
+
+INSERT INTO `digitalmenu`.`configs` (`name`, `value`) VALUES ('LANGUAGEAMOUNT', '2');
+INSERT INTO `digitalmenu`.`configs` (`name`, `value`) VALUES ('FIRSTLANGUAGENAME', '中文');
+INSERT INTO `digitalmenu`.`configs` (`name`, `value`) VALUES ('SECONDLANGUAGENAME', 'English');

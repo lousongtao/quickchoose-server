@@ -13,22 +13,22 @@ import com.shuishou.digitalmenu.views.SimpleValueResult;
 
 public interface IMenuService {
 
-	public ObjectResult addCategory1(long userId, String chineseName, String englishName, int sequence);
-	public ObjectResult addCategory2(long userId, String chineseName, String englishName, int sequence, int category1Id, ArrayList<Integer> printerIds);
-	public ObjectResult addDish(long userId, String chineseName, String englishName, int sequence, 
+	public ObjectResult addCategory1(long userId, String firstLanguageName, String secondLanguageName, int sequence);
+	public ObjectResult addCategory2(long userId, String firstLanguageName, String secondLanguageName, int sequence, int category1Id, ArrayList<Integer> printerIds);
+	public ObjectResult addDish(long userId, String firstLanguageName, String secondLanguageName, int sequence, 
 			double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation, 
 			MultipartFile image, int category2Id, int chooseMode, DishChoosePopinfo popinfo, 
-			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType);
-	public ObjectResult addFlavor(long userId, String chineseName, String englishName);
+			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType, boolean allowFlavor);
+	public ObjectResult addFlavor(long userId, String firstLanguageName, String secondLanguageName);
 	
 	
-	public ObjectResult updateCategory1(long userId, int id, String chineseName, String englishName, int sequence);
-	public ObjectResult updateCategory2(long userId, int id, String chineseName, String englishName, int sequence, int category1Id, ArrayList<Integer> printerIds);
-	public ObjectResult updateDish(long userId, int id, String chineseName, String englishName, int sequence, 
+	public ObjectResult updateCategory1(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence);
+	public ObjectResult updateCategory2(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, int category1Id, ArrayList<Integer> printerIds);
+	public ObjectResult updateDish(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, 
 			double price, boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, 
 			int category2Id, int chooseMode, DishChoosePopinfo popinfo, 
-			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType);
-	public ObjectResult updateFlavor(long userId, int id, String chineseName, String englishName);
+			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType, boolean allowFlavor);
+	public ObjectResult updateFlavor(long userId, int id, String firstLanguageName, String secondLanguageName);
 	
 	public ObjectResult changeDishPrice(long userId, int id, double newprice);
 	public ObjectResult changeDishPicture(long userId, int id, MultipartFile image);

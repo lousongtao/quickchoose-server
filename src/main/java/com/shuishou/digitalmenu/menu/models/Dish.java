@@ -35,11 +35,11 @@ public class Dish implements Serializable{
 	@Column(nullable = false, unique = true)
 	private int id;
 	
-	@Column(name = "chinese_name", nullable = false, unique = true)
-	private String chineseName;
+	@Column(name = "first_language_name", nullable = false, unique = true)
+	private String firstLanguageName;
 	
-	@Column(name = "english_name", nullable = false, unique = true)
-	private String englishName;
+	@Column(name = "second_language_name", unique = true)
+	private String secondLanguageName;
 	
 	@Column(nullable = false)
 	private int sequence;
@@ -68,6 +68,7 @@ public class Dish implements Serializable{
 	@Column
 	private int hotLevel = 0;
 	
+	//spring mvc can change "isSoldOut" to "soldOut" automatically, so must use JsonProperty
 	@JsonProperty("isSoldOut")
 	@Column
 	private boolean isSoldOut = false;
@@ -99,6 +100,10 @@ public class Dish implements Serializable{
 	//set whether merge to one record while customer choose this dish more than one time
 	@Column(name="automerge_whilechoose")
 	private boolean autoMergeWhileChoose = true;
+	
+	//是否支持配置口味
+	@Column
+	private boolean allowFlavor = true;
 	
 	
 	/**
@@ -234,21 +239,6 @@ public class Dish implements Serializable{
 		this.id = id;
 	}
 
-	public String getChineseName() {
-		return chineseName;
-	}
-
-	public void setChineseName(String chineseName) {
-		this.chineseName = chineseName;
-	}
-
-	public String getEnglishName() {
-		return englishName;
-	}
-
-	public void setEnglishName(String englishName) {
-		this.englishName = englishName;
-	}
 
 	public int getSequence() {
 		return sequence;
@@ -265,10 +255,37 @@ public class Dish implements Serializable{
 	public void setCategory2(Category2 category2) {
 		this.category2 = category2;
 	}
+	
+	
+
+	public boolean isAllowFlavor() {
+		return allowFlavor;
+	}
+
+	public void setAllowFlavor(boolean allowFlavor) {
+		this.allowFlavor = allowFlavor;
+	}
+
+
+	public String getFirstLanguageName() {
+		return firstLanguageName;
+	}
+
+	public void setFirstLanguageName(String firstLanguageName) {
+		this.firstLanguageName = firstLanguageName;
+	}
+
+	public String getSecondLanguageName() {
+		return secondLanguageName;
+	}
+
+	public void setSecondLanguageName(String secondLanguageName) {
+		this.secondLanguageName = secondLanguageName;
+	}
 
 	@Override
 	public String toString() {
-		return "Dish [chineseName=" + chineseName + ", englishName=" + englishName + "]";
+		return "Dish [firstLanguageName=" + firstLanguageName + ", secondLanguageName=" + secondLanguageName + "]";
 	}
 
 	@Override

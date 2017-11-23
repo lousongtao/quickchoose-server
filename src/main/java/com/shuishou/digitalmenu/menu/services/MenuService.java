@@ -95,10 +95,10 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult addFlavor(long userId, String chineseName, String englishName){
+	public ObjectResult addFlavor(long userId, String firstLanguageName, String secondLanguageName){
 		Flavor flavor = new Flavor();
-		flavor.setChineseName(chineseName);
-		flavor.setEnglishName(englishName);
+		flavor.setFirstLanguageName(firstLanguageName);
+		flavor.setSecondLanguageName(secondLanguageName);
 		flavorDA.save(flavor);
 		
 		// write log.
@@ -113,10 +113,10 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addCategory1(long userId, String chineseName, String englishName, int sequence) {
+	public ObjectResult addCategory1(long userId, String firstLanguageName, String secondLanguageName, int sequence) {
 		Category1 c1 = new Category1();
-		c1.setChineseName(chineseName);
-		c1.setEnglishName(englishName);
+		c1.setFirstLanguageName(firstLanguageName);
+		c1.setSecondLanguageName(secondLanguageName);
 		c1.setSequence(sequence);
 		category1DA.save(c1);
 		hibernateInitialCategory1(c1);
@@ -133,15 +133,15 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addCategory2(long userId, String chineseName, String englishName, int sequence, int category1Id, ArrayList<Integer> printerIds) {
+	public ObjectResult addCategory2(long userId, String firstLanguageName, String secondLanguageName, int sequence, int category1Id, ArrayList<Integer> printerIds) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null){
 			return new ObjectResult("cannot find category1 by id : "+ category1Id, false, null);
 		}
 		
 		Category2 c2 = new Category2();
-		c2.setChineseName(chineseName);
-		c2.setEnglishName(englishName);
+		c2.setFirstLanguageName(firstLanguageName);
+		c2.setSecondLanguageName(secondLanguageName);
 		c2.setSequence(sequence);
 		c2.setCategory1(c1);
 		category2DA.save(c2);
@@ -172,11 +172,11 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addDish(long userId, String chineseName, String englishName, int sequence, 
+	public ObjectResult addDish(long userId, String firstLanguageName, String secondLanguageName, int sequence, 
 			double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation, 
 			MultipartFile image, int category2Id, int chooseMode, 
 			DishChoosePopinfo popinfo, ArrayList<DishChooseSubitem> subitems, int subitemAmount,
-			boolean autoMerge, int purchaseType) {
+			boolean autoMerge, int purchaseType, boolean allowFlavor) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null){
 			return new ObjectResult("cannot find category2 by id "+ category2Id, false, null);
@@ -192,8 +192,8 @@ public class MenuService implements IMenuService {
 		}
 		
 		Dish dish = new Dish();
-		dish.setChineseName(chineseName);
-		dish.setEnglishName(englishName);
+		dish.setFirstLanguageName(firstLanguageName);
+		dish.setSecondLanguageName(secondLanguageName);
 		dish.setSequence(sequence);
 		dish.setCategory2(c2);
 		dish.setPrice(price);
@@ -205,6 +205,7 @@ public class MenuService implements IMenuService {
 		dish.setSubitemAmount(subitemAmount);
 		dish.setAutoMergeWhileChoose(autoMerge);
 		dish.setPurchaseType(purchaseType);
+		dish.setAllowFlavor(allowFlavor);
 		dishDA.save(dish);
 		
 		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE 
@@ -293,7 +294,7 @@ public class MenuService implements IMenuService {
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY2_CHANGE.toString(),
-				"User " + selfUser + " delete Category2 " + c2.getChineseName() + ".");
+				"User " + selfUser + " delete Category2 " + c2.getFirstLanguageName() + ".");
 
 		return new ObjectResult(Result.OK, true);		
 	}
@@ -347,29 +348,29 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult updateFlavor(long userId, int id, String chineseName, String englishName) {
+	public ObjectResult updateFlavor(long userId, int id, String firstLanguageName, String secondLanguageName) {
 		Flavor f = flavorDA.getFlavorById(id);
 		if (f == null)
 			return new ObjectResult("not found Flavor by id "+ id, false);
-		f.setChineseName(chineseName);
-		f.setEnglishName(englishName);
+		f.setFirstLanguageName(firstLanguageName);
+		f.setSecondLanguageName(secondLanguageName);
 		flavorDA.save(f);
 		
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.FLAVOR_CHANGE.toString(),
 				"User " + selfUser + " update flavor, id = " + id 
-				+ ", chineseName = " + chineseName + ", englishName = " +englishName);
+				+ ", firstLanguageName = " + firstLanguageName + ", secondLanguageName = " +secondLanguageName);
 		
 		return new ObjectResult(Result.OK, true, f);
 	}
 	@Override
 	@Transactional
-	public ObjectResult updateCategory1(long userId, int id, String chineseName, String englishName, int sequence) {
+	public ObjectResult updateCategory1(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence) {
 		Category1 c1 = category1DA.getCategory1ById(id);
 		if (c1 == null)
 			return new ObjectResult("not found Category1 by id "+ id, false, null);
-		c1.setChineseName(chineseName);
-		c1.setEnglishName(englishName);
+		c1.setFirstLanguageName(firstLanguageName);
+		c1.setSecondLanguageName(secondLanguageName);
 		c1.setSequence(sequence);
 		category1DA.save(c1);
 		hibernateInitialCategory1(c1);
@@ -377,14 +378,14 @@ public class MenuService implements IMenuService {
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY1_CHANGE.toString(),
 				"User " + selfUser + " update Category1, id = " + id 
-				+ ", chineseName = " + chineseName + ", englishName = "
-				+englishName + ", sequence = "+sequence+".");
+				+ ", firstLanguageName = " + firstLanguageName + ", secondLanguageName = "
+				+secondLanguageName + ", sequence = "+sequence+".");
 		return new ObjectResult(Result.OK, true, c1);
 	}
 
 	@Override
 	@Transactional
-	public ObjectResult updateCategory2(long userId, int id, String chineseName, String englishName, int sequence,
+	public ObjectResult updateCategory2(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence,
 			int category1Id, ArrayList<Integer> printerIds) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null)
@@ -410,8 +411,8 @@ public class MenuService implements IMenuService {
 			category2PrinterDA.save(cp);
 		}
 		
-		c2.setChineseName(chineseName);
-		c2.setEnglishName(englishName);
+		c2.setFirstLanguageName(firstLanguageName);
+		c2.setSecondLanguageName(secondLanguageName);
 		c2.setSequence(sequence);
 		c2.setCategory1(c1);
 		category2DA.save(c2);
@@ -421,18 +422,18 @@ public class MenuService implements IMenuService {
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY2_CHANGE.toString(),
 				"User " + selfUser + " update Category2, id = " + id 
-				+ ", chineseName = " + chineseName + ", englishName = "
-				+englishName + ", sequence = "+sequence+", Category1 = "+ c1
+				+ ", firstLanguageName = " + firstLanguageName + ", secondLanguageName = "
+				+secondLanguageName + ", sequence = "+sequence+", Category1 = "+ c1
 				+", Category2Printer = " + c2.getCategory2PrinterList()+".");
 		return new ObjectResult(Result.OK, true, c2);
 	}
 
 	@Override
 	@Transactional
-	public ObjectResult updateDish(long userId, int id, String chineseName, String englishName, int sequence, double price, 
+	public ObjectResult updateDish(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, double price, 
 			boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, int category2Id,
 			int chooseMode, DishChoosePopinfo popinfo, ArrayList<DishChooseSubitem> subitems, int subitemAmount,
-			boolean autoMerge, int purchaseType) {
+			boolean autoMerge, int purchaseType, boolean allowFlavor) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null)
 			return new ObjectResult("not found Category2 by id "+ category2Id, false, null);
@@ -451,8 +452,8 @@ public class MenuService implements IMenuService {
 		}
 		//save base property
 		dish.setCategory2(c2);
-		dish.setChineseName(chineseName);
-		dish.setEnglishName(englishName);
+		dish.setFirstLanguageName(firstLanguageName);
+		dish.setSecondLanguageName(secondLanguageName);
 		dish.setPrice(price);
 		dish.setSequence(sequence);
 		dish.setNew(isNew);
@@ -465,6 +466,7 @@ public class MenuService implements IMenuService {
 		dish.setSubitemAmount(subitemAmount);
 		dish.setAutoMergeWhileChoose(autoMerge);
 		dish.setPurchaseType(purchaseType);
+		dish.setAllowFlavor(allowFlavor);
 		dishDA.save(dish);
 		
 		//delete sub property if exist
@@ -499,8 +501,8 @@ public class MenuService implements IMenuService {
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
 				"User " + selfUser + " update Category2, id = " + id 
-				+ ", chineseName = " + chineseName + ", englishName = "
-				+englishName + ", sequence = "+sequence+", price = " + price + ", Category2 = "+ c2+".");
+				+ ", firstLanguageName = " + firstLanguageName + ", secondLanguageName = "
+				+secondLanguageName + ", sequence = "+sequence+", price = " + price + ", Category2 = "+ c2+".");
 		hibernateInitialDish(dish);
 		return new ObjectResult(Result.OK, true, dish);		
 	}
@@ -672,7 +674,7 @@ public class MenuService implements IMenuService {
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
-				"User " + selfUser + " change dish special as " + isSpecial + ", name = " + dish.getEnglishName());
+				"User " + selfUser + " change dish special as " + isSpecial + ", name = " + dish.getSecondLanguageName());
 		return new ObjectResult(Result.OK, true);	
 	}
 
@@ -688,7 +690,7 @@ public class MenuService implements IMenuService {
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
-				"User " + selfUser + " change dish isNew as " + isNew + ", name = "+ dish.getEnglishName());
+				"User " + selfUser + " change dish isNew as " + isNew + ", name = "+ dish.getSecondLanguageName());
 		return new ObjectResult(Result.OK, true);
 	}
 	
@@ -710,7 +712,7 @@ public class MenuService implements IMenuService {
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
-				"User " + selfUser + " change dish Sold Out as " + isSoldOut + ", name = "+dish.getEnglishName());
+				"User " + selfUser + " change dish Sold Out as " + isSoldOut + ", name = "+dish.getSecondLanguageName());
 		return new ObjectResult(Result.OK, true, dish);
 	}
 
@@ -751,7 +753,7 @@ public class MenuService implements IMenuService {
 	@Override
 	@Transactional
 	public ObjectResult queryDishByName(String dishName) {
-		String hql = "from Dish where englishName = '" + dishName + "'";
+		String hql = "from Dish where firstLanguageName = '" + dishName + "'";
 		List<Dish> dishes = dishDA.getSession().createQuery(hql).list();
 		if (dishes == null || dishes.isEmpty()){
 			return new ObjectResult("Cannot find dish by name " + dishName, false);
