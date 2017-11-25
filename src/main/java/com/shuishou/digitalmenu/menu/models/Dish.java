@@ -35,10 +35,10 @@ public class Dish implements Serializable{
 	@Column(nullable = false, unique = true)
 	private int id;
 	
-	@Column(name = "first_language_name", nullable = false, unique = true)
+	@Column(name = "first_language_name", nullable = false)
 	private String firstLanguageName;
 	
-	@Column(name = "second_language_name", unique = true)
+	@Column(name = "second_language_name")
 	private String secondLanguageName;
 	
 	@Column(nullable = false)

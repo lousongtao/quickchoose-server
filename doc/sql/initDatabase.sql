@@ -36,7 +36,7 @@ INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('1', 'CREATE_USER'
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('2', 'EDIT_MENU'); 
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('3', 'QUERY_ORDER'); 
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('4', 'QUERY_USER'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('5', 'CHANGE_CONFIRMCODE'); 
+INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('5', 'CHANGE_CONFIG'); 
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('6', 'QUERY_DESK'); 
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('7', 'EDIT_DESK'); 
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('8', 'EDIT_PRINTER'); 

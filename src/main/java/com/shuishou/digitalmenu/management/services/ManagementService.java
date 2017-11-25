@@ -101,8 +101,10 @@ public class ManagementService implements IManagementService{
 		}
 		//firstly, load last duty record
 		ShiftWork lastSW = shiftWorkDA.getLastShiftWork();
-		if (lastSW.getEndTime() == null)
+		if (lastSW != null && lastSW.getEndTime() == null){
 			lastSW.setEndTime(new Date());
+			shiftWorkDA.save(lastSW);
+		}
 		ShiftWork sw = new ShiftWork();
 		sw.setUserName(user.getUsername());
 		sw.setUserId(userId);

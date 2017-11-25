@@ -28,10 +28,10 @@ public class DishChooseSubitem implements Serializable{
 	@ManyToOne
 	private Dish dish;
 	
-	@Column(name = "first_language_name", nullable = false, unique = true)
+	@Column(name = "first_language_name", nullable = false)
 	private String firstLanguageName;
 	
-	@Column(name = "second_language_name", unique = true)
+	@Column(name = "second_language_name")
 	private String secondLanguageName;
 
 	@Override
