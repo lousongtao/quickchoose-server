@@ -53,21 +53,35 @@ public class CommonController extends BaseController {
 	@RequestMapping(value="/common/saveconfirmcode", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody Result saveConfirmCode(
 			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="oldCode", required = true) String oldCode,
 			@RequestParam(value="code", required = true) String code) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIRMCODE)){
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
 			return new Result("no_permission");
 		}
-		return commonService.saveConfirmCode(userId,code);
+		return commonService.saveConfirmCode(userId, oldCode,code);
 	}
 	
 	@RequestMapping(value="/common/saveopencashdrawercode", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody Result saveOpenCashdrawerCode(
 			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="oldCode", required = true) String oldCode,
 			@RequestParam(value="code", required = true) String code) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIRMCODE)){
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
 			return new Result("no_permission");
 		}
-		return commonService.saveOpenCashdrawerCode(userId,code);
+		return commonService.saveOpenCashdrawerCode(userId,oldCode, code);
+	}
+	
+	@RequestMapping(value="/common/savelanguageset", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result saveLanguageSet(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="amount", required = true) int amount,
+			@RequestParam(value="firstName", required = true) String firstName,
+			@RequestParam(value="secondName", required = false, defaultValue = "") String secondName) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+			return new Result("no_permission");
+		}
+		return commonService.saveLanguageSet(userId,amount, firstName, secondName);
 	}
 	
 	@RequestMapping(value="/common/getdesks", method = {RequestMethod.POST, RequestMethod.GET})

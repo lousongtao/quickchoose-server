@@ -28,16 +28,11 @@ public class DishChooseSubitem implements Serializable{
 	@ManyToOne
 	private Dish dish;
 	
-	@Column(name = "chinese_name", nullable = false)
-	private String chineseName;
+	@Column(name = "first_language_name", nullable = false)
+	private String firstLanguageName;
 	
-	@Column(name = "english_name", nullable = false)
-	private String englishName;
-
-	@Override
-	public String toString() {
-		return "DishChooseSubitem [dish=" + dish.getChineseName() + ", chineseName=" + chineseName + "]";
-	}
+	@Column(name = "second_language_name")
+	private String secondLanguageName;
 
 	@Override
 	public int hashCode() {
@@ -77,21 +72,27 @@ public class DishChooseSubitem implements Serializable{
 		this.dish = dish;
 	}
 
-	public String getChineseName() {
-		return chineseName;
+	public String getFirstLanguageName() {
+		return firstLanguageName;
 	}
 
-	public void setChineseName(String chineseName) {
-		this.chineseName = chineseName;
+	public void setFirstLanguageName(String firstLanguageName) {
+		this.firstLanguageName = firstLanguageName;
 	}
 
-	public String getEnglishName() {
-		return englishName;
+	public String getSecondLanguageName() {
+		return secondLanguageName;
 	}
 
-	public void setEnglishName(String englishName) {
-		this.englishName = englishName;
+	public void setSecondLanguageName(String secondLanguageName) {
+		this.secondLanguageName = secondLanguageName;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "DishChooseSubitem [firstLanguageName=" + firstLanguageName + ", secondLanguageName="
+				+ secondLanguageName + "]";
+	}
+
 	
 }

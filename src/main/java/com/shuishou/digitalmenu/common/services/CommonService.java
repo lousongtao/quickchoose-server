@@ -140,38 +140,79 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public ObjectResult saveConfirmCode(long userId, String code) {
+	public ObjectResult saveConfirmCode(long userId, String oldCode, String code) {
 		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
 		if (c == null){
 			c = new Configs();
 			c.setName(ConstantValue.CONFIGS_CONFIRMCODE);
+		} else {
+			if (!c.getValue().equals(oldCode)){
+				return new ObjectResult("old code is wrong", false);
+			}
 		}
 		c.setValue(code);
 		configsDA.saveConfigs(c);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CHANGE_CONFIRMCODE.toString(), "User "+ selfUser + " change confirm code " + code);
+		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change confirm code " + code);
 
 		return new ObjectResult(Result.OK, true);
 	}
 	
 	@Override
 	@Transactional
-	public ObjectResult saveOpenCashdrawerCode(long userId, String code) {
+	public ObjectResult saveOpenCashdrawerCode(long userId, String oldCode, String code) {
 		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_OPENCASHDRAWERCODE);
 		if (c == null){
 			c = new Configs();
 			c.setName(ConstantValue.CONFIGS_OPENCASHDRAWERCODE);
+		} else {
+			if (!c.getValue().equals(oldCode)){
+				return new ObjectResult("old code is wrong", false);
+			}
 		}
 		c.setValue(code);
 		configsDA.saveConfigs(c);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CHANGE_OPENCASHDRAWERCODE.toString(), "User "+ selfUser + " change open cashdrawer " + code);
+		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change open cashdrawer " + code);
 
 		return new ObjectResult(Result.OK, true);
 	}
 
+	@Override
+	@Transactional
+	public ObjectResult saveLanguageSet(long userId, int amount, String firstName, String secondName){
+		Configs c1 = configsDA.getConfigsByName(ConstantValue.CONFIGS_LANGUAGEAMOUNT);
+		if (c1 == null){
+			c1 = new Configs();
+			c1.setName(ConstantValue.CONFIGS_LANGUAGEAMOUNT);
+		} 
+		c1.setValue(String.valueOf(amount));
+		configsDA.saveConfigs(c1);
+		
+		Configs c2 = configsDA.getConfigsByName(ConstantValue.CONFIGS_FIRSTLANGUAGENAME);
+		if (c2 == null){
+			c2 = new Configs();
+			c2.setName(ConstantValue.CONFIGS_FIRSTLANGUAGENAME);
+		} 
+		c2.setValue(firstName);
+		configsDA.saveConfigs(c2);
+		
+		Configs c3 = configsDA.getConfigsByName(ConstantValue.CONFIGS_SECONDLANGUAGENAME);
+		if (c3 == null){
+			c3 = new Configs();
+			c3.setName(ConstantValue.CONFIGS_SECONDLANGUAGENAME);
+		} 
+		c3.setValue(secondName);
+		configsDA.saveConfigs(c3);
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change language. amount " + amount 
+				+ ", first language " + firstName + ", second laguage " + secondName);
+
+		return new ObjectResult(Result.OK, true);
+	}
 	@Override
 	@Transactional
 	public GetDeskResult getDesks() {

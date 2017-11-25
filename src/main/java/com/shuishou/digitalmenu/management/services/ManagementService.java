@@ -101,8 +101,10 @@ public class ManagementService implements IManagementService{
 		}
 		//firstly, load last duty record
 		ShiftWork lastSW = shiftWorkDA.getLastShiftWork();
-		if (lastSW.getEndTime() == null)
+		if (lastSW != null && lastSW.getEndTime() == null){
 			lastSW.setEndTime(new Date());
+			shiftWorkDA.save(lastSW);
+		}
 		ShiftWork sw = new ShiftWork();
 		sw.setUserName(user.getUsername());
 		sw.setUserId(userId);
@@ -195,14 +197,14 @@ public class ManagementService implements IManagementService{
 				List<IndentDetail> details = indent.getItems();
 				for(IndentDetail d : details){
 					dishAmount += d.getAmount();
-					Map<String, String> mg = mapDishAmount.get(d.getDishChineseName());
+					Map<String, String> mg = mapDishAmount.get(d.getDishFirstLanguageName());
 					if (mg == null){
 						mg = new HashMap<String, String>();
-						mg.put("name", d.getDishChineseName());
+						mg.put("name", d.getDishFirstLanguageName());
 						mg.put("price", d.getDishPrice()+"");
 						mg.put("amount", d.getAmount()+"");
 						mg.put("totalPrice", (d.getDishPrice() * d.getAmount()) + "");
-						mapDishAmount.put(d.getDishChineseName(), mg);
+						mapDishAmount.put(d.getDishFirstLanguageName(), mg);
 					} else {
 						mg.put("amount", Integer.parseInt(mg.get("amount")) + d.getAmount()+"");
 						mg.put("totalPrice", (d.getDishPrice() * Integer.parseInt(mg.get("amount"))) + "");

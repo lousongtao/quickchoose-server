@@ -1,9 +1,5 @@
 package com.shuishou.digitalmenu.indent.controllers;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +12,7 @@ import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
-import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.indent.services.IIndentService;
-import com.shuishou.digitalmenu.indent.views.GetIndentDetailResult;
-import com.shuishou.digitalmenu.indent.views.GetIndentResult;
 import com.shuishou.digitalmenu.indent.views.MakeOrderResult;
 import com.shuishou.digitalmenu.indent.views.OperateIndentResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
@@ -119,15 +112,15 @@ public class IndentController extends BaseController {
 		return indentService.queryIndent(start, limit, starttime, endtime, status, deskname,orderby,orderbydesc);
 	}
 	
-	@RequestMapping(value="/indent/queryindentdetail", method = {RequestMethod.GET,RequestMethod.POST})
-	public @ResponseBody GetIndentDetailResult queryIndentDetail(
-			@RequestParam(value = "userId", required = true) long userId,
-			@RequestParam(value="indentId", required = false) int indentId) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_ORDER)){
-			return new GetIndentDetailResult("no_permission", false, null);
-		}
-		return indentService.queryIndentDetail(indentId);
-	}
+//	@RequestMapping(value="/indent/queryindentdetail", method = {RequestMethod.GET,RequestMethod.POST})
+//	public @ResponseBody GetIndentDetailResult queryIndentDetail(
+//			@RequestParam(value = "userId", required = true) long userId,
+//			@RequestParam(value="indentId", required = false) int indentId) throws Exception{
+//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_ORDER)){
+//			return new GetIndentDetailResult("no_permission", false, null);
+//		}
+//		return indentService.queryIndentDetail(indentId);
+//	}
 	
 	/**
 	 * 

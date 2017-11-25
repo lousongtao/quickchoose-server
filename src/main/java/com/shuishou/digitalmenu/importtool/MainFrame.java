@@ -150,7 +150,7 @@ public class MainFrame extends JFrame {
 			XSSFSheet sheetC1 = (XSSFSheet) wb.getSheetAt(0);
 			for (int i = 1; i < sheetC1.getPhysicalNumberOfRows(); i++) {
 				XSSFRow row = sheetC1.getRow(i);
-				String sql = "insert into category1(id, chinese_name, english_name, sequence) values (";
+				String sql = "insert into category1(id, first_language_name, second_language_name, sequence) values (";
 				sql += (int)row.getCell(0).getNumericCellValue() + ",";
 				sql += "'" + row.getCell(1).getStringCellValue() + "',";
 				sql += "'" + row.getCell(2).getStringCellValue() + "',";
@@ -160,7 +160,7 @@ public class MainFrame extends JFrame {
 			XSSFSheet sheetC2 = (XSSFSheet) wb.getSheetAt(1);
 			for (int i = 1; i < sheetC2.getPhysicalNumberOfRows(); i++) {
 				XSSFRow row = sheetC2.getRow(i);
-				String sql = "insert into category2(id, chinese_name, english_name, sequence, category1_id) values (";
+				String sql = "insert into category2(id, first_language_name, second_language_name, sequence, category1_id) values (";
 				sql += (int)row.getCell(0).getNumericCellValue() + ",";
 				sql += "'" + row.getCell(1).getStringCellValue() + "',";
 				sql += "'" + row.getCell(2).getStringCellValue() + "',";
@@ -171,7 +171,7 @@ public class MainFrame extends JFrame {
 			XSSFSheet sheetDish = (XSSFSheet) wb.getSheetAt(2);
 			for (int i = 1; i < sheetDish.getPhysicalNumberOfRows(); i++) {
 				XSSFRow row = sheetDish.getRow(i);
-				String sql = "insert into dish(id, chinese_name, english_name, sequence, category2_id, price, isNew, isSpecial, hotLevel, isSoldOut) values (";
+				String sql = "insert into dish(id, first_language_name, second_language_name, sequence, category2_id, price, isNew, isSpecial, hotLevel, isSoldOut) values (";
 				sql += (int)row.getCell(0).getNumericCellValue() + ",";
 				sql += "'" + row.getCell(1).getStringCellValue() + "',";
 				sql += "'" + row.getCell(2).getStringCellValue() + "',";

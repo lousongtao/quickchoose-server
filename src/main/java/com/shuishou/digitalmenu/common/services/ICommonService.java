@@ -13,9 +13,11 @@ public interface ICommonService {
 //	
 //	GetConfirmCodeResult getConfirmCode();
 //	
-	ObjectResult saveConfirmCode(long userId, String code);
+	ObjectResult saveConfirmCode(long userId, String oldCode, String code);
 	
-	ObjectResult saveOpenCashdrawerCode(long userId, String code);
+	ObjectResult saveOpenCashdrawerCode(long userId, String oldCode, String code);
+	
+	ObjectResult saveLanguageSet(long userId, int amount, String firstName, String secondName);
 	
 	GetDeskResult getDesks();
 	
