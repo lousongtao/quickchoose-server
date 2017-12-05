@@ -34,6 +34,11 @@ public class CommonController extends BaseController {
 	@Autowired
 	private IPermissionService permissionService;
 	
+	@RequestMapping(value="/common/testserverconnection", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result testConnection() throws Exception{
+		return new Result(Result.OK);
+	}
+	
 	@RequestMapping(value="/common/queryconfigmap", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody ObjectResult queryConfigMap() throws Exception{
 		return commonService.queryConfigMap();

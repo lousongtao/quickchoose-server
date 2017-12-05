@@ -49,10 +49,10 @@ public class Indent {
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="indent")
 	private List<IndentDetail> items;
 	
-	@Column(name = "total_price", nullable = false)
+	@Column(name = "total_price", nullable = false, precision = 8, scale = 2)
 	private double totalPrice;
 	
-	@Column(name ="paid_price")
+	@Column(name ="paid_price", precision = 8, scale = 2)
 	private double paidPrice;//实际付款金额
 	
 	@Column(name = "pay_way")

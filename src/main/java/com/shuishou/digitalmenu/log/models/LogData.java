@@ -58,6 +58,8 @@ public class LogData {
 		SHIFTWORK("SHIFTWORK"),
 		
 		MERGETABLE("MERGETABLE"),
+		
+		MATERIAL_CHANGE("MATERIAL_CHANGE"),
 		;
 
 		private String type;

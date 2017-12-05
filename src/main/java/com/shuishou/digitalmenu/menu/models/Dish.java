@@ -50,7 +50,7 @@ public class Dish implements Serializable{
 	@JoinColumn(name = "category2_id")
 	private Category2 category2;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, precision = 8, scale = 2)
 	private double price;
 	
 	@Column

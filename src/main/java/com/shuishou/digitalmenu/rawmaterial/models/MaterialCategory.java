@@ -1,37 +1,36 @@
-package com.shuishou.digitalmenu.common.models;
+package com.shuishou.digitalmenu.rawmaterial.models;
 
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table
-public class DiscountTemplate {
+public class MaterialCategory implements Serializable {
 
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, unique = true)
 	private int id;
 	
-	@Column(name = "name", nullable = false, unique = true)
+	@Column(nullable = false)
 	private String name;
 	
-	@Column(name = "rate", nullable = false, precision = 8, scale = 2)
-	private double rate;
+	@Column
+	private int sequence;
 
-	public DiscountTemplate(){}
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="materialCategory")
+	@OrderBy("sequence")
+	private List<Material> materials;
 	
-	public DiscountTemplate(int id, String name, double rate){
-		this.id = id;
-		this.name = name;
-		this.rate = rate;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -40,12 +39,13 @@ public class DiscountTemplate {
 		this.id = id;
 	}
 
-	public double getRate() {
-		return rate;
+
+	public int getSequence() {
+		return sequence;
 	}
 
-	public void setRate(double rate) {
-		this.rate = rate;
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
 	}
 
 	public String getName() {
@@ -56,9 +56,12 @@ public class DiscountTemplate {
 		this.name = name;
 	}
 
-	@Override
-	public String toString() {
-		return "DiscountTemplate [name=" + name + "]";
+	public List<Material> getMaterials() {
+		return materials;
+	}
+
+	public void setMaterials(List<Material> materials) {
+		this.materials = materials;
 	}
 
 	@Override
@@ -77,7 +80,7 @@ public class DiscountTemplate {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DiscountTemplate other = (DiscountTemplate) obj;
+		MaterialCategory other = (MaterialCategory) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -85,6 +88,12 @@ public class DiscountTemplate {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "MaterialCategory [name=" + name + "]";
+	}
+
 	
 	
 }
