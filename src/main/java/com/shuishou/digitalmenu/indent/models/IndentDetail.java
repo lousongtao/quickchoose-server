@@ -32,7 +32,7 @@ public class IndentDetail {
 	@Column(nullable = false)
 	private int amount;
 	
-	@Column(nullable = false, name="dish_price")
+	@Column(nullable = false, name="dish_price", precision = 8, scale = 2)
 	private double dishPrice;//单个dish价格, 不考虑amount
 	
 	@Column(nullable = false, name="dish_firstlanguagename")
@@ -44,7 +44,7 @@ public class IndentDetail {
 	@Column(name="additional_requirements")
 	private String additionalRequirements;
 	
-	@Column
+	@Column(precision = 8, scale = 2)
 	private double weight;
 	
 	

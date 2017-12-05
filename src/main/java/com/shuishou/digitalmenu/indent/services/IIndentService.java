@@ -1,5 +1,7 @@
 package com.shuishou.digitalmenu.indent.services;
 
+import java.util.Date;
+
 import org.json.JSONArray;
 
 import com.shuishou.digitalmenu.indent.views.MakeOrderResult;
@@ -19,4 +21,5 @@ public interface IIndentService {
 //	ObjectResult printIndentDetail(int userId, int indentDetailId);
 	ObjectResult clearDesk(int userId, int deskId);
 	ObjectResult changeDesks(int userId, int deskId1, int deskId2);
+	
 }

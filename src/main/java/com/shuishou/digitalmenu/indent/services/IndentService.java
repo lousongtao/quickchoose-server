@@ -53,6 +53,7 @@ import com.shuishou.digitalmenu.menu.models.ICategory2PrinterDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IDishDataAccessor;
 import com.shuishou.digitalmenu.printertool.PrintJob;
 import com.shuishou.digitalmenu.printertool.PrintQueue;
+import com.shuishou.digitalmenu.statistics.views.StatItem;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -983,5 +984,7 @@ public class IndentService implements IIndentService {
 		}		
 		return new ObjectResult(Result.OK, true, deskinfos);
 	}
+
+	
 	
 }

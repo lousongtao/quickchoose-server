@@ -10,6 +10,7 @@ public class ConstantValue {
 	public static final DateFormat DFYMDHMS = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	public static final DateFormat DFHMS = new SimpleDateFormat("HH:mm:ss");
 	public static final DateFormat DFYMD = new SimpleDateFormat("yyyy/MM/dd");
+	public static final DateFormat DFWEEK = new SimpleDateFormat("EEE");
 	
 	public static final String PERMISSION_QUERY_USER = "QUERY_USER";
 	public static final String PERMISSION_CREATE_USER = "CREATE_USER";
@@ -23,6 +24,8 @@ public class ConstantValue {
 	public static final String PERMISSION_EDIT_DISCOUNTTEMPLATE = "EDIT_DISCOUNTTEMPLATE";
 	public static final String PERMISSION_QUERY_SHIFTWORK = "QUERY_SHIFTWORK";
 	public static final String PERMISSION_EDIT_PAYWAY = "EDIT_PAYWAY";
+	public static final String PERMISSION_STATISTICS = "STATISTICS";
+	public static final String PERMISSION_RAWMATERIAL = "RAWMATERIAL";
 	
 	public final static String SPLITTAG_PERMISSION = ";";
 	
@@ -92,4 +95,19 @@ public class ConstantValue {
 	public static final String CONFIGS_FIRSTLANGUAGEABBR = "FIRSTLANGUAGEABBR";
 	public static final String CONFIGS_SECONDLANGUAGENAME= "SECONDLANGUAGENAME";
 	public static final String CONFIGS_SECONDLANGUAGEABBR = "SECONDLANGUAGEABBR";
+	
+	public static final int STATISTICS_DIMENSTION_PAYWAY = 1;
+	public static final int STATISTICS_DIMENSTION_SELL = 2;
+	public static final int STATISTICS_DIMENSTION_PERIODSELL = 3;
+	
+	public static final int STATISTICS_SELLGRANULARITY_BYDISH = 1;
+	public static final int STATISTICS_SELLGRANULARITY_BYCATEGORY2 = 2;
+	public static final int STATISTICS_SELLGRANULARITY_BYCATEGORY1 = 3;
+	
+	public static final int STATISTICS_PERIODSELL_PERDAY = 1;
+	public static final int STATISTICS_PERIODSELL_PERHOUR = 2;
+	
+	public static final int MATERIAL_ALARMSTATUS_NOALARM = 1;
+	public static final int MATERIAL_ALARMSTATUS_ALARMACCEPTED = 2;
+	public static final int MATERIAL_ALARMSTATUS_ALARMDELAY = 3;
 }

@@ -44,6 +44,8 @@ INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('9', 'UPDATE_ORDER
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('10', 'EDIT_DISCOUNTTEMPLATE'); 
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('11', 'QUERY_SHIFTWORK'); 
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('12', 'EDIT_PAYWAY'); 
+INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('13', 'STATISTICS');
+INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('14', 'RAWMATERIAL');
 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('1', '1'); 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('2', '1'); 
@@ -57,3 +59,5 @@ INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('10', '1'); 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('11', '1'); 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('12', '1'); 
+INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('13', '1');
+INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('14', '1'); 

@@ -82,6 +82,7 @@
         <beans:value>com.shuishou.digitalmenu.common.models</beans:value>
         <beans:value>com.shuishou.digitalmenu.indent.models</beans:value>
         <beans:value>com.shuishou.digitalmenu.management.models</beans:value>
+        <beans:value>com.shuishou.digitalmenu.rawmaterial.models</beans:value>
       </beans:list>
     </beans:property>
     <beans:property name="hibernateProperties">

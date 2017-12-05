@@ -181,30 +181,29 @@ public class Printer implements Printable {
 		if (list!=null && list.size()>0) {
 			
 			for (_PagerBody body : list) {
-				//目前不支持二维码, 这里暂时注释
-//				if (body.getImg()!=null) {
-//					PagerImages qrcode = body.getImg();
-//					if (StrKit.notBlank(qrcode.getPath())) {
-//						ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(PathKit.getWebRootPath()+"/img/"+qrcode.getPath()));
-//						int drawWidth = (int)pageFormat.getImageableWidth();
-//						if (body.getAlign().equals(PrintAlignment.center)) {
-//							offSetX = (drawWidth-qrcode.getWidth())/2;
-//						} else if (body.getAlign().equals(PrintAlignment.right)) {
-//							offSetX = drawWidth-body.getImg().getWidth() - 20;
-//						}
-//						g2.drawImage(icon.getImage(), offSetX, offSetY, qrcode.getWidth(), qrcode.getHeight(), icon.getImageObserver());
-//					}
-//					if (body.isFeeLine()) {
-//						offSetX = printPager.offsetX;
-//						// 5=行间距
-//
-//						offSetY+=qrcode.getHeight() + 5;
-//					}else{
-//						offSetX+=qrcode.getWidth()+printPager.offsetX;
-//						offSetY+=qrcode.getHeight()/2 + 5;
-//					}
-//					continue;
-//				}
+				if (body.getImg()!=null) {
+					PagerImages qrcode = body.getImg();
+					if (StrKit.notBlank(qrcode.getPath())) {
+						ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(PathKit.getWebRootPath()+"/img/"+qrcode.getPath()));
+						int drawWidth = (int)pageFormat.getImageableWidth();
+						if (body.getAlign().equals(PrintAlignment.center)) {
+							offSetX = (drawWidth-qrcode.getWidth())/2;
+						} else if (body.getAlign().equals(PrintAlignment.right)) {
+							offSetX = drawWidth-body.getImg().getWidth() - 20;
+						}
+						g2.drawImage(icon.getImage(), offSetX, offSetY, qrcode.getWidth(), qrcode.getHeight(), icon.getImageObserver());
+					}
+					if (body.isFeeLine()) {
+						offSetX = printPager.offsetX;
+						// 5=行间距
+
+						offSetY+=qrcode.getHeight() + 5;
+					}else{
+						offSetX+=qrcode.getWidth()+printPager.offsetX;
+						offSetY+=qrcode.getHeight()/2 + 5;
+					}
+					continue;
+				}
 				//设置字体
 
 //				Font font = new Font(printPager.fontFamily,body.getFontStyle(),body.getFontSize());
