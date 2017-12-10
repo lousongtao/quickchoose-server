@@ -11,6 +11,7 @@ public interface IMaterialService {
 	public ObjectResult deleteMaterialCategory(int userId, int id);
 	public ObjectResult addMaterial(int userId, String name, int sequence, double leftAmount, String unit, double alarmAmount, int categoryId);
 	public ObjectResult updateMaterial(int userId, int id, String name, int sequence, double leftAmount, String unit, double alarmAmount, int categoryId);
+	public ObjectResult updateMaterialAmount(int userId, int id, double leftAmount);
 	public ObjectResult deleteMaterial(int userId, int id);
 	public ObjectListResult queryMaterialByCategoryId(int categoryid);
 	public ObjectResult queryMaterialById(int id);

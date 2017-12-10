@@ -118,6 +118,19 @@ public class MaterialService implements IMaterialService {
 		logService.write(selfUser, LogData.LogType.MATERIAL_CHANGE.toString(), "User " + selfUser + " update Material : " + m);
 		return new ObjectResult(Result.OK, true, m);
 	}
+	
+	@Override
+	@Transactional
+	public ObjectResult updateMaterialAmount(int userId, int id, double leftAmount) {
+		Material m = materialDA.getMaterialById(id);
+		if (m == null)
+			return new ObjectResult("not find Material by id " + id, false);
+		m.setLeftAmount(leftAmount);
+		materialDA.save(m);
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.MATERIAL_CHANGE.toString(), "User " + selfUser + " update Material : " + m);
+		return new ObjectResult(Result.OK, true, m);
+	}
 
 	@Override
 	@Transactional

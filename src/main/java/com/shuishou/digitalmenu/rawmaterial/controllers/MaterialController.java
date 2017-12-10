@@ -105,6 +105,18 @@ public class MaterialController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/material/updatematerialamount", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody ObjectResult updateMaterial(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "id", required = true) int id,
+			@RequestParam(value = "leftAmount", required = true) double leftAmount) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
+			return new ObjectResult("no_permission", false);
+		}
+		ObjectResult result = materialService.updateMaterialAmount(userId, id, leftAmount);
+		return result;
+	}
+	
 	@RequestMapping(value = "/material/deletematerial", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody ObjectResult deleteMaterial(
 			@RequestParam(value = "userId", required = true) int userId,
