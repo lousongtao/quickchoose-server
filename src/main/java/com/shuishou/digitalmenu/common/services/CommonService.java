@@ -308,22 +308,25 @@ public class CommonService implements ICommonService {
 		Printer p = printerDA.getPrinterById(id);
 		if (p == null)
 			return new ObjectResult("No printer found, id = "+ id, false);
-		printerDA.deletePrinter(p);
+		
 		//clear the connection with Category2
 		List<Category2> c2s = category2DA.getAllCategory2();
 		for(Category2 c2 : c2s ){
 			if (c2.getCategory2PrinterList()!= null){
 				for(Category2Printer cp : c2.getCategory2PrinterList()){
 					if (cp.getPrinter().getId() == id){
-						category2PrinterDA.delete(cp);
 						c2.getCategory2PrinterList().remove(cp);
 						category2DA.save(c2);
+						cp.setCategory2(null);
+						cp.setPrinter(null);
+						category2PrinterDA.delete(cp);
 					}
 					
 				}
 				
 			}
 		}
+		printerDA.deletePrinter(p);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " delete printer " + p.getName());
