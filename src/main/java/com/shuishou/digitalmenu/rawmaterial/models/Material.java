@@ -49,6 +49,9 @@ public class Material implements Serializable {
 	
 	@Column
 	private int alarmStatus;
+	
+	@Column
+	private String barCode;
 
 	@JsonIgnore
 	@ManyToOne
@@ -117,6 +120,15 @@ public class Material implements Serializable {
 
 	public void setMaterialCategory(MaterialCategory materialCategory) {
 		this.materialCategory = materialCategory;
+	}
+
+	
+	public String getBarCode() {
+		return barCode;
+	}
+
+	public void setBarCode(String barCode) {
+		this.barCode = barCode;
 	}
 
 	@Override

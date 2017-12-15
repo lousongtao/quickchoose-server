@@ -79,7 +79,7 @@ public class MaterialService implements IMaterialService {
 	@Override
 	@Transactional
 	public ObjectResult addMaterial(int userId, String name, int sequence, double leftAmount, String unit,
-			double alarmAmount, int categoryId) {
+			double alarmAmount, int categoryId, String barCode) {
 		MaterialCategory mc = materialCategoryDA.getMaterialCategoryById(categoryId);
 		if (mc == null)
 			return new ObjectResult("cannot find MaterialCategory by id " + categoryId, false);
@@ -91,6 +91,7 @@ public class MaterialService implements IMaterialService {
 		m.setAlarmStatus(ConstantValue.MATERIAL_ALARMSTATUS_NOALARM);
 		m.setAlarmAmount(alarmAmount);
 		m.setMaterialCategory(mc);
+		m.setBarCode(barCode);
 		materialDA.save(m);
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.MATERIAL_CHANGE.toString(), "User " + selfUser + " add Material : " + m);
@@ -100,7 +101,7 @@ public class MaterialService implements IMaterialService {
 	@Override
 	@Transactional
 	public ObjectResult updateMaterial(int userId, int id, String name, int sequence, double leftAmount, String unit,
-			double alarmAmount, int categoryId) {
+			double alarmAmount, int categoryId, String barCode) {
 		MaterialCategory mc = materialCategoryDA.getMaterialCategoryById(categoryId);
 		if (mc == null)
 			return new ObjectResult("cannot find MaterialCategory by id " + categoryId, false);
@@ -113,6 +114,7 @@ public class MaterialService implements IMaterialService {
 		m.setUnit(unit);
 		m.setAlarmAmount(alarmAmount);
 		m.setMaterialCategory(mc);
+		m.setBarCode(barCode);
 		materialDA.save(m);
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.MATERIAL_CHANGE.toString(), "User " + selfUser + " update Material : " + m);
