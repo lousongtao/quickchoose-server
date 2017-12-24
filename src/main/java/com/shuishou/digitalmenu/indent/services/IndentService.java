@@ -330,8 +330,8 @@ public class IndentService implements IIndentService {
 		Map<Printer, List<IndentDetail>> mapPrintDish = new HashMap<Printer, List<IndentDetail>>();
 		
 		int totalamount = 0;
-		
-		for(IndentDetail detail : indent.getItems()){
+		for (int i = 0; i < indent.getItems().size(); i++) {
+			IndentDetail detail = indent.getItems().get(i);
 			totalamount += detail.getAmount();
 			Dish dish = dishDA.getDishById(detail.getDishId());
 			List<Category2Printer> cps = dish.getCategory2().getCategory2PrinterList();
@@ -358,7 +358,9 @@ public class IndentService implements IIndentService {
 			keyMap.put("indentcomments", indent.getComments() == null ? "" : indent.getComments());
 			int amount = 0;
 			List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
-			for(IndentDetail d : mapPrintDish.get(p)){
+			List<IndentDetail> detailList = mapPrintDish.get(p);
+			for (int ij = 0; ij < detailList.size(); ij++) {
+				IndentDetail d = detailList.get(ij);
 				Map<String, String> mg = new HashMap<String, String>();
 				Dish dish = dishDA.getDishById(d.getDishId());
 				for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
@@ -449,18 +451,18 @@ public class IndentService implements IIndentService {
 
 		int totalamount = 0;
 		Indent indent = details.get(0).getIndent();
-		for (IndentDetail detail : indent.getItems()){
-			totalamount += detail.getAmount();
+		for (int i = 0; i< indent.getItems().size(); i++){
+			totalamount += indent.getItems().get(i).getAmount();
 		}
-		for (IndentDetail detail : details) {
-			Dish dish = dishDA.getDishById(detail.getDishId());
+		for (int i = 0; i < details.size(); i++) {
+			Dish dish = dishDA.getDishById(details.get(i).getDishId());
 			List<Category2Printer> cps = dish.getCategory2().getCategory2PrinterList();
 			for(Category2Printer cp : cps){
 				Printer printer = cp.getPrinter();
 				if (mapPrintDish.get(printer) == null){
 					mapPrintDish.put(printer, new ArrayList<IndentDetail>());
 				}
-				mapPrintDish.get(printer).add(detail);
+				mapPrintDish.get(printer).add(details.get(i));
 			}
 		}
 		
@@ -479,7 +481,9 @@ public class IndentService implements IIndentService {
 			keyMap.put("indentcomments", indent.getComments() == null ? "" : indent.getComments());
 			int amount = 0;
 			List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
-			for (IndentDetail d : mapPrintDish.get(p)) {
+			List<IndentDetail> detailList = mapPrintDish.get(p);
+			for (int ij = 0; ij < detailList.size(); ij++) {
+				IndentDetail d = detailList.get(ij);
 				Map<String, String> mg = new HashMap<String, String>();
 				Dish dish = dishDA.getDishById(d.getDishId());
 				for (int i = 0; i < d.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行

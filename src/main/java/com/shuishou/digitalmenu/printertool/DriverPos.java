@@ -96,14 +96,14 @@ public class DriverPos {
         		bodyList.add(new _PagerBody().setFeeLine(true));
         		//单独一行打印需求
         		if(goods.get("requirement") != null && goods.get("requirement").toString().length() > 0){
-        			bodyList.add(printRemark(goods.get("requirement")+""));
+        			bodyList.add(printRemark(goods.get("requirement")+"", 10, true));
         		}
         		//换行
         		bodyList.add(new _PagerBody().setFeeLine(true));
         		//打印菜品条形码
         		if(goods.containsKey("qrcode") ){
         			bodyList.add(printGoodsQrcode(goods.get("qrcode")+""));
-        			bodyList.add(printRemark(goods.get("remark")+""));
+        			bodyList.add(printRemark(goods.get("remark")+"", 10, true));
         		}
         	}
         }
@@ -137,12 +137,13 @@ public class DriverPos {
 	 * @return
 
 	 */
-	private _PagerBody printRemark(String remark) {
+	private _PagerBody printRemark(String remark, int fontsize, boolean isBold) {
 		if(remark.equals("null")){
 			return new _PagerBody().setFeeLine(true);
 		}
 		
-		return new _PagerBody().setContent(remark).setAlign(0).setFeeLine(true);
+		return new _PagerBody().setContent(remark).setAlign(0).setFeeLine(true).setFontSize(fontsize).isBold(isBold);
+		
 	}
 
 	/**

@@ -32,7 +32,7 @@ public class StatisticsController {
 			@RequestParam(value = "sellGranularity", required = false, defaultValue="0") int sellGranularity,
 			@RequestParam(value = "sellByPeriod", required = false, defaultValue= "0") int sellByPeriod) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_STATISTICS)){
-			return new OperateIndentResult("no_permission", false);
+			return new ObjectResult("no_permission", false);
 		}
 		Date startDate = ConstantValue.DFYMDHMS.parse(sStartDate);
 		Date endDate = ConstantValue.DFYMDHMS.parse(sEndDate);
