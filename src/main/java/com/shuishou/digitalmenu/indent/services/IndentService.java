@@ -10,6 +10,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -359,6 +361,26 @@ public class IndentService implements IIndentService {
 			int amount = 0;
 			List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 			List<IndentDetail> detailList = mapPrintDish.get(p);
+			/**
+			 * sort these dishes by sequence, firstly compare by category1's sequence, then category2's sequence,
+			 * at last compare dish's sequence
+			 */
+			Collections.sort(detailList, new Comparator<IndentDetail>(){
+
+				@Override
+				public int compare(IndentDetail o1, IndentDetail o2) {
+					Dish dish1 = dishDA.getDishById(o1.getDishId());
+					Dish dish2 = dishDA.getDishById(o2.getDishId());
+					if (dish1.getCategory2().getCategory1().getId() == dish2.getCategory2().getCategory1().getId()){
+						if (dish1.getCategory2().getId() == dish2.getCategory2().getId()){
+							return dish1.getSequence() - dish2.getSequence();
+						} else {
+							return dish1.getCategory2().getSequence() - dish2.getCategory2().getSequence();
+						}
+					} else {
+						return dish1.getCategory2().getCategory1().getSequence() - dish2.getCategory2().getCategory1().getSequence();
+					}	
+				}});
 			for (int ij = 0; ij < detailList.size(); ij++) {
 				IndentDetail d = detailList.get(ij);
 				Map<String, String> mg = new HashMap<String, String>();
@@ -482,6 +504,26 @@ public class IndentService implements IIndentService {
 			int amount = 0;
 			List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 			List<IndentDetail> detailList = mapPrintDish.get(p);
+			/**
+			 * sort these dishes by sequence, firstly compare by category1's sequence, then category2's sequence,
+			 * at last compare dish's sequence
+			 */
+			Collections.sort(detailList, new Comparator<IndentDetail>(){
+
+				@Override
+				public int compare(IndentDetail o1, IndentDetail o2) {
+					Dish dish1 = dishDA.getDishById(o1.getDishId());
+					Dish dish2 = dishDA.getDishById(o2.getDishId());
+					if (dish1.getCategory2().getCategory1().getId() == dish2.getCategory2().getCategory1().getId()){
+						if (dish1.getCategory2().getId() == dish2.getCategory2().getId()){
+							return dish1.getSequence() - dish2.getSequence();
+						} else {
+							return dish1.getCategory2().getSequence() - dish2.getCategory2().getSequence();
+						}
+					} else {
+						return dish1.getCategory2().getCategory1().getSequence() - dish2.getCategory2().getCategory1().getSequence();
+					}	
+				}});
 			for (int ij = 0; ij < detailList.size(); ij++) {
 				IndentDetail d = detailList.get(ij);
 				Map<String, String> mg = new HashMap<String, String>();

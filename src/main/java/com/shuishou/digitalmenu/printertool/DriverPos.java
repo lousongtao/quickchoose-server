@@ -74,15 +74,17 @@ public class DriverPos {
         for (JSONObject jsonObject : posTpl.getHeader()) {
             bodyList.add(print(jsonObject));
         }
-
+        
         if(posTpl.getGoods()!=null){
         	// print goods title
         	for (Goods goods : posTpl.getGoods()) {
         		//跳过requirement项
-        		if (!"备注".equals(goods.getName()))
+        		if (!"备注".equals(goods.getName())){
         			bodyList.add(printTitle(goods));
+        		}
         	}
         	//换行
+        	bodyList.add(new _PagerBody().setFeeLine(true));
         	bodyList.add(new _PagerBody().setFeeLine(true));
         	
         	// print detail
@@ -96,14 +98,16 @@ public class DriverPos {
         		bodyList.add(new _PagerBody().setFeeLine(true));
         		//单独一行打印需求
         		if(goods.get("requirement") != null && goods.get("requirement").toString().length() > 0){
-        			bodyList.add(printRemark(goods.get("requirement")+"", 10, true));
+        			bodyList.add(new _PagerBody().setFeeLine(true));
+        			bodyList.add(new _PagerBody().setFeeLine(true));
+        			bodyList.add(printRemark(goods.get("requirement")+"", 12, true));
         		}
         		//换行
         		bodyList.add(new _PagerBody().setFeeLine(true));
         		//打印菜品条形码
         		if(goods.containsKey("qrcode") ){
         			bodyList.add(printGoodsQrcode(goods.get("qrcode")+""));
-        			bodyList.add(printRemark(goods.get("remark")+"", 10, true));
+        			bodyList.add(printRemark(goods.get("remark")+"", 12, true));
         		}
         	}
         }
