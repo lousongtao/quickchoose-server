@@ -393,7 +393,7 @@ public class IndentService implements IIndentService {
 						requirement += d.getAdditionalRequirements();
 					//按重量卖的dish, 把重量加入requirement
 					if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
-						requirement += "\n" + d.getWeight();
+						requirement += " " + d.getWeight();
 					mg.put("requirement", requirement);
 					
 					amount++;
@@ -536,7 +536,7 @@ public class IndentService implements IIndentService {
 						requirement += d.getAdditionalRequirements();
 					//按重量卖的dish, 把重量加入requirement
 					if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
-						requirement += "\n" + d.getWeight();
+						requirement += " " + d.getWeight();
 					mg.put("requirement", requirement);
 					amount++;
 					goods.add(mg);
