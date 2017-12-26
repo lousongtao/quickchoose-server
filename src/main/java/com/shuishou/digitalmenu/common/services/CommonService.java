@@ -161,6 +161,48 @@ public class CommonService implements ICommonService {
 	
 	@Override
 	@Transactional
+	public ObjectResult saveClearTableCode(long userId, String oldCode, String code) {
+		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_CLEARTABLECODE);
+		if (c == null){
+			c = new Configs();
+			c.setName(ConstantValue.CONFIGS_CLEARTABLECODE);
+		} else {
+			if (!c.getValue().equals(oldCode)){
+				return new ObjectResult("old code is wrong", false);
+			}
+		}
+		c.setValue(code);
+		configsDA.saveConfigs(c);
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change clear table code " + code);
+
+		return new ObjectResult(Result.OK, true);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectResult saveCancelOrderCode(long userId, String oldCode, String code) {
+		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_CANCELORDERCODE);
+		if (c == null){
+			c = new Configs();
+			c.setName(ConstantValue.CONFIGS_CANCELORDERCODE);
+		} else {
+			if (!c.getValue().equals(oldCode)){
+				return new ObjectResult("old code is wrong", false);
+			}
+		}
+		c.setValue(code);
+		configsDA.saveConfigs(c);
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change cancel order code " + code);
+
+		return new ObjectResult(Result.OK, true);
+	}
+	
+	@Override
+	@Transactional
 	public ObjectResult saveOpenCashdrawerCode(long userId, String oldCode, String code) {
 		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_OPENCASHDRAWERCODE);
 		if (c == null){
