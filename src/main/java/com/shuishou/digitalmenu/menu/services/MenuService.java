@@ -123,7 +123,10 @@ public class MenuService implements IMenuService {
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CATEGORY1_CHANGE.toString(), "User " + selfUser + " add Category1 : " + c1);
+		logService.write(selfUser, LogData.LogType.CATEGORY1_CHANGE.toString(), "User " + selfUser 
+				+ " add Category1 : firstLanguageName =" + firstLanguageName
+				+ ", secondLanguageName = " + secondLanguageName
+				+ ", sequence = " + sequence);
 
 		return new ObjectResult(Result.OK, true, c1);
 	}
@@ -162,7 +165,9 @@ public class MenuService implements IMenuService {
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CATEGORY2_CHANGE.toString(), "User " + selfUser + " add Category2 : " + c2);
+		logService.write(selfUser, LogData.LogType.CATEGORY2_CHANGE.toString(), "User " + selfUser + " add Category2 : firstLanguageName = " + firstLanguageName
+				+ ", secondLanguageName = " + secondLanguageName + ", sequence = " + sequence + ", category1 = " + c1.getFirstLanguageName()
+				+ ", printerIds = " + printerIds);
 
 		return new ObjectResult(Result.OK, true, c2);
 	}
@@ -224,7 +229,8 @@ public class MenuService implements IMenuService {
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(), "User " + selfUser + " add Dish : " + dish);
+		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(), "User " + selfUser + " add Dish : firstLanguageName = " + firstLanguageName
+				+ ", secondLanguageName = "+ secondLanguageName);
 		
 		hibernateInitialDish(dish);
 		return new ObjectResult(Result.OK, true, dish);

@@ -674,7 +674,7 @@ public class IndentService implements IIndentService {
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, logtype,
-						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + operationType + ".");
+						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
 		return new OperateIndentResult(Result.OK, true);
 	}
 
@@ -693,28 +693,6 @@ public class IndentService implements IIndentService {
 		String logtype = null;
 		Indent indent = null;
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-//		if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_ADD){
-//			logtype = LogData.LogType.INDENTDETAIL_ADDDISH.toString();
-//			Dish dish = dishDA.getDishById(dishId);
-//			if (dish == null)
-//				return new OperateIndentResult("cannot find Dish by Id:" + dishId, false);
-//			indent = indentDA.getIndentById(indentId);
-//			if (indent == null)
-//				return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
-//			IndentDetail detail = new IndentDetail();
-//			detail.setAmount(amount);
-//			detail.setDishId(dishId);
-//			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
-//			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
-//			detail.setDishPrice(dish.getPrice());
-//			detail.setIndent(indent);
-//			indent.addItem(detail);
-//			indent.setTotalPrice(indent.getTotalPrice() + amount * dish.getPrice());
-//			indentDA.update(indent);
-//			ArrayList<IndentDetail> listPrintDetails = new ArrayList<>();
-//			printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json");
-//			printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
-//		} else 
 		if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_CHANGEAMOUNT){
 			logtype = LogData.LogType.INDENTDETAIL_CHANGEAMOUNT.toString();
 			IndentDetail detail = indentDetailDA.getIndentDetailById(indentDetailId);
@@ -737,27 +715,27 @@ public class IndentService implements IIndentService {
 			}
 			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 			indentDA.update(indent);
-//			ArrayList<IndentDetail> listPrintDetails = new ArrayList<>();
-//			listPrintDetails.add(detail);
 			printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", amount - originalAmount);
-//			printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
-//			listPrintDetails.clear();//must remove from the collection firstly, otherwise hibernate will rebuild the detail object by cascade
 		} else if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_DELETE){
 			logtype = LogData.LogType.INDENTDETAIL_DELETE.toString();
 			IndentDetail detail = indentDetailDA.getIndentDetailById(indentDetailId);
 			indent = detail.getIndent();
 			if (detail == null)
 				return new OperateIndentResult("cannot find IndentDetail by IndentId:" + indentId + " + dishId:" + dishId, false);
+			Dish dish = dishDA.getDishById(detail.getDishId());
+			if (dish == null)
+				return new OperateIndentResult("cannot find dish by id:" + detail.getDishId(), false);
 			indent.getItems().remove(detail);//must remove from the collection firstly, otherwise hibernate will rebuild the detail object by cascade
 			indentDetailDA.delete(detail);
-			double totalprice = detail.getIndent().getTotalPrice() - detail.getAmount() * detail.getDishPrice();
-			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
+			double newPrice = detail.getIndent().getTotalPrice();
+			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT){
+				newPrice -= detail.getAmount() * detail.getWeight() * detail.getDishPrice();
+			} else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT){
+				newPrice -= detail.getAmount() * detail.getDishPrice();
+			}
+			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(newPrice)));
 			indentDA.update(detail.getIndent());
-//			ArrayList<IndentDetail> listPrintDetails = new ArrayList<>();
-//			listPrintDetails.add(detail);
 			printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", detail.getAmount() * (-1));
-//			printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
-//			listPrintDetails.clear();//must remove from the collection firstly, otherwise hibernate will rebuild the detail object by cascade
 		} 
 		OperateIndentResult result = new OperateIndentResult("ok", true);
 		if (indent != null){
@@ -788,7 +766,7 @@ public class IndentService implements IIndentService {
 			logService.write(selfUser, logtype,
 				"User " + selfUser + " operate IndentDetail, indentId = " + indentId 
 				+ ", dishId = " + dishId + ", indentdetailId = " + indentDetailId 
-				+ ", amount = " + amount + ", operationType = " + operateType + ".");
+				+ ", amount = " + amount + ", operationType = " + logtype + ".");
 		}
 		
 		return result;
