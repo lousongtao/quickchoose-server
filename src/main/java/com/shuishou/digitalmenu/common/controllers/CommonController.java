@@ -66,6 +66,28 @@ public class CommonController extends BaseController {
 		return commonService.saveConfirmCode(userId, oldCode,code);
 	}
 	
+	@RequestMapping(value="/common/savecleartablecode", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result saveClearTableCode(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="oldCode", required = true) String oldCode,
+			@RequestParam(value="code", required = true) String code) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+			return new Result("no_permission");
+		}
+		return commonService.saveClearTableCode(userId, oldCode,code);
+	}
+	
+	@RequestMapping(value="/common/savecancelordercode", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result saveCancelOrderCode(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="oldCode", required = true) String oldCode,
+			@RequestParam(value="code", required = true) String code) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+			return new Result("no_permission");
+		}
+		return commonService.saveCancelOrderCode(userId, oldCode,code);
+	}
+	
 	@RequestMapping(value="/common/saveopencashdrawercode", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody Result saveOpenCashdrawerCode(
 			@RequestParam(value = "userId", required = true) int userId,

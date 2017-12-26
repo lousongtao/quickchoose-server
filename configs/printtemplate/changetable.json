@@ -1,0 +1,61 @@
+{
+	"header": [
+	{
+		"text": "换桌单",
+		"size": 20,
+		"bold": true,
+		"align": 1,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "{$from} ---> {$to}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "日期：{$dateTime}",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "-",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	},
+	{
+		"text": "--------------------------------",
+		"size": 9,
+		"bold": false,
+		"align": 0,
+		"line": true,
+		"type": 0
+	}]
+	
+	
+}

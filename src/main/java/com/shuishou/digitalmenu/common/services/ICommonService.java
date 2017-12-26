@@ -14,6 +14,8 @@ public interface ICommonService {
 //	GetConfirmCodeResult getConfirmCode();
 //	
 	ObjectResult saveConfirmCode(long userId, String oldCode, String code);
+	ObjectResult saveClearTableCode(long userId, String oldCode, String code);
+	ObjectResult saveCancelOrderCode(long userId, String oldCode, String code);
 	
 	ObjectResult saveOpenCashdrawerCode(long userId, String oldCode, String code);
 	
