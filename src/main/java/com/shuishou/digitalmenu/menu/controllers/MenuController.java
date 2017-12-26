@@ -110,7 +110,8 @@ public class MenuController extends BaseController {
 			@RequestParam(value="userId", required = true) long userId, 
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
-			@RequestParam(value = "sequence", required = true) int sequence, 
+			@RequestParam(value = "sequence", required = true) int sequence,
+			@RequestParam(value = "printStyle", required = true) int printStyle, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
 			@RequestParam(value = "printerIds", required = true) String sPrinterId) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -119,7 +120,7 @@ public class MenuController extends BaseController {
 		
 		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
 		
-		Result result = menuService.addCategory2(userId, firstLanguageName, secondLanguageName, sequence, category1Id, printerIds);
+		Result result = menuService.addCategory2(userId, firstLanguageName, secondLanguageName, sequence, printStyle, category1Id, printerIds);
 		
 		return result;
 	}
@@ -131,6 +132,7 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
+			@RequestParam(value = "printStyle", required = true) int printStyle, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
 			@RequestParam(value = "printerIds", required = true) String sPrinterId) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -139,7 +141,7 @@ public class MenuController extends BaseController {
 		
 		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
 		
-		Result result = menuService.updateCategory2(userId, id, firstLanguageName, secondLanguageName, sequence, category1Id, printerIds);
+		Result result = menuService.updateCategory2(userId, id, firstLanguageName, secondLanguageName, sequence, printStyle, category1Id, printerIds);
 		
 		return result;
 	}

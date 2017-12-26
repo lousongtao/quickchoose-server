@@ -3,6 +3,7 @@ package com.shuishou.digitalmenu;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 
@@ -11,6 +12,8 @@ public class ConstantValue {
 	public static final DateFormat DFHMS = new SimpleDateFormat("HH:mm:ss");
 	public static final DateFormat DFYMD = new SimpleDateFormat("yyyy/MM/dd");
 	public static final DateFormat DFWEEK = new SimpleDateFormat("EEE");
+	
+	public static final DecimalFormat doubleFormat = new DecimalFormat("0.00");
 	
 	public static final String PERMISSION_QUERY_USER = "QUERY_USER";
 	public static final String PERMISSION_CREATE_USER = "CREATE_USER";
@@ -73,8 +76,8 @@ public class ConstantValue {
 	
 	public static final byte MENUCHANGE_TYPE_SOLDOUT = 0;
 	
-	public static final byte PRINT_STYLE_TOGETHER = 0;
-	public static final byte PRINT_STYLE_SEPARATELY = 1;
+	public static final byte CATEGORY2_PRINT_STYLE_TOGETHER = 0;
+	public static final byte CATEGORY2_PRINT_STYLE_SEPARATELY = 1;
 	public static final byte PRINTER_TYPE_COUNTER = 1;
 	public static final byte PRINTER_TYPE_KITCHEN = 2;
 //	public static final byte SHIFTWORK_ONWORK = 0;
@@ -87,6 +90,8 @@ public class ConstantValue {
 	
 	public static final byte DISH_PURCHASETYPE_UNIT = 1;
 	public static final byte DISH_PURCHASETYPE_WEIGHT = 2;
+	
+	
 	
 	public static final String CONFIGS_CONFIRMCODE = "CONFIRMCODE";
 	public static final String CONFIGS_OPENCASHDRAWERCODE = "OPENCASHDRAWERCODE";

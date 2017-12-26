@@ -136,7 +136,7 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addCategory2(long userId, String firstLanguageName, String secondLanguageName, int sequence, int category1Id, ArrayList<Integer> printerIds) {
+	public ObjectResult addCategory2(long userId, String firstLanguageName, String secondLanguageName, int sequence, int printStyle, int category1Id, ArrayList<Integer> printerIds) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null){
 			return new ObjectResult("cannot find category1 by id : "+ category1Id, false, null);
@@ -146,6 +146,7 @@ public class MenuService implements IMenuService {
 		c2.setFirstLanguageName(firstLanguageName);
 		c2.setSecondLanguageName(secondLanguageName);
 		c2.setSequence(sequence);
+		c2.setPrintStyle(printStyle);
 		c2.setCategory1(c1);
 		category2DA.save(c2);
 		for(Integer i : printerIds){
@@ -391,7 +392,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult updateCategory2(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence,
+	public ObjectResult updateCategory2(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, int printStyle, 
 			int category1Id, ArrayList<Integer> printerIds) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null)
@@ -420,6 +421,7 @@ public class MenuService implements IMenuService {
 		c2.setFirstLanguageName(firstLanguageName);
 		c2.setSecondLanguageName(secondLanguageName);
 		c2.setSequence(sequence);
+		c2.setPrintStyle(printStyle);
 		c2.setCategory1(c1);
 		category2DA.save(c2);
 		
