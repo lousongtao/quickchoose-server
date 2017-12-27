@@ -1,6 +1,8 @@
 package com.shuishou.digitalmenu.menu.controllers;
 
 import java.util.ArrayList;
+
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,16 +113,15 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence,
-			@RequestParam(value = "printStyle", required = true) int printStyle, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
-			@RequestParam(value = "printerIds", required = true) String sPrinterId) throws Exception{
+			@RequestParam(value = "printers", required = true) String printers) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
+		JSONArray ja = new JSONArray(printers);
+//		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
 		
-		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
-		
-		Result result = menuService.addCategory2(userId, firstLanguageName, secondLanguageName, sequence, printStyle, category1Id, printerIds);
+		Result result = menuService.addCategory2(userId, firstLanguageName, secondLanguageName, sequence, category1Id, ja);
 		
 		return result;
 	}
@@ -132,16 +133,15 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence, 
-			@RequestParam(value = "printStyle", required = true) int printStyle, 
 			@RequestParam(value = "category1Id", required = true) int category1Id,
-			@RequestParam(value = "printerIds", required = true) String sPrinterId) throws Exception{
+			@RequestParam(value = "printers", required = true) String printers) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
 		}
+		JSONArray ja = new JSONArray(printers);
+//		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
 		
-		ArrayList<Integer> printerIds = new Gson().fromJson(sPrinterId, new TypeToken<ArrayList<Integer>>(){}.getType());
-		
-		Result result = menuService.updateCategory2(userId, id, firstLanguageName, secondLanguageName, sequence, printStyle, category1Id, printerIds);
+		Result result = menuService.updateCategory2(userId, id, firstLanguageName, secondLanguageName, sequence, category1Id, ja);
 		
 		return result;
 	}

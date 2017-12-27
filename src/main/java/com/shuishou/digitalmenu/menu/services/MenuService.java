@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -136,7 +138,7 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addCategory2(long userId, String firstLanguageName, String secondLanguageName, int sequence, int printStyle, int category1Id, ArrayList<Integer> printerIds) {
+	public ObjectResult addCategory2(long userId, String firstLanguageName, String secondLanguageName, int sequence, int category1Id, JSONArray jaPrinter) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null){
 			return new ObjectResult("cannot find category1 by id : "+ category1Id, false, null);
@@ -146,29 +148,30 @@ public class MenuService implements IMenuService {
 		c2.setFirstLanguageName(firstLanguageName);
 		c2.setSecondLanguageName(secondLanguageName);
 		c2.setSequence(sequence);
-		c2.setPrintStyle(printStyle);
 		c2.setCategory1(c1);
 		category2DA.save(c2);
-		for(Integer i : printerIds){
-			Printer p = printerDA.getPrinterById(i);
+		for (int i = 0; i < jaPrinter.length(); i++) {
+			JSONObject joPrinter = (JSONObject) jaPrinter.get(i);
+			int printerId = joPrinter.getInt("printerId");
+			int printStyle = joPrinter.getInt("printStyle");
+			Printer p = printerDA.getPrinterById(printerId);
 			if (p == null){
-				return new ObjectResult("cannot find Printer by id : "+ i, false, null);
+				return new ObjectResult("cannot find Printer by id : "+ printerId, false, null);
 			}
 			Category2Printer cp = new Category2Printer();
 			cp.setPrinter(p);
 			cp.setCategory2(c2);
+			cp.setPrintStyle(printStyle);
 			c2.addCategory2Printer(cp);
 			category2PrinterDA.save(cp);
 		}
-		
 		
 		hibernateInitialCategory2(c2);
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY2_CHANGE.toString(), "User " + selfUser + " add Category2 : firstLanguageName = " + firstLanguageName
-				+ ", secondLanguageName = " + secondLanguageName + ", sequence = " + sequence + ", category1 = " + c1.getFirstLanguageName()
-				+ ", printerIds = " + printerIds);
+				+ ", secondLanguageName = " + secondLanguageName + ", sequence = " + sequence + ", category1 = " + c1.getFirstLanguageName());
 
 		return new ObjectResult(Result.OK, true, c2);
 	}
@@ -392,8 +395,8 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult updateCategory2(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, int printStyle, 
-			int category1Id, ArrayList<Integer> printerIds) {
+	public ObjectResult updateCategory2(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, 
+			int category1Id, JSONArray jaPrinter) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null)
 			return new ObjectResult("not found Category1 by id "+ category1Id, false, null);
@@ -406,14 +409,18 @@ public class MenuService implements IMenuService {
 		for(Category2Printer cp : cps){
 			category2PrinterDA.delete(cp);
 		}
-		for (Integer i : printerIds) {
-			Printer p = printerDA.getPrinterById(i);
-			if (p == null) {
-				return new ObjectResult("cannot find Printer by id : " + i, false, null);
+		for (int i = 0; i < jaPrinter.length(); i++) {
+			JSONObject joPrinter = (JSONObject) jaPrinter.get(i);
+			int printerId = joPrinter.getInt("printerId");
+			int printStyle = joPrinter.getInt("printStyle");
+			Printer p = printerDA.getPrinterById(printerId);
+			if (p == null){
+				return new ObjectResult("cannot find Printer by id : "+ printerId, false, null);
 			}
 			Category2Printer cp = new Category2Printer();
 			cp.setPrinter(p);
 			cp.setCategory2(c2);
+			cp.setPrintStyle(printStyle);
 			c2.addCategory2Printer(cp);
 			category2PrinterDA.save(cp);
 		}
@@ -421,7 +428,6 @@ public class MenuService implements IMenuService {
 		c2.setFirstLanguageName(firstLanguageName);
 		c2.setSecondLanguageName(secondLanguageName);
 		c2.setSequence(sequence);
-		c2.setPrintStyle(printStyle);
 		c2.setCategory1(c1);
 		category2DA.save(c2);
 		

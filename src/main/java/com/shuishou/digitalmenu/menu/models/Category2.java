@@ -53,9 +53,6 @@ public class Category2 implements Serializable{
 	@OneToMany(cascade={CascadeType.ALL}, mappedBy="category2")
 	private List<Category2Printer> category2PrinterList;
 	
-	@Column(nullable = false)
-	private int printStyle;
-
 	public Category1 getCategory1() {
 		return category1;
 	}
@@ -115,15 +112,6 @@ public class Category2 implements Serializable{
 		if (category2PrinterList == null)
 			category2PrinterList = new ArrayList<Category2Printer>();
 		category2PrinterList.add(cp);
-	}
-
-
-	public int getPrintStyle() {
-		return printStyle;
-	}
-
-	public void setPrintStyle(int printStyle) {
-		this.printStyle = printStyle;
 	}
 
 	public List<Category2Printer> getCategory2PrinterList() {

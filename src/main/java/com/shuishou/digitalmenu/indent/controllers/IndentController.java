@@ -66,12 +66,13 @@ public class IndentController extends BaseController {
 			@RequestParam(value = "confirmCode", required = true) String confirmCode,
 			@RequestParam(value = "originIndentId", required = true) int originIndentId,
 			@RequestParam(value = "indents", required = true) String indents,
+			@RequestParam(value = "paidCash", required = true) double paidCash,
 			@RequestParam(value = "paidPrice", required = false, defaultValue = "0") double paidPrice,
 			@RequestParam(value = "payWay", required = false, defaultValue = ConstantValue.INDENT_PAYWAY_CASH) String payWay,
 			@RequestParam(value = "memberCard", required = false, defaultValue = "0") String memberCard) throws Exception{
 		JSONArray jsonOrder = new JSONArray(indents);
 		
-		return indentService.splitIndent(userId, confirmCode, jsonOrder, originIndentId, paidPrice, payWay, memberCard);
+		return indentService.splitIndent(userId, confirmCode, jsonOrder, originIndentId, paidPrice, paidCash, payWay, memberCard);
 	}
 	
 	@RequestMapping(value="/indent/cleardesk", method = (RequestMethod.POST))
@@ -138,13 +139,14 @@ public class IndentController extends BaseController {
 			@RequestParam(value="id", required = true) int indentId,
 			@RequestParam(value="operatetype", required = true) byte operateType,
 			@RequestParam(value="paidPrice", required = false, defaultValue = "0") double paidPrice,
+			@RequestParam(value="paidCash", required = true) double paidCash,
 			@RequestParam(value="payWay", required = false, defaultValue = ConstantValue.INDENT_PAYWAY_CASH) String payWay,
 			@RequestParam(value="memberCard", required = false, defaultValue = "0") String memberCard) throws Exception{
 		
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
 			return new OperateIndentResult("no_permission", false);
 		}
-		return indentService.operateIndent(userId, indentId, operateType, paidPrice, payWay, memberCard);
+		return indentService.operateIndent(userId, indentId, operateType, paidPrice, paidCash, payWay, memberCard);
 	}
 	
 	/**

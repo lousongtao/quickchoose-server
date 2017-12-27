@@ -12,6 +12,8 @@ public class ConstantValue {
 	public static final DateFormat DFYMD = new SimpleDateFormat("yyyy/MM/dd");
 	public static final DateFormat DFWEEK = new SimpleDateFormat("EEE");
 	
+	public static final String FORMAT_DOUBLE = "%.2f";
+	
 	public static final String PERMISSION_QUERY_USER = "QUERY_USER";
 	public static final String PERMISSION_CREATE_USER = "CREATE_USER";
 	public static final String PERMISSION_EDIT_MENU = "EDIT_MENU";

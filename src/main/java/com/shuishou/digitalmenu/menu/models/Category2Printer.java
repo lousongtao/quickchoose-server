@@ -24,6 +24,9 @@ public class Category2Printer {
 	
 	@ManyToOne(optional = false)
 	private Printer printer;
+	
+	@Column(nullable = false)
+	private int printStyle;
 
 	public long getId() {
 		return id;
@@ -47,6 +50,14 @@ public class Category2Printer {
 
 	public void setPrinter(Printer printer) {
 		this.printer = printer;
+	}
+
+	public int getPrintStyle() {
+		return printStyle;
+	}
+
+	public void setPrintStyle(int printStyle) {
+		this.printStyle = printStyle;
 	}
 
 	@Override
