@@ -598,7 +598,7 @@ public class IndentService implements IIndentService {
 		keyMap.put("title", "出菜勾单");
 		keyMap.put("tableNumb", indent.getDeskName());
 		keyMap.put("orderId", indent.getDailySequence()+"");
-		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(indent.getStartTime()));
+		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(new Date()));
 		keyMap.put("amountOnThisTable", totalamount + "");
 		keyMap.put("indentcomments", indent.getComments() == null ? "" : indent.getComments());
 		printCucaigoudan2KitchenWithPrintStyle(mapPrintDish, tempfile, keyMap);
