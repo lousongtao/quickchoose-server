@@ -129,7 +129,7 @@ public class DriverPos {
         
         //填充打印对象列表
         pager.setList(bodyList);
-        new Printer().printJob(pager, printerName); 
+        new Printer().printJob(pager, printerName, 0); 
     }
 
 	/**

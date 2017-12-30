@@ -71,11 +71,15 @@ public class Printer implements Printable {
 	 * @param printPager	页面对象
 
 	 * @param printerName	打印机名称(Windows控制面板-->设备和打印机-->打印机名称) 支持共享打印机
+	 * 
+	 * @param errorTryTimes 从Jdk5开始, 会出现一个PrinterException : Printer is not accepting job.
+	 * 			这个异常不确定什么时候触发. 但是一旦出现, 导致后续的打印都会停止. 有一个建议是异常触发时继续多打几次. 使用这个参数标志重复打印次数, 然后进行观察.
 
 	 */
-	public void printJob(PrintPager printPager, String printerName){
+	public void printJob(PrintPager printPager, String printerName, int errorTryTimes){
 		try{
 			if(printPager==null)return;
+			
 			int printSize = 1;
 			
 			this.printPager = printPager;
@@ -115,6 +119,12 @@ public class Printer implements Printable {
 		} catch (Exception e){
 			e.printStackTrace();
 			logger.error("打印异常", e);
+			if (e.getMessage().indexOf("not accepting job") > 0){
+				if (errorTryTimes > 10)
+					return;
+				logger.debug("find a 'Printer is not accepting job' exception, here is trying to loop printing, this time is " + (errorTryTimes + 1));
+				printJob(printPager, printerName, errorTryTimes + 1);
+			}
 		}
 	}
 	
