@@ -9,10 +9,10 @@
 		"type": 0
 	},
 	{
-		"text": "{$from} ---> {$to}",
-		"size": 9,
-		"bold": false,
-		"align": 0,
+		"text": "{$from}--->{$to}",
+		"size": 20,
+		"bold": true,
+		"align": 1,
 		"line": true,
 		"type": 0
 	},
