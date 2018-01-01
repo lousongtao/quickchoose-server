@@ -663,6 +663,7 @@ public class MenuService implements IMenuService {
 				makeZoomImage(image.getInputStream(), fileNameSmall, ConstantValue.DISHIMAGE_WIDTH_SMALL, ConstantValue.DISHIMAGE_HEIGHT_SMALL);
 				makeZoomImage(image.getInputStream(), fileNameOrigin, ConstantValue.DISHIMAGE_WIDTH_ORIGIN, ConstantValue.DISHIMAGE_HEIGHT_ORIGIN);
 			} catch (IOException e) {
+				logger.error(ConstantValue.DFYMDHMS.format(new Date()) + "\n");
 				logger.error("Exception when create image file for dish : " + dish, e);
 				e.printStackTrace();
 			} 

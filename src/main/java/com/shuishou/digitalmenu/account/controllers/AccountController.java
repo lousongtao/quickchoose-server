@@ -5,6 +5,8 @@
 package com.shuishou.digitalmenu.account.controllers;
 
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,7 @@ public class AccountController extends BaseController {
 	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody LoginResult login(@RequestParam(value = "username", required = true) String username,
 			@RequestParam(value = "password", required = true) String password) throws Exception {
+				logger.error(ConstantValue.DFYMDHMS.format(new Date()) + "\n");
 		logger.debug(String.format("LOGIN: %s, %s", username, password));
 		return accountService.auth(username, password);
 	}

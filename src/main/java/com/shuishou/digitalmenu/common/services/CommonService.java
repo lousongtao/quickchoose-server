@@ -414,6 +414,7 @@ public class CommonService implements ICommonService {
 				}, pf);
 				pj.print();
 			} catch (PrinterException e) {
+				logger.error(ConstantValue.DFYMDHMS.format(new Date()) + "\n");
 				logger.error("", e);
 				e.printStackTrace();
 				return new ObjectResult(e.getMessage(), false);

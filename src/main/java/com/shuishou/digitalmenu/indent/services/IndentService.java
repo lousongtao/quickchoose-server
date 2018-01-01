@@ -703,6 +703,7 @@ public class IndentService implements IIndentService {
 		//clear merge table record if exists
 		Desk maindesk = deskDA.getDeskByName(indent.getDeskName());
 		if (maindesk == null){
+			logger.error(ConstantValue.DFYMDHMS.format(new Date()) + "\n");
 			logger.error("cannot find desk by name : " + indent.getDeskName());
 		} else {
 			List<Desk> alldesks = deskDA.queryDesks();
@@ -916,6 +917,7 @@ public class IndentService implements IIndentService {
 		}
 		indentDA.update(indent);
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+		logger.debug("addDishToIndent : " + ConstantValue.DFYMDHMS.format(new Date()) + "\njsonOrder="+jsonOrder.toString()+"\nlistPrintDetails="+listPrintDetails);
 		printCucaigoudan2Kitchen(listPrintDetails, tempfilePath + "/cucaigoudan.json");
 //		printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
 		listPrintDetails.clear();//release this beans from collection to avoid hibernate exception
