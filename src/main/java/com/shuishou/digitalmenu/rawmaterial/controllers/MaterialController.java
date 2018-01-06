@@ -81,11 +81,12 @@ public class MaterialController {
 			@RequestParam(value = "unit", required = true) String unit,
 			@RequestParam(value = "alarmAmount", required = false, defaultValue = "0") double alarmAmount,
 			@RequestParam(value = "barCode", required = false, defaultValue = "") String barcode,
+			@RequestParam(value = "price", required = true) double price,
 			@RequestParam(value = "categoryId", required = true) int categoryId) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
 			return new ObjectResult("no_permission", false);
 		}
-		ObjectResult result = materialService.addMaterial(userId, name, sequence, leftAmount, unit, alarmAmount, categoryId, barcode);
+		ObjectResult result = materialService.addMaterial(userId, name, sequence, leftAmount, unit, alarmAmount, categoryId, barcode, price);
 		return result;
 	}
 	
@@ -99,11 +100,12 @@ public class MaterialController {
 			@RequestParam(value = "unit", required = true) String unit,
 			@RequestParam(value = "alarmAmount", required = false, defaultValue = "0") double alarmAmount,
 			@RequestParam(value = "barCode", required = false, defaultValue = "") String barcode,
+			@RequestParam(value = "price", required = true) double price,
 			@RequestParam(value = "categoryId", required = true) int categoryId) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
 			return new ObjectResult("no_permission", false);
 		}
-		ObjectResult result = materialService.updateMaterial(userId, id, name, sequence, leftAmount, unit, alarmAmount, categoryId, barcode);
+		ObjectResult result = materialService.updateMaterial(userId, id, name, sequence, leftAmount, unit, alarmAmount, categoryId, barcode, price);
 		return result;
 	}
 	

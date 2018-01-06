@@ -47,6 +47,9 @@ public class Material implements Serializable {
 	@Column(precision = 8, scale = 2)
 	private double alarmAmount;
 	
+	@Column(columnDefinition="Decimal(10, 2) default '0'")
+	private double price;
+	
 	@Column
 	private int alarmStatus;
 	
@@ -129,6 +132,14 @@ public class Material implements Serializable {
 
 	public void setBarCode(String barCode) {
 		this.barCode = barCode;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 	@Override
