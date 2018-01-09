@@ -59,8 +59,7 @@ public class AccountController extends BaseController {
 	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody LoginResult login(@RequestParam(value = "username", required = true) String username,
 			@RequestParam(value = "password", required = true) String password) throws Exception {
-				logger.error(ConstantValue.DFYMDHMS.format(new Date()) + "\n");
-		logger.debug(String.format("LOGIN: %s, %s", username, password));
+		logger.debug(String.format(ConstantValue.DFYMDHMS.format(new Date()) + "\nLOGIN: %s, %s", username, password));
 		return accountService.auth(username, password);
 	}
 
