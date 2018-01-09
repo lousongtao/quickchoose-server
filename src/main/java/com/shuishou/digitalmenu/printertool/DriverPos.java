@@ -281,19 +281,18 @@ public class DriverPos {
 	 */
 	private static String addBlank(String str, int length) {
 
-//		try {
-//			int len = str.getBytes(encoding).length;
-			int len = str.length();
+		try {
+			int len = str.getBytes(encoding).length;
 			if (len > length) {
-				return str.substring(0, length);
+				return str.substring(0, length > str.length() ? str.length() : length);
 			}
 			for (int i = 0; i < length - len; i++) {
 				str += " ";
 			}
 			
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
 		return str;
 	}
