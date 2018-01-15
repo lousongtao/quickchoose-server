@@ -313,7 +313,7 @@ public class IndentService implements IIndentService {
 						requirement += d.getAdditionalRequirements();
 					//按重量卖的dish, 把重量加入requirement
 					if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
-						requirement += "\n" + d.getWeight();
+						requirement += " " + d.getWeight();
 					if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT){
 						mg.put("totalPrice", String.format("%.2f",d.getWeight() * d.getDishPrice() * d.getAmount()));
 					} else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT){
@@ -369,7 +369,7 @@ public class IndentService implements IIndentService {
 		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(indent.getStartTime()));
 		keyMap.put("amountOnThisTable", totalamount + "");
 		keyMap.put("indentcomments", indent.getComments() == null ? "" : indent.getComments());
-		printCucaigoudan2KitchenWithPrintStyle(mapPrintDish, tempfile, keyMap);
+		printCucaigoudan2KitchenWithPrintStyle(mapPrintDish, tempfile, keyMap, isAdd);
 	}
 	
 	/**
@@ -378,14 +378,13 @@ public class IndentService implements IIndentService {
 	 * @param mapPrintDish key = Printer, value = list of indentdetail with printstyle info
 	 * @param tempfile, the file of print template
 	 * @param keyMap, some basic information value needed to be printed on the ticket
+	 * @param isAdd, if this is a cancel order, isAdd = false, otherwise isAdd = true
 	 */
 	@Transactional
-	private void printCucaigoudan2KitchenWithPrintStyle(Map<Printer, List<IndentDetail_PrintStyle>> mapPrintDish, String tempfile, Map<String,String> keyMap){
+	private void printCucaigoudan2KitchenWithPrintStyle(Map<Printer, List<IndentDetail_PrintStyle>> mapPrintDish, String tempfile, Map<String,String> keyMap, boolean isAdd){
 		Iterator<Printer> keys = mapPrintDish.keySet().iterator();
 		while(keys.hasNext()){
 			Printer p = keys.next();
-			
-			
 			
 			List<IndentDetail_PrintStyle> detailList = mapPrintDish.get(p);
 			
@@ -411,7 +410,10 @@ public class IndentService implements IIndentService {
 				Dish dish = dishDA.getDishById(idsp.indentDetail.getDishId());
 				for (int i = 0; i < idsp.indentDetail.getAmount(); i++) {
 					List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
-					mg.put("name", idsp.indentDetail.getDishFirstLanguageName());
+					if (isAdd)
+						mg.put("name", idsp.indentDetail.getDishFirstLanguageName());
+					else 
+						mg.put("name", "Canceled " + idsp.indentDetail.getDishFirstLanguageName());
 					mg.put("amount", "1");
 					String requirement = "";
 					if (idsp.indentDetail.getAdditionalRequirements() != null)
@@ -445,7 +447,10 @@ public class IndentService implements IIndentService {
 					Map<String, String> mg = new HashMap<String, String>();
 					Dish dish = dishDA.getDishById(idsp.indentDetail.getDishId());
 					for (int i = 0; i < idsp.indentDetail.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
-						mg.put("name", idsp.indentDetail.getDishFirstLanguageName());
+						if (isAdd)
+							mg.put("name", idsp.indentDetail.getDishFirstLanguageName());
+						else 
+							mg.put("name", "Canceled" + idsp.indentDetail.getDishFirstLanguageName());
 						mg.put("amount", "1");
 						String requirement = "";
 						if (idsp.indentDetail.getAdditionalRequirements() != null)
@@ -519,7 +524,10 @@ public class IndentService implements IIndentService {
 				Map<String, String> mg = new HashMap<String, String>();
 				for (int i = 0; i < Math.abs(changedAmount); i++) {
 					List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
-					mg.put("name", idps.indentDetail.getDishFirstLanguageName());
+					if (changedAmount > 0)
+						mg.put("name", idps.indentDetail.getDishFirstLanguageName());
+					else 
+						mg.put("name", "Canceled " +idps.indentDetail.getDishFirstLanguageName());
 					mg.put("amount", "1");
 					String requirement = "";
 					if (idps.indentDetail.getAdditionalRequirements() != null)
@@ -542,7 +550,10 @@ public class IndentService implements IIndentService {
 				List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 				Map<String, String> mg = new HashMap<String, String>();
 				for (int i = 0; i < Math.abs(changedAmount); i++) {//每个菜品单独打印一行, 重复的打印多行
-					mg.put("name", detail.getDishFirstLanguageName());
+					if (changedAmount > 0)
+						mg.put("name", detail.getDishFirstLanguageName());
+					else 
+						mg.put("name", "Canceled " + detail.getDishFirstLanguageName());
 					mg.put("amount", "1");
 					String requirement = "";
 					if (detail.getAdditionalRequirements() != null)
@@ -601,7 +612,7 @@ public class IndentService implements IIndentService {
 		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(new Date()));
 		keyMap.put("amountOnThisTable", totalamount + "");
 		keyMap.put("indentcomments", indent.getComments() == null ? "" : indent.getComments());
-		printCucaigoudan2KitchenWithPrintStyle(mapPrintDish, tempfile, keyMap);
+		printCucaigoudan2KitchenWithPrintStyle(mapPrintDish, tempfile, keyMap, true);
 		
 	}
 

@@ -187,7 +187,7 @@ public class StatisticsService implements IStatisticsService{
 					if (dish == null || dish.getCategory2() == null){
 						ssUnfound.soldAmount += detail.getAmount();
 						ssUnfound.totalPrice += detail.getDishPrice();
-						ssUnfound.weight += detail.getAmount();
+						ssUnfound.weight += detail.getWeight();
 					} else {
 						StatItem ss = mapSell.get(dish.getCategory2().getFirstLanguageName());
 						if (ss == null){
@@ -200,7 +200,7 @@ public class StatisticsService implements IStatisticsService{
 					if (dish == null || dish.getCategory2() == null || dish.getCategory2().getCategory1() == null){
 						ssUnfound.soldAmount += detail.getAmount();
 						ssUnfound.totalPrice += detail.getDishPrice();
-						ssUnfound.weight += detail.getAmount();
+						ssUnfound.weight += detail.getWeight();
 					} else {
 						StatItem ss = mapSell.get(dish.getCategory2().getCategory1().getFirstLanguageName());
 						if (ss == null){
