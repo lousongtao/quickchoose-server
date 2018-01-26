@@ -77,6 +77,13 @@ public class Dish implements Serializable{
 	@Column
 	private String abbreviation;
 	
+	@JsonProperty("isPromotion")
+	@Column
+	private boolean isPromotion = false;
+	
+	@Column
+	private double originPrice;
+	
 	/**
 	 * 点菜时动作     1.	默认值, 直接点菜     2.	强制选择特定子类         3.	提示信息后点菜       4.	提示信息后不点菜, 即只提示信息
 	 */
@@ -112,7 +119,45 @@ public class Dish implements Serializable{
 	@Column
 	private int purchaseType = ConstantValue.DISH_PURCHASETYPE_UNIT;
 	
+	@Column
+	private String description_1stlang;
 	
+	@Column
+	private String description_2ndlang;
+	
+
+	public String getDescription_1stlang() {
+		return description_1stlang;
+	}
+
+	public void setDescription_1stlang(String description_1stlang) {
+		this.description_1stlang = description_1stlang;
+	}
+
+	public String getDescription_2ndlang() {
+		return description_2ndlang;
+	}
+
+	public void setDescription_2ndlang(String description_2ndlang) {
+		this.description_2ndlang = description_2ndlang;
+	}
+
+	public boolean isPromotion() {
+		return isPromotion;
+	}
+
+	public void setPromotion(boolean isPromotion) {
+		this.isPromotion = isPromotion;
+	}
+
+	public double getOriginPrice() {
+		return originPrice;
+	}
+
+	public void setOriginPrice(double originPrice) {
+		this.originPrice = originPrice;
+	}
+
 	public int getPurchaseType() {
 		return purchaseType;
 	}

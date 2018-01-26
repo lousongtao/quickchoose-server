@@ -928,7 +928,7 @@ public class IndentService implements IIndentService {
 		}
 		indentDA.update(indent);
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-		logger.debug("addDishToIndent : " + ConstantValue.DFYMDHMS.format(new Date()) + "\njsonOrder="+jsonOrder.toString()+"\nlistPrintDetails="+listPrintDetails);
+//		logger.debug("addDishToIndent : " + ConstantValue.DFYMDHMS.format(new Date()) + "\njsonOrder="+jsonOrder.toString()+"\nlistPrintDetails="+listPrintDetails);
 		printCucaigoudan2Kitchen(listPrintDetails, tempfilePath + "/cucaigoudan.json");
 //		printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
 		listPrintDetails.clear();//release this beans from collection to avoid hibernate exception

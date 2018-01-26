@@ -343,6 +343,26 @@ public class CommonService implements ICommonService {
 
 		return new ObjectResult(Result.OK, true);
 	}
+	
+	@Override
+	@Transactional
+	public ObjectResult updatePrinter(long userId, int id, String name, String printerName, int type) {
+		Printer p = printerDA.getPrinterById(id);
+		if (p == null)
+			return new ObjectResult("cannot find printer by id "+id, false);
+		p.setName(name);
+		p.setPrinterName(printerName);
+		p.setType(type);
+//		p.setCopy(copy);
+//		p.setPrintStyle(printStyle);
+		printerDA.updatePrinter(p);
+		
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " add printer "+ printerName);
+
+		return new ObjectResult(Result.OK, true);
+	}
 
 	@Override
 	@Transactional
@@ -363,9 +383,7 @@ public class CommonService implements ICommonService {
 						cp.setPrinter(null);
 						category2PrinterDA.delete(cp);
 					}
-					
 				}
-				
 			}
 		}
 		printerDA.deletePrinter(p);

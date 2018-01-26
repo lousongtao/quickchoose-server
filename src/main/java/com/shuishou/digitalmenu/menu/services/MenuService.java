@@ -183,10 +183,9 @@ public class MenuService implements IMenuService {
 	@Override
 	@Transactional
 	public ObjectResult addDish(long userId, String firstLanguageName, String secondLanguageName, int sequence, 
-			double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation, 
-			MultipartFile image, int category2Id, int chooseMode, 
+			double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation,  MultipartFile image, int category2Id, int chooseMode, 
 			DishChoosePopinfo popinfo, ArrayList<DishChooseSubitem> subitems, int subitemAmount,
-			boolean autoMerge, int purchaseType, boolean allowFlavor) {
+			boolean autoMerge, int purchaseType, boolean allowFlavor, String description_1stlang, String description_2ndlang) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null){
 			return new ObjectResult("cannot find category2 by id "+ category2Id, false, null);
@@ -216,6 +215,8 @@ public class MenuService implements IMenuService {
 		dish.setAutoMergeWhileChoose(autoMerge);
 		dish.setPurchaseType(purchaseType);
 		dish.setAllowFlavor(allowFlavor);
+		dish.setDescription_1stlang(description_1stlang);
+		dish.setDescription_2ndlang(description_2ndlang);
 		dishDA.save(dish);
 		
 		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE 
@@ -249,6 +250,20 @@ public class MenuService implements IMenuService {
 			return new ObjectResult("cannot find dish by id "+ dishId, false, null);
 		hibernateInitialDish(dish);
 		return new ObjectResult(Result.OK, true, dish);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectListResult queryDishByIdList(ArrayList<Integer> dishIdList){
+		ArrayList<Dish> dishes = new ArrayList<>();
+		for(Integer i : dishIdList){
+			Dish dish = dishDA.getDishById(i);
+			if (dish == null)
+				return new ObjectListResult("cannot find dish by id "+ i, false, null);
+			hibernateInitialDish(dish);
+			dishes.add(dish);
+		}
+		return new ObjectListResult(Result.OK, true, dishes);
 	}
 	
 	@Override
@@ -448,7 +463,7 @@ public class MenuService implements IMenuService {
 	public ObjectResult updateDish(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, double price, 
 			boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, int category2Id,
 			int chooseMode, DishChoosePopinfo popinfo, ArrayList<DishChooseSubitem> subitems, int subitemAmount,
-			boolean autoMerge, int purchaseType, boolean allowFlavor) {
+			boolean autoMerge, int purchaseType, boolean allowFlavor, String description_1stlang, String description_2ndlang) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null)
 			return new ObjectResult("not found Category2 by id "+ category2Id, false, null);
@@ -482,20 +497,9 @@ public class MenuService implements IMenuService {
 		dish.setAutoMergeWhileChoose(autoMerge);
 		dish.setPurchaseType(purchaseType);
 		dish.setAllowFlavor(allowFlavor);
+		dish.setDescription_1stlang(description_1stlang);
+		dish.setDescription_2ndlang(description_2ndlang);
 		dishDA.save(dish);
-		
-		//delete sub property if exist
-//		if (dish.getChoosePopInfo() != null){
-//			DishChoosePopinfo pi = dish.getChoosePopInfo();
-//			pi.setDish(null);
-//			dish.setChoosePopInfo(null);
-//			dishChoosePopinfoDA.delete(pi);
-//			dishDA.getSession().clear();
-//		}
-//		if (dish.getChooseSubItems() != null){
-//			dish.removeAllChooseSubItems();
-//			dishDA.getSession().clear();
-//		}
 		
 		//save sub property
 		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE 
@@ -693,7 +697,59 @@ public class MenuService implements IMenuService {
 				"User " + selfUser + " change dish special as " + isSpecial + ", name = " + dish.getSecondLanguageName());
 		return new ObjectResult(Result.OK, true);	
 	}
+	
+	@Override
+	@Transactional
+	public ObjectResult changeDishPromotion(long userId, int dishid, double promotionPrice) {
+		Dish dish = dishDA.getDishById(dishid);
+		if (dish == null)
+			return new ObjectResult("not found dish by id "+ dishid, false);
+		if (dish.isPromotion()){
+			return new ObjectResult("This dish is currently promoted, cannot do promotion again.", false);
+		}
+		dish.setPromotion(true);
+		dish.setOriginPrice(dish.getPrice());
+		dish.setPrice(promotionPrice);
+		dishDA.save(dish);
+		
+		MenuVersion mv = new MenuVersion();
+		mv.setDishId(dishid);
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_CHANGEPROMOTION);
+		menuVersionDA.save(mv);
+		
+		hibernateInitialDish(dish);
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
+				"User " + selfUser + " change dish to be promotion, name = " + dish.getSecondLanguageName());
+		return new ObjectResult(Result.OK, true, dish);	
+	}
 
+	@Override
+	@Transactional
+	public ObjectResult cancelDishPromotion(long userId, int dishid) {
+		Dish dish = dishDA.getDishById(dishid);
+		if (dish == null)
+			return new ObjectResult("not found dish by id "+ dishid, false);
+		if (!dish.isPromotion()){
+			return new ObjectResult("This dish is not in promotion currently, cannot cancel promotion.", false);
+		}
+		dish.setPromotion(false);
+		dish.setPrice(dish.getOriginPrice());
+		dishDA.save(dish);
+		MenuVersion mv = new MenuVersion();
+		mv.setDishId(dishid);
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_CHANGEPROMOTION);
+		menuVersionDA.save(mv);
+		
+		hibernateInitialDish(dish);
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
+				"User " + selfUser + " cancel dish's promotion status, name = " + dish.getSecondLanguageName());
+		return new ObjectResult(Result.OK, true, dish);	
+	}
+	
 	@Override
 	@Transactional
 	public ObjectResult changeDishNewProduct(long userId, int id, boolean isNew) {

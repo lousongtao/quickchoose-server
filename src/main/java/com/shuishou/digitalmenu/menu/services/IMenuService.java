@@ -17,19 +17,19 @@ public interface IMenuService {
 
 	public ObjectResult addCategory1(long userId, String firstLanguageName, String secondLanguageName, int sequence);
 	public ObjectResult addCategory2(long userId, String firstLanguageName, String secondLanguageName, int sequence, int category1Id, JSONArray jaPrinter);
-	public ObjectResult addDish(long userId, String firstLanguageName, String secondLanguageName, int sequence, 
-			double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation, 
-			MultipartFile image, int category2Id, int chooseMode, DishChoosePopinfo popinfo, 
-			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType, boolean allowFlavor);
+	public ObjectResult addDish(long userId, String firstLanguageName, String secondLanguageName, int sequence,double price, boolean isNew, 
+			boolean isSpecial, int hotLevel, String abbreviation, MultipartFile image, int category2Id, int chooseMode, DishChoosePopinfo popinfo, 
+			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType, boolean allowFlavor, 
+			String description_1stlang, String description_2ndlang);
 	public ObjectResult addFlavor(long userId, String firstLanguageName, String secondLanguageName);
 	
 	
 	public ObjectResult updateCategory1(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence);
 	public ObjectResult updateCategory2(long userId, int id, String firstLanguageName, String secondLanguageName, int printStyle, int category1Id, JSONArray jaPrinter);
-	public ObjectResult updateDish(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, 
-			double price, boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, 
-			int category2Id, int chooseMode, DishChoosePopinfo popinfo, 
-			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType, boolean allowFlavor);
+	public ObjectResult updateDish(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, double price, boolean isNew, 
+			boolean isSpecial, byte hotLevel, String abbreviation, int category2Id, int chooseMode, DishChoosePopinfo popinfo, 
+			ArrayList<DishChooseSubitem> subitems, int subitemAmount, boolean autoMerge, int purchaseType, boolean allowFlavor, 
+			String description_1stlang, String description_2ndlang);
 	public ObjectResult updateFlavor(long userId, int id, String firstLanguageName, String secondLanguageName);
 	
 	public ObjectResult changeDishPrice(long userId, int id, double newprice);
@@ -37,6 +37,8 @@ public interface IMenuService {
 	public Result changeDishSpecial(long userId, int id, boolean isSpecial);
 	public Result changeDishNewProduct(long userId, int id, boolean isNew);
 	public Result changeDishSoldOut(long userId, int id, boolean isSoldOut);
+	public Result changeDishPromotion(long userId, int id, double promotionPrice);
+	public Result cancelDishPromotion(long userId, int id);
 	
 //	public GetMenuResult queryMenu(String node);
 	public ObjectListResult queryAllMenu();
@@ -44,6 +46,7 @@ public interface IMenuService {
 //	public GetCategory2Result queryAllCategory2(int category1Id);
 //	public ObjectListResult queryAllDish(int category2Id);
 	public ObjectResult queryDishById(int dishId);
+	public ObjectListResult queryDishByIdList(ArrayList<Integer> dishIdList);
 	public ObjectResult queryDishByName(String dishName);
 	
 	public Result deleteCategory1(long userId, int category1Id);

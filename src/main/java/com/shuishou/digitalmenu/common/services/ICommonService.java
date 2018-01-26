@@ -35,6 +35,8 @@ public interface ICommonService {
 	
 	ObjectResult savePrinter(long userId, String name, String printerName, int type);
 	
+	ObjectResult updatePrinter(long userId, int id, String name, String printerName, int type);
+	
 	ObjectResult deletePrinter(long userId, int id);
 	
 	ObjectResult testPrinterConnection(int id);

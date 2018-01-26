@@ -187,6 +187,8 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
 			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
 			@RequestParam(value = "purchaseType", required = false, defaultValue = "1") int purchaseType,
+			@RequestParam(value = "description_1stlang", required = false, defaultValue = "") String description_1stlang,
+			@RequestParam(value = "description_2ndlang", required = false, defaultValue = "") String description_2ndlang,
 			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -203,7 +205,7 @@ public class MenuController extends BaseController {
 		}
 		Result result = menuService.addDish(userId, firstLanguageName, secondLanguageName, sequence, price, isNew, 
 				isSpecial, hotLevel, abbreviation, null, category2Id, chooseMode, popinfo, subitems, subitemAmount,
-				autoMerge, purchaseType, allowFlavor);
+				autoMerge, purchaseType, allowFlavor, description_1stlang, description_2ndlang);
 		
 		return result;
 	}
@@ -228,6 +230,8 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
 			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
 			@RequestParam(value = "purchaseType", required = false, defaultValue = "1") int purchaseType,
+			@RequestParam(value = "description_1stlang", required = false, defaultValue = "") String description_1stlang,
+			@RequestParam(value = "description_2ndlang", required = false, defaultValue = "") String description_2ndlang,
 			@RequestParam(value = "category2Id", required = true) int category2Id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -244,7 +248,8 @@ public class MenuController extends BaseController {
 		}
 		
 		Result result = menuService.updateDish(userId, id, firstLanguageName, secondLanguageName, sequence, price, isNew, isSpecial, hotLevel, 
-				abbreviation, category2Id, chooseMode, popinfo, subitems, subitemAmount, autoMerge, purchaseType, allowFlavor);
+				abbreviation, category2Id, chooseMode, popinfo, subitems, subitemAmount, autoMerge, purchaseType, allowFlavor, 
+				description_1stlang, description_2ndlang);
 		
 		return result;
 	}
@@ -273,6 +278,33 @@ public class MenuController extends BaseController {
 		}
 		
 		Result result = menuService.changeDishPrice(userId, id, newPrice);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/menu/changedishpromotion", method = {RequestMethod.POST})
+	public @ResponseBody Result changeDishPromotion(
+			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "dishId", required = true) int dishId,
+			@RequestParam(value = "promotionPrice", required = true) double promotionPrice) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		
+		Result result = menuService.changeDishPromotion(userId, dishId, promotionPrice);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/menu/canceldishpromotion", method = {RequestMethod.POST})
+	public @ResponseBody Result cancelDishPromotion(
+			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "dishId", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		
+		Result result = menuService.cancelDishPromotion(userId, id);
 		
 		return result;
 	}
@@ -343,6 +375,24 @@ public class MenuController extends BaseController {
 	public @ResponseBody ObjectResult queryDishById(
 			@RequestParam(value = "dishId", required = true) int dishId) throws Exception{
 		ObjectResult result = menuService.queryDishById(dishId);
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param sIdList Id seperate by comma
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/menu/querydishbyidlist", method = {RequestMethod.POST})
+	public @ResponseBody ObjectListResult queryDishByIdList(
+			@RequestParam(value = "dishIdList", required = true) String sIdList) throws Exception{
+		ArrayList<Integer> idList = new ArrayList<>();
+		String[] sIds = sIdList.split(",");
+		for (int i = 0; i < sIds.length; i++) {
+			idList.add(Integer.parseInt(sIds[i]));
+		}
+		ObjectListResult result = menuService.queryDishByIdList(idList);
 		return result;
 	}
 	

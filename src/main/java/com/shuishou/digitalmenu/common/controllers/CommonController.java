@@ -179,6 +179,19 @@ public class CommonController extends BaseController {
 		return commonService.savePrinter(userId,name, printerName, type);
 	}
 	
+	@RequestMapping(value="/common/updateprinter", method =  {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result updatePrinter(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "id", required = true) int id,
+			@RequestParam(value="name", required = true) String name,
+			@RequestParam(value="printerName", required = true) String printerName,
+			@RequestParam(value="type", required = true) int type) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_PRINTER)){
+			return new Result("no_permission");
+		}
+		return commonService.updatePrinter(userId, id, name, printerName, type);
+	}
+	
 	@RequestMapping(value="/common/deleteprinter", method =  {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody Result deletePrinter(
 			@RequestParam(value = "userId", required = true) int userId,

@@ -73,7 +73,8 @@ public class ConstantValue {
 //	public static final byte INDENTDETAIL_OPERATIONTYPE_MINUSAMOUNT = 4;// no use any more
 	public static final byte INDENTDETAIL_OPERATIONTYPE_CHANGEAMOUNT = 5;
 	
-	public static final byte MENUCHANGE_TYPE_SOLDOUT = 0;
+	public static final byte MENUCHANGE_TYPE_SOLDOUT = 0;//设置soldout或取消soldout
+	public static final byte MENUCHANGE_TYPE_CHANGEPROMOTION = 1;//设置promotion或取消promotion
 	
 	public static final byte PRINT_STYLE_TOGETHER = 0;
 	public static final byte PRINT_STYLE_SEPARATELY = 1;
