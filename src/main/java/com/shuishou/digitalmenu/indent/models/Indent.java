@@ -35,14 +35,14 @@ public class Indent {
 	@Column(name="desk_name")
 	private String deskName;
 	
-	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8:00")
+	@JsonFormat(pattern=ConstantValue.DATE_PATTERN_YMDHMS, timezone="GMT+8:00")
 	@Column(nullable = false)
 	private Date startTime;
 	
 	@Column(name = "customer_amount", nullable = false)
 	private int customerAmount;
 	
-	@JsonFormat(pattern="yyyy/MM/dd HH:mm:ss", timezone="GMT+8:00")
+	@JsonFormat(pattern=ConstantValue.DATE_PATTERN_YMDHMS, timezone="GMT+8:00")
 	@Column
 	private Date endTime;
 	

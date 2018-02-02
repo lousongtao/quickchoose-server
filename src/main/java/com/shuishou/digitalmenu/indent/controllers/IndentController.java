@@ -211,6 +211,4 @@ public class IndentController extends BaseController {
 		}
 		return indentService.changeDesks(userId, deskId1, deskId2);
 	}
-	
-	
 }

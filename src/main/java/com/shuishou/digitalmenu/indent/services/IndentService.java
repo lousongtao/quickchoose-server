@@ -1027,5 +1027,4 @@ public class IndentService implements IIndentService {
 				return dish1.getCategory2().getCategory1().getSequence() - dish2.getCategory2().getCategory1().getSequence();
 			}	
 		}};
-	
 }

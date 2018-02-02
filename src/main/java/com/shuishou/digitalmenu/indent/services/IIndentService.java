@@ -21,5 +21,4 @@ public interface IIndentService {
 //	ObjectResult printIndentDetail(int userId, int indentDetailId);
 	ObjectResult clearDesk(int userId, int deskId);
 	ObjectResult changeDesks(int userId, int deskId1, int deskId2);
-	
 }
