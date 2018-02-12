@@ -142,6 +142,8 @@ public class MainFrame extends JFrame {
 		if (fc.getSelectedFile() == null)
 			return;
 		sqls.clear();
+		sqls.add("delete from dishchoose_popinfo");
+		sqls.add("delete from dishchoose_subitem");
 		sqls.add("delete from dish;");
 		sqls.add("delete from category2;");
 		sqls.add("delete from category1;");
@@ -171,17 +173,25 @@ public class MainFrame extends JFrame {
 			XSSFSheet sheetDish = (XSSFSheet) wb.getSheetAt(2);
 			for (int i = 1; i < sheetDish.getPhysicalNumberOfRows(); i++) {
 				XSSFRow row = sheetDish.getRow(i);
-				String sql = "insert into dish(id, first_language_name, second_language_name, sequence, category2_id, price, isNew, isSpecial, hotLevel, isSoldOut) values (";
+				String sql = "insert into dish(id, first_language_name, second_language_name, sequence, category2_id, price, isNew, isSpecial, hotLevel, isSoldOut, "
+						+ "abbreviation, choose_mode, automerge_whilechoose, purchaseType, allowFlavor, isPromotion, originPrice ) values (";
 				sql += (int)row.getCell(0).getNumericCellValue() + ",";
 				sql += "'" + row.getCell(1).getStringCellValue() + "',";
 				sql += "'" + row.getCell(2).getStringCellValue() + "',";
-				sql += (int)row.getCell(3).getNumericCellValue() +",";
-				sql += (int)row.getCell(4).getNumericCellValue() +",";
-				sql += row.getCell(5).getNumericCellValue() +",";
-				sql += (int)row.getCell(6).getNumericCellValue() +",";
-				sql += (int)row.getCell(7).getNumericCellValue() +",";
-				sql += (int)row.getCell(8).getNumericCellValue() +",";
-				sql += "0);";
+				sql += (int)row.getCell(3).getNumericCellValue() + ",";
+				sql += (int)row.getCell(4).getNumericCellValue() + ",";
+				sql += row.getCell(5).getNumericCellValue() + ",";
+				sql += (int)row.getCell(6).getNumericCellValue() + ",";
+				sql += (int)row.getCell(7).getNumericCellValue() + ",";
+				sql += (int)row.getCell(8).getNumericCellValue() + ",";
+				sql += "0,";
+				sql += "'" + row.getCell(9).getStringCellValue() + "',";
+				sql += (int)row.getCell(10).getNumericCellValue()+ ",";
+				sql += (int)row.getCell(11).getNumericCellValue()+ ",";
+				sql += (int)row.getCell(12).getNumericCellValue()+ ",";
+				sql += (int)row.getCell(13).getNumericCellValue()+ ",";
+				sql += (int)row.getCell(14).getNumericCellValue()+ ",";
+				sql += "0)";
 				sqls.add(sql);
 			}
 			sqls.add("commit");
