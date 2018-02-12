@@ -41,7 +41,7 @@ public class IndentController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/indent/makeindent", method = (RequestMethod.POST))
-	public @ResponseBody MakeOrderResult makeOrder(
+	public @ResponseBody synchronized MakeOrderResult makeOrder(
 			@RequestParam(value="confirmCode", required = true) String confirmCode,
 			@RequestParam(value="indents", required = true) String indents,
 			@RequestParam(value="deskid", required = true) int deskid,
