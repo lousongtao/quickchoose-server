@@ -1,5 +1,6 @@
 package com.shuishou.digitalmenu.rawmaterial.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -15,8 +16,10 @@ import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.rawmaterial.models.IMaterialCategoryDataAccessor;
 import com.shuishou.digitalmenu.rawmaterial.models.IMaterialDataAccessor;
+import com.shuishou.digitalmenu.rawmaterial.models.IMaterialRecordDataAccessor;
 import com.shuishou.digitalmenu.rawmaterial.models.Material;
 import com.shuishou.digitalmenu.rawmaterial.models.MaterialCategory;
+import com.shuishou.digitalmenu.rawmaterial.models.MaterialRecord;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -36,6 +39,9 @@ public class MaterialService implements IMaterialService {
 	
 	@Autowired
 	private IMaterialDataAccessor materialDA;
+	
+	@Autowired
+	private IMaterialRecordDataAccessor materialRecordDA;
 	
 	@Override
 	@Transactional
@@ -101,7 +107,7 @@ public class MaterialService implements IMaterialService {
 
 	@Override
 	@Transactional
-	public ObjectResult updateMaterial(int userId, int id, String name, int sequence, double leftAmount, String unit,
+	public ObjectResult updateMaterial(int userId, int id, String name, int sequence, String unit,
 			double alarmAmount, int categoryId, String barCode, double price) {
 		MaterialCategory mc = materialCategoryDA.getMaterialCategoryById(categoryId);
 		if (mc == null)
@@ -111,7 +117,7 @@ public class MaterialService implements IMaterialService {
 			return new ObjectResult("not find Material by id " + id, false);
 		m.setName(name);
 		m.setSequence(sequence);
-		m.setLeftAmount(leftAmount);
+//		m.setLeftAmount(leftAmount);
 		m.setUnit(unit);
 		m.setAlarmAmount(alarmAmount);
 		m.setMaterialCategory(mc);
@@ -127,11 +133,20 @@ public class MaterialService implements IMaterialService {
 	@Transactional
 	public ObjectResult updateMaterialAmount(int userId, int id, double leftAmount) {
 		Material m = materialDA.getMaterialById(id);
+		UserData selfUser = userDA.getUserById(userId);
 		if (m == null)
 			return new ObjectResult("not find Material by id " + id, false);
 		m.setLeftAmount(leftAmount);
 		materialDA.save(m);
-		UserData selfUser = userDA.getUserById(userId);
+		MaterialRecord mr = new MaterialRecord();
+		mr.setMaterial(m);
+		mr.setAmount(leftAmount);
+		mr.setLeftAmount(leftAmount);
+		mr.setOperator(selfUser.getUsername());
+		mr.setType(ConstantValue.MATERIALRECORD_TYPE_CHANGEAMOUNT);
+		mr.setDate(new Date());
+		materialRecordDA.save(mr);
+		
 		logService.write(selfUser, LogData.LogType.MATERIAL_CHANGE.toString(), "User " + selfUser + " update Material : " + m);
 		return new ObjectResult(Result.OK, true, m);
 	}
@@ -209,5 +224,33 @@ public class MaterialService implements IMaterialService {
 	@Transactional
 	private void hibernateInitializeMaterial(Material m){
 		Hibernate.initialize(m);
+	}
+
+	@Override
+	@Transactional
+	public ObjectResult purchaseMaterial(int userId, int materialId, double amount) {
+		UserData selfUser = userDA.getUserById(userId);
+		Material m = materialDA.getMaterialById(materialId);
+		if (m == null)
+			return new ObjectResult("not find Material by id " + materialId, false);
+		m.setLeftAmount(m.getLeftAmount() + amount);
+		materialDA.save(m);
+		MaterialRecord mr = new MaterialRecord();
+		mr.setMaterial(m);
+		mr.setAmount(amount);
+		mr.setLeftAmount(m.getLeftAmount());
+		mr.setOperator(selfUser.getUsername());
+		mr.setType(ConstantValue.MATERIALRECORD_TYPE_PURCHASE);
+		mr.setDate(new Date());
+		materialRecordDA.save(mr);
+		logService.write(selfUser, LogData.LogType.MATERIAL_CHANGE.toString(), "User " + selfUser + " purchase Material : " + m.getName());
+		return new ObjectResult(Result.OK, true, m);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectListResult queryMaterialRecordByMaterial(int materialId){
+		List<MaterialRecord> records = materialRecordDA.getMaterialRecordByMaterial(materialId);
+		return new ObjectListResult(Result.OK, true, records);
 	}
 }

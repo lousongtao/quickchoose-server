@@ -9,7 +9,7 @@ public class CheckMenuVersionResult extends ObjectResult {
 
 	public static class MenuVersionInfo{
 		public int id;
-		public int dishId;
+		public int objectId;
 		public int type;
 	}
 	public List<MenuVersionInfo> data;

@@ -23,11 +23,8 @@ public class MenuVersion implements Serializable{
 	@Column(nullable = false, unique = true)
 	private int id;
 
-//	@Column(nullable=false)
-//	private int version;
-	
 	@Column(nullable=false)
-	private int dishId;
+	private int objectId;
 	
 	@Column(nullable=false)
 	private int type; 
@@ -41,24 +38,16 @@ public class MenuVersion implements Serializable{
 		this.id = id;
 	}
 
-//	public int getVersion() {
-//		return version;
-//	}
-//
-//	public void setVersion(int version) {
-//		this.version = version;
-//	}
-
-	public int getDishId() {
-		return dishId;
-	}
-
-	public void setDishId(int dishId) {
-		this.dishId = dishId;
-	}
-
 	public int getType() {
 		return type;
+	}
+
+	public int getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(int objectId) {
+		this.objectId = objectId;
 	}
 
 	public void setType(int type) {

@@ -33,7 +33,15 @@ public class IndentDetail {
 	private int amount;
 	
 	@Column(nullable = false, name="dish_price", precision = 8, scale = 2)
-	private double dishPrice;//单个dish价格, 不考虑amount
+	private double dishPrice;//单个dish价格, 不考虑amount, 如果有DishConfig影响了价格, 这里记录改变之后的价格
+	
+	/**
+	 * 调整价格, 由于用户选择了某些DishConfig, 导致的价格变化. 该值可正可负
+	 * 该价格跟dishPrice并列. 在最后计算整单价格时, 应该使用dishPrice+adjustPrice;
+	 * 调整价格只跟份数有关, 如果是按重量购买的, 则订单总价为weight*dishPrice + adjustPrice, 即该价格只使用一次, 不考虑重量.
+	 */
+//	@Column(nullable = false)
+//	private double adjustPrice;
 	
 	@Column(nullable = false, name="dish_firstlanguagename")
 	private String dishFirstLanguageName;
@@ -48,6 +56,14 @@ public class IndentDetail {
 	private double weight;
 	
 	
+
+//	public double getAdjustPrice() {
+//		return adjustPrice;
+//	}
+//
+//	public void setAdjustPrice(double adjustPrice) {
+//		this.adjustPrice = adjustPrice;
+//	}
 
 	public double getWeight() {
 		return weight;

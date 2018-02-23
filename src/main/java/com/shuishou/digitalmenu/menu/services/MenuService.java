@@ -38,18 +38,24 @@ import com.shuishou.digitalmenu.menu.models.Category2;
 import com.shuishou.digitalmenu.menu.models.Category2Printer;
 import com.shuishou.digitalmenu.menu.models.Dish;
 import com.shuishou.digitalmenu.menu.models.DishChoosePopinfo;
-import com.shuishou.digitalmenu.menu.models.DishChooseSubitem;
+import com.shuishou.digitalmenu.menu.models.DishConfig;
+import com.shuishou.digitalmenu.menu.models.DishConfigGroup;
+import com.shuishou.digitalmenu.menu.models.DishMaterialConsume;
 import com.shuishou.digitalmenu.menu.models.Flavor;
 import com.shuishou.digitalmenu.menu.models.ICategory1DataAccessor;
 import com.shuishou.digitalmenu.menu.models.ICategory2DataAccessor;
 import com.shuishou.digitalmenu.menu.models.ICategory2PrinterDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IDishChoosePopinfoDataAccessor;
-import com.shuishou.digitalmenu.menu.models.IDishChooseSubitemDataAccessor;
+import com.shuishou.digitalmenu.menu.models.IDishConfigDataAccessor;
+import com.shuishou.digitalmenu.menu.models.IDishConfigGroupDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IDishDataAccessor;
+import com.shuishou.digitalmenu.menu.models.IDishMaterialConsumeDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IFlavorDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IMenuVersionDataAccessor;
 import com.shuishou.digitalmenu.menu.models.MenuVersion;
 import com.shuishou.digitalmenu.menu.views.CheckMenuVersionResult;
+import com.shuishou.digitalmenu.rawmaterial.models.IMaterialDataAccessor;
+import com.shuishou.digitalmenu.rawmaterial.models.Material;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -76,10 +82,13 @@ public class MenuService implements IMenuService {
 	private IDishDataAccessor dishDA;
 	
 	@Autowired
-	private IDishChoosePopinfoDataAccessor dishChoosePopinfoDA;
+	private IMaterialDataAccessor materialDA;
 	
 	@Autowired
-	private IDishChooseSubitemDataAccessor dishChooseSubitemDA;
+	private IDishMaterialConsumeDataAccessor dishMaterialConsumeDA;
+	
+	@Autowired
+	private IDishChoosePopinfoDataAccessor dishChoosePopinfoDA;
 	
 	@Autowired
 	private HttpServletRequest request;
@@ -95,10 +104,17 @@ public class MenuService implements IMenuService {
 	
 	@Autowired
 	private ICategory2PrinterDataAccessor category2PrinterDA;
+	
+	@Autowired
+	private IDishConfigDataAccessor dishConfigDA;
+	
+	@Autowired
+	private IDishConfigGroupDataAccessor dishConfigGroupDA;
+	
 
 	@Override
 	@Transactional
-	public ObjectResult addFlavor(long userId, String firstLanguageName, String secondLanguageName){
+	public ObjectResult addFlavor(int userId, String firstLanguageName, String secondLanguageName){
 		Flavor flavor = new Flavor();
 		flavor.setFirstLanguageName(firstLanguageName);
 		flavor.setSecondLanguageName(secondLanguageName);
@@ -116,7 +132,7 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addCategory1(long userId, String firstLanguageName, String secondLanguageName, int sequence) {
+	public ObjectResult addCategory1(int userId, String firstLanguageName, String secondLanguageName, int sequence) {
 		Category1 c1 = new Category1();
 		c1.setFirstLanguageName(firstLanguageName);
 		c1.setSecondLanguageName(secondLanguageName);
@@ -139,7 +155,7 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addCategory2(long userId, String firstLanguageName, String secondLanguageName, int sequence, int category1Id, JSONArray jaPrinter) {
+	public ObjectResult addCategory2(int userId, String firstLanguageName, String secondLanguageName, int sequence, int category1Id, JSONArray jaPrinter) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null){
 			return new ObjectResult("cannot find category1 by id : "+ category1Id, false, null);
@@ -182,10 +198,9 @@ public class MenuService implements IMenuService {
 	 */
 	@Override
 	@Transactional
-	public ObjectResult addDish(long userId, String firstLanguageName, String secondLanguageName, int sequence, 
+	public ObjectResult addDish(int userId, String firstLanguageName, String secondLanguageName, int sequence, 
 			double price, boolean isNew, boolean isSpecial, int hotLevel, String abbreviation,  MultipartFile image, int category2Id, int chooseMode, 
-			DishChoosePopinfo popinfo, ArrayList<DishChooseSubitem> subitems, int subitemAmount,
-			boolean autoMerge, int purchaseType, boolean allowFlavor, String description_1stlang, String description_2ndlang) {
+			DishChoosePopinfo popinfo, boolean autoMerge, int purchaseType, boolean allowFlavor, String description_1stlang, String description_2ndlang) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null){
 			return new ObjectResult("cannot find category2 by id "+ category2Id, false, null);
@@ -195,9 +210,6 @@ public class MenuService implements IMenuService {
 			if (popinfo == null){
 				return new ObjectResult("no pop info", false, null);
 			}
-		}
-		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_SUBITEM && (subitems == null || subitems.isEmpty())){
-			return new ObjectResult("no subitems", false, null);
 		}
 		
 		Dish dish = new Dish();
@@ -211,7 +223,6 @@ public class MenuService implements IMenuService {
 		dish.setSpecial(isSpecial);
 		dish.setAbbreviation(abbreviation);
 		dish.setChooseMode(chooseMode);
-		dish.setSubitemAmount(subitemAmount);
 		dish.setAutoMergeWhileChoose(autoMerge);
 		dish.setPurchaseType(purchaseType);
 		dish.setAllowFlavor(allowFlavor);
@@ -224,13 +235,6 @@ public class MenuService implements IMenuService {
 			popinfo.setDish(dish);
 			dishChoosePopinfoDA.save(popinfo);
 			dish.setChoosePopInfo(popinfo);
-		}
-		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_SUBITEM && (subitems != null || !subitems.isEmpty())){
-			for(DishChooseSubitem item : subitems){
-				item.setDish(dish);
-				dishChooseSubitemDA.save(item);
-				dish.addChooseSubItems(item);
-			}
 		}
 		
 		// write log.
@@ -268,6 +272,19 @@ public class MenuService implements IMenuService {
 	
 	@Override
 	@Transactional
+	public ObjectListResult queryDishConfigByIdList(ArrayList<Integer> dishConfigIdList){
+		ArrayList<DishConfig> dishConfigList = new ArrayList<>();
+		for(Integer i : dishConfigIdList){
+			DishConfig config = dishConfigDA.getDishConfigById(i);
+			if (config == null)
+				return new ObjectListResult("cannot find dish config by id "+ i, false, null);
+			dishConfigList.add(config);
+		}
+		return new ObjectListResult(Result.OK, true, dishConfigList);
+	}
+	
+	@Override
+	@Transactional
 	public ObjectListResult queryAllMenu() {
 		List<Category1> c1s = category1DA.getAllCategory1();
 		hibernateInitialCategory1(c1s);
@@ -276,7 +293,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult deleteFlavor(long userId, int flavorId){
+	public ObjectResult deleteFlavor(int userId, int flavorId){
 		Flavor f = flavorDA.getFlavorById(flavorId);
 		if (f == null)
 			return new ObjectResult("not found Flavor by id" + flavorId, false);
@@ -290,7 +307,7 @@ public class MenuService implements IMenuService {
 	}
 	@Override
 	@Transactional
-	public ObjectResult deleteCategory1(long userId, int category1Id) {
+	public ObjectResult deleteCategory1(int userId, int category1Id) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null)
 			return new ObjectResult("not found Category1 by id "+ category1Id, false);
@@ -307,7 +324,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult deleteCategory2(long userId, int category2Id) {
+	public ObjectResult deleteCategory2(int userId, int category2Id) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null)
 			return new ObjectResult("not found Category2 by id "+ category2Id, false);
@@ -327,26 +344,13 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult deleteDish(long userId, int dishId) {
+	public ObjectResult deleteDish(int userId, int dishId) {
 		Dish dish = dishDA.getDishById(dishId);
 		if (dish == null)
 			return new ObjectResult("not found dish by ID " + dishId, false);
 		//must delete first from C2's children, otherwise report hibernate exception:
 		//deleted object would be re-saved by cascade (remove deleted object from associations)
 		dish.getCategory2().getDishes().remove(dish);
-		/**
-		 * must clear session before delete dish if this dish has a list of DishChooseSubitem; 
-		 * I don't know the reason, but if don't do, will report the error of : 
-		 * deleted object would be re-saved by cascade (remove deleted object from associations);
-		 * this does not same to the relation between Category2 and Dish. 
-		 * for Category2-Dish or Category1-Category2, we just need to remove the son from parent's list, then can delete parent directly;
-		 * but for Dish-DishChooseSubitem, only release the relation is not enough;
-		 */
-		if (dish.getChooseSubItems() != null){
-			dish.removeAllChooseSubItems();
-			dishDA.getSession().clear();
-		}
-
 		
 		dishDA.delete(dish);
 
@@ -374,7 +378,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult updateFlavor(long userId, int id, String firstLanguageName, String secondLanguageName) {
+	public ObjectResult updateFlavor(int userId, int id, String firstLanguageName, String secondLanguageName) {
 		Flavor f = flavorDA.getFlavorById(id);
 		if (f == null)
 			return new ObjectResult("not found Flavor by id "+ id, false);
@@ -391,7 +395,7 @@ public class MenuService implements IMenuService {
 	}
 	@Override
 	@Transactional
-	public ObjectResult updateCategory1(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence) {
+	public ObjectResult updateCategory1(int userId, int id, String firstLanguageName, String secondLanguageName, int sequence) {
 		Category1 c1 = category1DA.getCategory1ById(id);
 		if (c1 == null)
 			return new ObjectResult("not found Category1 by id "+ id, false, null);
@@ -411,7 +415,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult updateCategory2(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, 
+	public ObjectResult updateCategory2(int userId, int id, String firstLanguageName, String secondLanguageName, int sequence, 
 			int category1Id, JSONArray jaPrinter) {
 		Category1 c1 = category1DA.getCategory1ById(category1Id);
 		if (c1 == null)
@@ -460,9 +464,9 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult updateDish(long userId, int id, String firstLanguageName, String secondLanguageName, int sequence, double price, 
+	public ObjectResult updateDish(int userId, int id, String firstLanguageName, String secondLanguageName, int sequence, double price, 
 			boolean isNew, boolean isSpecial, byte hotLevel, String abbreviation, int category2Id,
-			int chooseMode, DishChoosePopinfo popinfo, ArrayList<DishChooseSubitem> subitems, int subitemAmount,
+			int chooseMode, DishChoosePopinfo popinfo, 
 			boolean autoMerge, int purchaseType, boolean allowFlavor, String description_1stlang, String description_2ndlang) {
 		Category2 c2 = category2DA.getCategory2ById(category2Id);
 		if (c2 == null)
@@ -477,9 +481,6 @@ public class MenuService implements IMenuService {
 				return new ObjectResult("no pop info", false, null);
 			}
 		}
-		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_SUBITEM && (subitems == null || subitems.isEmpty())) {
-			return new ObjectResult("no subitems", false, null);
-		}
 		//save base property
 		dish.setCategory2(c2);
 		dish.setFirstLanguageName(firstLanguageName);
@@ -492,8 +493,6 @@ public class MenuService implements IMenuService {
 		dish.setAbbreviation(abbreviation);
 		dish.setChooseMode(chooseMode);
 		dish.setChoosePopInfo(null);
-		dish.setChooseSubItems(null);
-		dish.setSubitemAmount(subitemAmount);
 		dish.setAutoMergeWhileChoose(autoMerge);
 		dish.setPurchaseType(purchaseType);
 		dish.setAllowFlavor(allowFlavor);
@@ -507,13 +506,6 @@ public class MenuService implements IMenuService {
 			popinfo.setDish(dish);
 			dishChoosePopinfoDA.save(popinfo);
 			dish.setChoosePopInfo(popinfo);
-		}
-		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_SUBITEM && (subitems != null || !subitems.isEmpty())){
-			for(DishChooseSubitem item : subitems){
-				item.setDish(dish);
-				dishChooseSubitemDA.save(item);
-				dish.addChooseSubItems(item);
-			}
 		}
 		
 		// write log.
@@ -615,7 +607,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult changeDishPrice(long userId, int id, double newprice) {
+	public ObjectResult changeDishPrice(int userId, int id, double newprice) {
 		Dish dish = dishDA.getDishById(id);
 		if (dish == null)
 			return new ObjectResult("not found dish by id "+ id, false, null);
@@ -633,7 +625,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult changeDishPicture(long userId, int id, MultipartFile image) {
+	public ObjectResult changeDishPicture(int userId, int id, MultipartFile image) {
 		Dish dish = dishDA.getDishById(id);
 		if (dish == null)
 			return new ObjectResult("not found dish by id "+ id, false, null);
@@ -684,7 +676,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult changeDishSpecial(long userId, int id, boolean isSpecial) {
+	public ObjectResult changeDishSpecial(int userId, int id, boolean isSpecial) {
 		Dish dish = dishDA.getDishById(id);
 		if (dish == null)
 			return new ObjectResult("not found dish by id "+ id, false);
@@ -700,7 +692,7 @@ public class MenuService implements IMenuService {
 	
 	@Override
 	@Transactional
-	public ObjectResult changeDishPromotion(long userId, int dishid, double promotionPrice) {
+	public ObjectResult changeDishPromotion(int userId, int dishid, double promotionPrice) {
 		Dish dish = dishDA.getDishById(dishid);
 		if (dish == null)
 			return new ObjectResult("not found dish by id "+ dishid, false);
@@ -713,7 +705,7 @@ public class MenuService implements IMenuService {
 		dishDA.save(dish);
 		
 		MenuVersion mv = new MenuVersion();
-		mv.setDishId(dishid);
+		mv.setObjectId(dishid);
 		mv.setType(ConstantValue.MENUCHANGE_TYPE_CHANGEPROMOTION);
 		menuVersionDA.save(mv);
 		
@@ -727,7 +719,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
-	public ObjectResult cancelDishPromotion(long userId, int dishid) {
+	public ObjectResult cancelDishPromotion(int userId, int dishid) {
 		Dish dish = dishDA.getDishById(dishid);
 		if (dish == null)
 			return new ObjectResult("not found dish by id "+ dishid, false);
@@ -738,7 +730,7 @@ public class MenuService implements IMenuService {
 		dish.setPrice(dish.getOriginPrice());
 		dishDA.save(dish);
 		MenuVersion mv = new MenuVersion();
-		mv.setDishId(dishid);
+		mv.setObjectId(dishid);
 		mv.setType(ConstantValue.MENUCHANGE_TYPE_CHANGEPROMOTION);
 		menuVersionDA.save(mv);
 		
@@ -752,7 +744,7 @@ public class MenuService implements IMenuService {
 	
 	@Override
 	@Transactional
-	public ObjectResult changeDishNewProduct(long userId, int id, boolean isNew) {
+	public ObjectResult changeDishNewProduct(int userId, int id, boolean isNew) {
 		Dish dish = dishDA.getDishById(id);
 		if (dish == null)
 			return new ObjectResult("not found dish by id "+ id, false);
@@ -768,7 +760,7 @@ public class MenuService implements IMenuService {
 	
 	@Override
 	@Transactional
-	public ObjectResult changeDishSoldOut(long userId, int id, boolean isSoldOut) {
+	public ObjectResult changeDishSoldOut(int userId, int id, boolean isSoldOut) {
 		Dish dish = dishDA.getDishById(id);
 		if (dish == null)
 			return new ObjectResult("not found dish by id "+ id, false);
@@ -777,8 +769,8 @@ public class MenuService implements IMenuService {
 		hibernateInitialDish(dish);
 		//add record to menu_version
 		MenuVersion mv = new MenuVersion();
-		mv.setDishId(id);
-		mv.setType(ConstantValue.MENUCHANGE_TYPE_SOLDOUT);//不管是sold out还是取消sold out, 都使用这个值
+		mv.setObjectId(id);
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHSOLDOUT);//不管是sold out还是取消sold out, 都使用这个值
 		menuVersionDA.save(mv);
 		
 		// write log.
@@ -790,6 +782,25 @@ public class MenuService implements IMenuService {
 
 	@Override
 	@Transactional
+	public Result changeDishConfigSoldout(int userId, int configId, boolean isSoldOut){
+		DishConfig config = dishConfigDA.getDishConfigById(configId);
+		if (config == null)
+			return new ObjectResult("not found dishconfig by id "+ configId, false);
+		config.setSoldOut(isSoldOut);
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(configId);
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHCONFIGSOLDOUT);//不管是sold out还是取消sold out, 都使用这个值
+		menuVersionDA.save(mv);
+		
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
+				"User " + selfUser + " change dish config Sold Out as " + isSoldOut + ", id = "+ configId);
+		return new ObjectResult(Result.OK, true, config);
+	}
+	
+	@Override
+	@Transactional
 	public CheckMenuVersionResult checkMenuVersion(int versionId){
 		List<MenuVersion> mvs = menuVersionDA.getMenuVersionFromId(versionId);
 		if (mvs == null || mvs.isEmpty())
@@ -798,7 +809,7 @@ public class MenuService implements IMenuService {
 		for (int i = 0; i < mvs.size(); i++) {
 			CheckMenuVersionResult.MenuVersionInfo info = new CheckMenuVersionResult.MenuVersionInfo();
 			info.id = mvs.get(i).getId();
-			info.dishId = mvs.get(i).getDishId();
+			info.objectId = mvs.get(i).getObjectId();
 			info.type = mvs.get(i).getType();
 			infos.add(info);
 		}
@@ -821,7 +832,24 @@ public class MenuService implements IMenuService {
 		List<Flavor> mvs = flavorDA.getAllFlavor();
 		return new ObjectListResult<Flavor>(Result.OK, true, mvs);
 	}
+	
+	@Override
+	@Transactional
+	public ObjectListResult<DishConfigGroup> queryDishConfigGroup(){
+		List<DishConfigGroup> mvs = dishConfigGroupDA.getAllDishConfigGroup();
+		for (int i = 0; i < mvs.size(); i++) {
+			hibernateInitialConfigGroup(mvs.get(i));
+		}
+		return new ObjectListResult<DishConfigGroup>(Result.OK, true, mvs);
+	}
 
+	@Override
+	@Transactional
+	public ObjectListResult<DishConfig> queryDishConfig(){
+		List<DishConfig> mvs = dishConfigDA.getAllDishConfig();
+		return new ObjectListResult<DishConfig>(Result.OK, true, mvs);
+	}
+	
 	@Override
 	@Transactional
 	public ObjectResult queryDishByName(String dishName) {
@@ -837,6 +865,169 @@ public class MenuService implements IMenuService {
 		return new ObjectResult(Result.OK, true, dishes.get(0));
 	}
 	
+
+	@Override
+	@Transactional
+	public ObjectResult addDishConfig(int userId, String firstLanguageName, String secondLanguageName,
+			int sequence, double price, int groupId) {
+		DishConfigGroup group = dishConfigGroupDA.getDishConfigGroupById(groupId);
+		if (group == null){
+			return new ObjectResult("cannot find dish config group by id " + groupId, false);
+		}
+		DishConfig dc = new DishConfig();
+		dc.setFirstLanguageName(firstLanguageName);
+		dc.setSecondLanguageName(secondLanguageName);
+		dc.setSequence(sequence);
+		dc.setPrice(price);
+		dc.setGroup(group);
+		dishConfigDA.save(dc);
+		
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " add dishconfig : firstLanguageName = " + firstLanguageName);
+		return new ObjectResult(Result.OK, true, dc);
+	}
+
+
+	@Override
+	@Transactional
+	public ObjectResult addDishConfigGroup(int userId, String firstLanguageName, String secondLanguageName,
+			String uniqueName, int sequence, int requiredQuantity, boolean allowDuplicate) {
+		DishConfigGroup dg = new DishConfigGroup();
+		dg.setFirstLanguageName(firstLanguageName);
+		dg.setSecondLanguageName(secondLanguageName);
+		dg.setUniqueName(uniqueName);
+		dg.setSequence(sequence);
+		dg.setRequiredQuantity(requiredQuantity);
+		dg.setAllowDuplicate(allowDuplicate);
+		dishConfigGroupDA.save(dg);
+		
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " add dishconfiggroup : firstLanguageName = " + firstLanguageName
+				+ ", uniqueName = "+uniqueName);
+		return new ObjectResult(Result.OK, true, dg);
+	}
+
+
+	@Override
+	@Transactional
+	public ObjectResult updateDishConfig(int userId, int id, String firstLanguageName, String secondLanguageName,
+			int sequence, double price) {
+		DishConfig dc = dishConfigDA.getDishConfigById(id);
+		if (dc == null){
+			return new ObjectResult("cannot find dishConfig object by id "+ id, false);
+		}
+		dc.setFirstLanguageName(firstLanguageName);
+		dc.setSecondLanguageName(secondLanguageName);
+		dc.setSequence(sequence);
+		dc.setPrice(price);
+		dishConfigDA.save(dc);
+		
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " modify dishconfig : firstLanguageName = " + firstLanguageName);
+		return new ObjectResult(Result.OK, true, dc);
+	}
+
+
+	@Override
+	@Transactional
+	public ObjectResult updateDishConfigGroup(int userId, int id, String firstLanguageName, String secondLanguageName,
+			String uniqueName, int sequence, int requiredQuantity, boolean allowDuplicate) {
+		DishConfigGroup dg = dishConfigGroupDA.getDishConfigGroupById(id);
+		if (dg == null){
+			return new ObjectResult("cannot find dishConfigGroup object by id "+ id, false);
+		}
+		dg.setFirstLanguageName(firstLanguageName);
+		dg.setSecondLanguageName(secondLanguageName);
+		dg.setAllowDuplicate(allowDuplicate);
+		dg.setSequence(sequence);
+		dg.setUniqueName(uniqueName);
+		dg.setRequiredQuantity(requiredQuantity);
+		dishConfigGroupDA.save(dg);
+		hibernateInitialConfigGroup(dg);
+		
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " modify dishconfiggroup : firstLanguageName = " + firstLanguageName
+				+ ", uniqueName = "+uniqueName);
+		return new ObjectResult(Result.OK, true, dg);
+	}
+
+
+	@Override
+	@Transactional
+	public Result deleteDishConfig(int userId, int configId) {
+		DishConfig dc = dishConfigDA.getDishConfigById(configId);
+		if (dc == null){
+			return new ObjectResult("cannot find dishConfig object by id "+ configId, false);
+		}
+		dishConfigDA.delete(dc);
+		
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " delete dishconfig : firstLanguageName = " + dc.getFirstLanguageName());
+		return new ObjectResult(Result.OK, true);
+	}
+
+
+	@Override
+	@Transactional
+	public Result deleteDishConfigGroup(int userId, int configGroupId) {
+		DishConfigGroup dg = dishConfigGroupDA.getDishConfigGroupById(configGroupId);
+		if (dg == null){
+			return new ObjectResult("cannot find dishConfigGroup object by id "+ configGroupId, false);
+		}
+		dishConfigGroupDA.delete(dg);
+		
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " delete dishconfiggroup : firstLanguageName = " + dg.getFirstLanguageName()
+				+ ", uniqueName = "+ dg.getUniqueName());
+		return new ObjectResult(Result.OK, true);
+	}
+
+
+	@Override
+	@Transactional
+	public ObjectResult moveinConfigGroupForDish(int userId, int dishId, int configGroupId) {
+		DishConfigGroup dg = dishConfigGroupDA.getDishConfigGroupById(configGroupId);
+		if (dg == null){
+			return new ObjectResult("cannot find dishConfigGroup object by id "+ configGroupId, false);
+		}
+		
+		Dish dish = dishDA.getDishById(dishId);
+		if (dish == null){
+			return new ObjectResult("cannot find dish object by id "+ dishId, false);
+		}
+		
+		dish.addConfigGroup(dg);
+		dish.setAutoMergeWhileChoose(false);
+		hibernateInitialDish(dish);
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " bind dishConfigGroup : firstLanguageName = " + dg.getFirstLanguageName()
+				+ ", uniqueName = "+ dg.getUniqueName() +" to Dish : "+dish.getFirstLanguageName());
+		return new ObjectResult(Result.OK, true, dish);
+	}
+
+
+	@Override
+	@Transactional
+	public ObjectResult moveoutConfigGroupForDish(int userId, int dishId, int configGroupId) {
+		DishConfigGroup dg = dishConfigGroupDA.getDishConfigGroupById(configGroupId);
+		if (dg == null){
+			return new ObjectResult("cannot find dishConfigGroup object by id "+ configGroupId, false);
+		}
+		
+		Dish dish = dishDA.getDishById(dishId);
+		if (dish == null){
+			return new ObjectResult("cannot find dish object by id "+ dishId, false);
+		}
+		
+		dish.getConfigGroups().remove(dg);
+		hibernateInitialDish(dish);
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " unbind dishConfigGroup : firstLanguageName = " + dg.getFirstLanguageName()
+				+ ", uniqueName = "+ dg.getUniqueName() +" from Dish : "+dish.getFirstLanguageName());
+		return new ObjectResult(Result.OK, true, dish);
+	}
+
 	@Transactional
 	public void hibernateInitialCategory1(Category1 c1){
 		Hibernate.initialize(c1);
@@ -873,6 +1064,17 @@ public class MenuService implements IMenuService {
 	public void hibernateInitialDish(Dish dish){
 		Hibernate.initialize(dish);
 		Hibernate.initialize(dish.getChoosePopInfo());
-		Hibernate.initialize(dish.getChooseSubItems());
+//		Hibernate.initialize(dish.getMaterialConsumes());
+		if (dish.getConfigGroups() != null){
+			for(DishConfigGroup dg : dish.getConfigGroups()){
+				hibernateInitialConfigGroup(dg);
+			}
+		}
+	}
+	
+	@Transactional
+	public void hibernateInitialConfigGroup(DishConfigGroup dg){
+		Hibernate.initialize(dg);
+		Hibernate.initialize(dg.getDishConfigs());
 	}
 }

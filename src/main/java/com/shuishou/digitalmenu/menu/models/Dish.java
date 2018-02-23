@@ -12,10 +12,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -93,17 +96,6 @@ public class Dish implements Serializable{
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="dish", orphanRemoval = true)
 	private DishChoosePopinfo choosePopInfo;
 	
-	/**
-	 * initial this property as a null list;
-	 * if I need to add/remove or delete all elements from the list, remember not to replace this list as a new list,
-	 * if do so, hibernate will error, 
-	 */
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="dish", orphanRemoval= true)
-	private List<DishChooseSubitem> chooseSubItems = new ArrayList<>();
-
-	@Column(name = "subitem_amount")
-	private int subitemAmount = 0;
-	
 	//set whether merge to one record while customer choose this dish more than one time
 	@Column(name="automerge_whilechoose")
 	private boolean autoMergeWhileChoose = true;
@@ -111,6 +103,12 @@ public class Dish implements Serializable{
 	//是否支持配置口味
 	@Column
 	private boolean allowFlavor = true;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name="dish_dishconfiggroup", joinColumns = {@JoinColumn(name="dish_id")}, 
+		inverseJoinColumns = {@JoinColumn(name="dishconfiggroup_id")},
+		uniqueConstraints = {@UniqueConstraint(columnNames = {"dish_id", "dishconfiggroup_id"})})
+	private List<DishConfigGroup> configGroups = new ArrayList<>();
 	
 	
 	/**
@@ -125,7 +123,38 @@ public class Dish implements Serializable{
 	@Column
 	private String description_2ndlang;
 	
+	@JsonIgnore
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="dish")
+	private List<DishMaterialConsume> materialConsumes;
+	
+	
 
+	public List<DishMaterialConsume> getMaterialConsumes() {
+		return materialConsumes;
+	}
+
+	public void setMaterialConsumes(List<DishMaterialConsume> materialConsumes) {
+		this.materialConsumes = materialConsumes;
+	}
+
+	public void setConfigGroups(List<DishConfigGroup> configGroups) {
+		this.configGroups = configGroups;
+	}
+
+	public List<DishConfigGroup> getConfigGroups() {
+		return configGroups;
+	}
+
+	public void setConfigGroups(ArrayList<DishConfigGroup> configGroups) {
+		this.configGroups = configGroups;
+	}
+
+	public void addConfigGroup(DishConfigGroup configGroup){
+		if (configGroups == null)
+			configGroups = new ArrayList<>();
+		configGroups.add(configGroup);
+	}
+	
 	public String getDescription_1stlang() {
 		return description_1stlang;
 	}
@@ -174,42 +203,12 @@ public class Dish implements Serializable{
 		this.autoMergeWhileChoose = autoMergeWhileChoose;
 	}
 
-	public int getSubitemAmount() {
-		return subitemAmount;
-	}
-
-	public void setSubitemAmount(int subitemAmount) {
-		this.subitemAmount = subitemAmount;
-	}
-
 	public DishChoosePopinfo getChoosePopInfo() {
 		return choosePopInfo;
 	}
 
 	public void setChoosePopInfo(DishChoosePopinfo choosePopInfo) {
 		this.choosePopInfo = choosePopInfo;
-	}
-
-	public List<DishChooseSubitem> getChooseSubItems() {
-		return chooseSubItems;
-	}
-
-	public void setChooseSubItems(List<DishChooseSubitem> chooseSubItems) {
-		this.chooseSubItems.clear();
-		if (chooseSubItems != null)
-			this.chooseSubItems.addAll(chooseSubItems);;
-	}
-	
-	public void addChooseSubItems(DishChooseSubitem chooseSubItem) {
-		this.chooseSubItems.add(chooseSubItem);
-	}
-	
-	public void removeAllChooseSubItems(){
-			chooseSubItems.clear();
-	}
-	
-	public void removeChooseSubItem(DishChooseSubitem chooseSubItem){
-			chooseSubItems.remove(chooseSubItem);
 	}
 
 	public int getChooseMode() {

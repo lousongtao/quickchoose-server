@@ -20,7 +20,7 @@ import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
 import com.shuishou.digitalmenu.menu.models.DishChoosePopinfo;
-import com.shuishou.digitalmenu.menu.models.DishChooseSubitem;
+import com.shuishou.digitalmenu.menu.services.IDishMaterialConsumeService;
 import com.shuishou.digitalmenu.menu.services.IMenuService;
 import com.shuishou.digitalmenu.menu.views.CheckMenuVersionResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
@@ -45,9 +45,12 @@ public class MenuController extends BaseController {
 	@Autowired
 	private IMenuService menuService;
 	
+	@Autowired
+	private IDishMaterialConsumeService dishMaterialConsumeService;
+	
 	@RequestMapping(value = "/menu/addflavor", method = {RequestMethod.POST})
 	public @ResponseBody Result addFlavor(
-			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -61,7 +64,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/add_category1", method = {RequestMethod.POST})
 	public @ResponseBody Result addCategory1(
-			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence) throws Exception{
@@ -76,7 +79,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/updateflavor", method = {RequestMethod.POST})
 	public @ResponseBody Result updateFlavor(
-			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName) throws Exception{
@@ -92,7 +95,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/update_category1", method = {RequestMethod.POST})
 	public @ResponseBody Result updateCategory1(
-			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
@@ -109,7 +112,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value="/menu/add_category2", method = {RequestMethod.POST})
 	public @ResponseBody Result addCategory2(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence,
@@ -128,7 +131,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value="/menu/update_category2", method = {RequestMethod.POST})
 	public @ResponseBody Result updateCategory2(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
@@ -162,8 +165,6 @@ public class MenuController extends BaseController {
 	 * @param chooseMode
 	 * @param allowFlavor
 	 * @param sPopInfo : a string of json format
-	 * @param sDishChooseSubitem: a string of json format
-	 * @param subitemAmount
 	 * @param purchaseType
 	 * @param category2Id
 	 * @return
@@ -171,7 +172,7 @@ public class MenuController extends BaseController {
 	 */
 	@RequestMapping(value="/menu/add_dish", method = {RequestMethod.POST})
 	public @ResponseBody Result addDish(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
 			@RequestParam(value = "sequence", required = true) int sequence,
@@ -184,8 +185,6 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "chooseMode", required = true) int chooseMode,
 			@RequestParam(value = "allowFlavor", required = true) boolean allowFlavor,
 			@RequestParam(value = "sPopInfo", required = false) String sPopInfo,
-			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
-			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
 			@RequestParam(value = "purchaseType", required = false, defaultValue = "1") int purchaseType,
 			@RequestParam(value = "description_1stlang", required = false, defaultValue = "") String description_1stlang,
 			@RequestParam(value = "description_2ndlang", required = false, defaultValue = "") String description_2ndlang,
@@ -194,17 +193,12 @@ public class MenuController extends BaseController {
 			return new Result("no_permission");
 		}
 		DishChoosePopinfo popinfo = null;
-		ArrayList<DishChooseSubitem> subitems= null;
 		
 		if (sPopInfo != null && sPopInfo.length() > 0){
 			popinfo = new Gson().fromJson(sPopInfo, new TypeToken<DishChoosePopinfo>(){}.getType());
 		}
-		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
-			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
-			
-		}
 		Result result = menuService.addDish(userId, firstLanguageName, secondLanguageName, sequence, price, isNew, 
-				isSpecial, hotLevel, abbreviation, null, category2Id, chooseMode, popinfo, subitems, subitemAmount,
+				isSpecial, hotLevel, abbreviation, null, category2Id, chooseMode, popinfo, 
 				autoMerge, purchaseType, allowFlavor, description_1stlang, description_2ndlang);
 		
 		return result;
@@ -212,7 +206,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value="/menu/update_dish", method = {RequestMethod.POST})
 	public @ResponseBody Result updateDish(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
 			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
@@ -227,8 +221,6 @@ public class MenuController extends BaseController {
 			@RequestParam(value = "allowFlavor", required = true) boolean allowFlavor,
 			@RequestParam(value = "chooseMode", required = true) int chooseMode,
 			@RequestParam(value = "sPopInfo", required = false) String sPopInfo,
-			@RequestParam(value = "dishChooseSubitem", required = false) String sDishChooseSubitem,//a json String of list;
-			@RequestParam(value = "subitemAmount", required = false, defaultValue = "0") int subitemAmount,
 			@RequestParam(value = "purchaseType", required = false, defaultValue = "1") int purchaseType,
 			@RequestParam(value = "description_1stlang", required = false, defaultValue = "") String description_1stlang,
 			@RequestParam(value = "description_2ndlang", required = false, defaultValue = "") String description_2ndlang,
@@ -238,17 +230,12 @@ public class MenuController extends BaseController {
 		}
 		
 		DishChoosePopinfo popinfo = null;
-		ArrayList<DishChooseSubitem> subitems= null;
 		if (sPopInfo != null && sPopInfo.length() > 0){
 			popinfo = new Gson().fromJson(sPopInfo, new TypeToken<DishChoosePopinfo>(){}.getType());
 		}
-		if (sDishChooseSubitem != null && sDishChooseSubitem.length() > 0){
-			subitems = new Gson().fromJson(sDishChooseSubitem, new TypeToken<ArrayList<DishChooseSubitem>>(){}.getType());
-			
-		}
 		
 		Result result = menuService.updateDish(userId, id, firstLanguageName, secondLanguageName, sequence, price, isNew, isSpecial, hotLevel, 
-				abbreviation, category2Id, chooseMode, popinfo, subitems, subitemAmount, autoMerge, purchaseType, allowFlavor, 
+				abbreviation, category2Id, chooseMode, popinfo, autoMerge, purchaseType, allowFlavor, 
 				description_1stlang, description_2ndlang);
 		
 		return result;
@@ -256,7 +243,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value="/menu/changedishpicture", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishPicture(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "picture", required = false) MultipartFile image) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -270,7 +257,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value="/menu/change_dish_price", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishPrice(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "newPrice", required = true) double newPrice) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -284,7 +271,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/changedishpromotion", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishPromotion(
-			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "dishId", required = true) int dishId,
 			@RequestParam(value = "promotionPrice", required = true) double promotionPrice) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -298,7 +285,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/canceldishpromotion", method = {RequestMethod.POST})
 	public @ResponseBody Result cancelDishPromotion(
-			@RequestParam(value = "userId", required = true) long userId,
+			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "dishId", required = true) int id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -311,7 +298,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value="/menu/change_dish_newproduct", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishNewProduct(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "isNew", required = true) boolean isNew) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -325,7 +312,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value="/menu/changedishsoldout", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishSoldOut(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "isSoldOut", required = true) boolean isSoldOut) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -333,6 +320,20 @@ public class MenuController extends BaseController {
 		}
 		
 		Result result = menuService.changeDishSoldOut(userId, id, isSoldOut);
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/menu/changedishconfigsoldout", method = {RequestMethod.POST})
+	public @ResponseBody Result changeDishConfigSoldOut(
+			@RequestParam(value="userId", required = true) int userId, 
+			@RequestParam(value = "configId", required = true) int configId,
+			@RequestParam(value = "isSoldOut", required = true) boolean isSoldOut) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		
+		Result result = menuService.changeDishConfigSoldout(userId, configId, isSoldOut);
 		
 		return result;
 	}
@@ -353,7 +354,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value="/menu/change_dish_special", method = {RequestMethod.POST})
 	public @ResponseBody Result changeDishSpecial(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "isSpecial", required = true) boolean isSpecial) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -397,6 +398,24 @@ public class MenuController extends BaseController {
 	}
 	
 	/**
+	 * 
+	 * @param sIdList Id seperate by comma
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/menu/querydishconfigbyidlist", method = {RequestMethod.POST})
+	public @ResponseBody ObjectListResult queryDishConfigByIdList(
+			@RequestParam(value = "dishConfigIdList", required = true) String sIdList) throws Exception{
+		ArrayList<Integer> idList = new ArrayList<>();
+		String[] sIds = sIdList.split(",");
+		for (int i = 0; i < sIds.length; i++) {
+			idList.add(Integer.parseInt(sIds[i]));
+		}
+		ObjectListResult result = menuService.queryDishConfigByIdList(idList);
+		return result;
+	}
+	
+	/**
 	 * 删除操作, 包括删除目录及dish
 	 * @param userId
 	 * @param objectTypeId, 由于查询菜单时拼装的ID为"type+ID", 所以前端同样范围该值, 这里需要根据type进行区分.
@@ -405,7 +424,7 @@ public class MenuController extends BaseController {
 	 */
 	@RequestMapping(value = "/menu/delete", method = (RequestMethod.POST))
 	public @ResponseBody Result deleteMenu(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "objectId", required = true) String objectId,
 			@RequestParam(value = "objectType", required = true) String objectType) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
@@ -425,7 +444,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/deleteflavor", method = (RequestMethod.POST))
 	public @ResponseBody Result deleteFlavor(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -435,7 +454,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/delete_category1", method = (RequestMethod.POST))
 	public @ResponseBody Result deleteCategory1(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -445,7 +464,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/delete_category2", method = (RequestMethod.POST))
 	public @ResponseBody Result deleteCategory2(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -455,7 +474,7 @@ public class MenuController extends BaseController {
 	
 	@RequestMapping(value = "/menu/delete_dish", method = (RequestMethod.POST))
 	public @ResponseBody Result deleteDish(
-			@RequestParam(value="userId", required = true) long userId, 
+			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
 			return new Result("no_permission");
@@ -473,6 +492,176 @@ public class MenuController extends BaseController {
 	public @ResponseBody Result queryDishByName(
 			@RequestParam(value = "dishName", required = true) String dishName) throws Exception{
 		ObjectResult result = menuService.queryDishByName(dishName);
+		return result;
+	}
+
+	@RequestMapping(value="/menu/query_dishconfiggroup", method = {RequestMethod.GET})
+	public @ResponseBody Result queryDishConfigGroup() throws Exception{
+		ObjectListResult result = menuService.queryDishConfigGroup();
+		return result;
+	}
+	
+	@RequestMapping(value="/menu/query_dishconfig", method = {RequestMethod.GET})
+	public @ResponseBody Result queryDishConfig() throws Exception{
+		ObjectListResult result = menuService.queryDishConfig();
+		return result;
+	}
+	
+	@RequestMapping(value="/menu/add_dishconfiggroup", method = {RequestMethod.POST})
+	public @ResponseBody Result addDishConfigGroup(
+			@RequestParam(value="userId", required = true) int userId, 
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
+			@RequestParam(value = "uniqueName", required = true) String uniqueName, 
+			@RequestParam(value = "sequence", required = true) int sequence,
+			@RequestParam(value = "requiredQuantity", required = true) int requiredQuantity,
+			@RequestParam(value = "allowDuplicate", required = true) boolean allowDuplicate) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.addDishConfigGroup(userId, firstLanguageName, secondLanguageName, uniqueName, sequence, requiredQuantity, allowDuplicate);
+	}
+	
+	@RequestMapping(value="/menu/update_dishconfiggroup", method = {RequestMethod.POST})
+	public @ResponseBody Result updateDishConfigGroup(
+			@RequestParam(value="userId", required = true) int userId,
+			@RequestParam(value="id", required = true) int id,
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName,
+			@RequestParam(value = "uniqueName", required = true) String uniqueName,
+			@RequestParam(value = "sequence", required = true) int sequence,
+			@RequestParam(value = "requiredQuantity", required = true) int requiredQuantity,
+			@RequestParam(value = "allowDuplicate", required = true) boolean allowDuplicate) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.updateDishConfigGroup(userId, id, firstLanguageName, secondLanguageName, uniqueName, sequence, requiredQuantity, allowDuplicate);
+	}
+	
+	@RequestMapping(value="/menu/delete_dishconfiggroup", method = {RequestMethod.POST})
+	public @ResponseBody Result deleteDishConfigGroup(
+			@RequestParam(value="userId", required = true) int userId,
+			@RequestParam(value="id", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.deleteDishConfigGroup(userId, id);
+	}
+	
+	@RequestMapping(value="/menu/movein_configgroup_fordish", method = {RequestMethod.POST})
+	public @ResponseBody Result moveinConfigGroupForDish(
+			@RequestParam(value="userId", required = true) int userId,
+			@RequestParam(value="dishId", required = true) int dishId,
+			@RequestParam(value="configGroupId", required = true) int configGroupId) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.moveinConfigGroupForDish(userId, dishId, configGroupId);
+	}
+	
+	@RequestMapping(value="/menu/moveout_configgroup_fordish", method = {RequestMethod.POST})
+	public @ResponseBody Result moveoutConfigGroupForDish(
+			@RequestParam(value="userId", required = true) int userId,
+			@RequestParam(value="dishId", required = true) int dishId,
+			@RequestParam(value="configGroupId", required = true) int configGroupId) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.moveoutConfigGroupForDish(userId, dishId, configGroupId);
+	}
+	
+	@RequestMapping(value="/menu/add_dishconfig", method = {RequestMethod.POST})
+	public @ResponseBody Result addDishConfig(
+			@RequestParam(value="userId", required = true) int userId, 
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
+			@RequestParam(value = "sequence", required = true) int sequence,
+			@RequestParam(value = "groupId", required = true) int groupId,
+			@RequestParam(value = "price", required = true) double price) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.addDishConfig(userId, firstLanguageName, secondLanguageName, sequence, price, groupId);
+	}
+	
+	@RequestMapping(value="/menu/update_dishconfig", method = {RequestMethod.POST})
+	public @ResponseBody Result updateDishConfig(
+			@RequestParam(value="userId", required = true) int userId,
+			@RequestParam(value="id", required = true) int id,
+			@RequestParam(value = "firstLanguageName", required = true) String firstLanguageName, 
+			@RequestParam(value = "secondLanguageName", required = false, defaultValue = "") String secondLanguageName, 
+			@RequestParam(value = "sequence", required = true) int sequence,
+			@RequestParam(value = "price", required = true) double price) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.updateDishConfig(userId, id, firstLanguageName, secondLanguageName, sequence, price);
+	}
+	
+	@RequestMapping(value="/menu/delete_dishconfig", method = {RequestMethod.POST})
+	public @ResponseBody Result deleteDishConfig(
+			@RequestParam(value="userId", required = true) int userId,
+			@RequestParam(value="id", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_EDIT_MENU)){
+			return new Result("no_permission");
+		}
+		return menuService.deleteDishConfig(userId, id);
+	}
+	
+	@RequestMapping(value = "/menu/adddishmaterialconsume", method = {RequestMethod.POST})
+	public @ResponseBody Result addDishMaterialConsume(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "dishId", required = true) int dishId,
+			@RequestParam(value = "amount", required = true) double amount,
+			@RequestParam(value = "materialId", required = true) int materialId) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
+			return new Result("no_permission");
+		}
+		
+		Result result = dishMaterialConsumeService.addDishMaterialConsume(userId, dishId, materialId, amount);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/menu/updatedishmaterialconsume", method = {RequestMethod.POST})
+	public @ResponseBody Result updateDishMaterialConsume(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "id", required = true) int id,
+			@RequestParam(value = "amount", required = true) double amount) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
+			return new Result("no_permission");
+		}
+		
+		Result result = dishMaterialConsumeService.updateDishMaterialConsume(userId, id, amount);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/menu/deletedishmaterialconsume", method = {RequestMethod.POST})
+	public @ResponseBody Result deleteDishMaterialConsume(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
+			return new Result("no_permission");
+		}
+		
+		Result result = dishMaterialConsumeService.deleteDishMaterialConsume(userId, id);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/menu/querydishmaterialconsume", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result queryAllDishMaterialConsume() throws Exception{
+		Result result = dishMaterialConsumeService.queryDishMaterialConsume();
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/menu/querydishmaterialconsumebydish", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result queryAllDishMaterialConsumeByDish(
+			@RequestParam(value = "dishId", required = true) int dishId) throws Exception{
+		Result result = dishMaterialConsumeService.queryDishMaterialConsumeByDish(dishId);
+		
 		return result;
 	}
 }

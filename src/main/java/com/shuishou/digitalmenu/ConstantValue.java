@@ -77,8 +77,9 @@ public class ConstantValue {
 //	public static final byte INDENTDETAIL_OPERATIONTYPE_MINUSAMOUNT = 4;// no use any more
 	public static final byte INDENTDETAIL_OPERATIONTYPE_CHANGEAMOUNT = 5;
 	
-	public static final byte MENUCHANGE_TYPE_SOLDOUT = 0;//设置soldout或取消soldout
+	public static final byte MENUCHANGE_TYPE_DISHSOLDOUT = 0;//设置soldout或取消soldout
 	public static final byte MENUCHANGE_TYPE_CHANGEPROMOTION = 1;//设置promotion或取消promotion
+	public static final byte MENUCHANGE_TYPE_DISHCONFIGSOLDOUT = 2;//设置soldout或取消soldout
 	
 	public static final byte PRINT_STYLE_TOGETHER = 0;
 	public static final byte PRINT_STYLE_SEPARATELY = 1;
@@ -88,7 +89,7 @@ public class ConstantValue {
 //	public static final byte SHIFTWORK_OFFWORK = 1;
 	
 	public static final byte DISH_CHOOSEMODE_DEFAULT = 1;
-	public static final byte DISH_CHOOSEMODE_SUBITEM = 2;
+//	public static final byte DISH_CHOOSEMODE_SUBITEM = 2;
 	public static final byte DISH_CHOOSEMODE_POPINFOCHOOSE = 3;
 	public static final byte DISH_CHOOSEMODE_POPINFOQUIT = 4;
 	
@@ -119,4 +120,9 @@ public class ConstantValue {
 	public static final int MATERIAL_ALARMSTATUS_NOALARM = 1;
 	public static final int MATERIAL_ALARMSTATUS_ALARMACCEPTED = 2;
 	public static final int MATERIAL_ALARMSTATUS_ALARMDELAY = 3;
+	
+	public static final int MATERIALRECORD_TYPE_PURCHASE = 1;//采购入库
+	public static final int MATERIALRECORD_TYPE_CHANGEAMOUNT = 2;//操作员手动调整库存
+	public static final int MATERIALRECORD_TYPE_SELLDISH = 3;//卖菜自动减库存
+	
 }

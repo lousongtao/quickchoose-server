@@ -36,6 +36,12 @@ public class MaterialController {
 		return materialService.queryMaterialByName(name);
 	}
 	
+	@RequestMapping(value = "/material/querymaterialrecordbymaterial", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody ObjectListResult queryMaterialRecordByMaterial(
+			@RequestParam(value = "materialId", required = true) int materialId) throws Exception{
+		return materialService.queryMaterialRecordByMaterial(materialId);
+	}
+	
 	@RequestMapping(value = "/material/addmaterialcategory", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody ObjectResult addMaterialCategory(
 			@RequestParam(value = "userId", required = true) int userId,
@@ -96,7 +102,7 @@ public class MaterialController {
 			@RequestParam(value = "id", required = true) int id,
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "sequence", required = true) int sequence,
-			@RequestParam(value = "leftAmount", required = false, defaultValue = "0") double leftAmount,
+//			@RequestParam(value = "leftAmount", required = false, defaultValue = "0") double leftAmount,
 			@RequestParam(value = "unit", required = true) String unit,
 			@RequestParam(value = "alarmAmount", required = false, defaultValue = "0") double alarmAmount,
 			@RequestParam(value = "barCode", required = false, defaultValue = "") String barcode,
@@ -105,7 +111,7 @@ public class MaterialController {
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
 			return new ObjectResult("no_permission", false);
 		}
-		ObjectResult result = materialService.updateMaterial(userId, id, name, sequence, leftAmount, unit, alarmAmount, categoryId, barcode, price);
+		ObjectResult result = materialService.updateMaterial(userId, id, name, sequence, unit, alarmAmount, categoryId, barcode, price);
 		return result;
 	}
 	
@@ -118,6 +124,18 @@ public class MaterialController {
 			return new ObjectResult("no_permission", false);
 		}
 		ObjectResult result = materialService.updateMaterialAmount(userId, id, leftAmount);
+		return result;
+	}
+	
+	@RequestMapping(value = "/material/purchasematerial", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody ObjectResult purchaseMaterial(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "id", required = true) int id,
+			@RequestParam(value = "amount", required = true) double amount) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
+			return new ObjectResult("no_permission", false);
+		}
+		ObjectResult result = materialService.purchaseMaterial(userId, id, amount);
 		return result;
 	}
 	

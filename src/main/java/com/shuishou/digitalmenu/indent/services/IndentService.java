@@ -51,10 +51,14 @@ import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.menu.models.Category2Printer;
 import com.shuishou.digitalmenu.menu.models.Dish;
+import com.shuishou.digitalmenu.menu.models.DishMaterialConsume;
 import com.shuishou.digitalmenu.menu.models.ICategory2PrinterDataAccessor;
 import com.shuishou.digitalmenu.menu.models.IDishDataAccessor;
 import com.shuishou.digitalmenu.printertool.PrintJob;
 import com.shuishou.digitalmenu.printertool.PrintQueue;
+import com.shuishou.digitalmenu.rawmaterial.models.IMaterialRecordDataAccessor;
+import com.shuishou.digitalmenu.rawmaterial.models.Material;
+import com.shuishou.digitalmenu.rawmaterial.models.MaterialRecord;
 import com.shuishou.digitalmenu.statistics.views.StatItem;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
@@ -79,6 +83,9 @@ public class IndentService implements IIndentService {
 	
 	@Autowired
 	private IIndentDetailDataAccessor indentDetailDA;
+	
+	@Autowired
+	private IMaterialRecordDataAccessor materialRecordDA;
 	
 	@Autowired
 	private IDeskDataAccessor deskDA;
@@ -146,17 +153,17 @@ public class IndentService implements IIndentService {
 			detail.setAmount(o.getInt("amount"));
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
-			detail.setDishPrice(dish.getPrice());
+			detail.setDishPrice(o.getDouble("dishPrice"));
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("additionalRequirements"))
 				detail.setAdditionalRequirements(o.getString("additionalRequirements"));
-			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
-				totalprice += detail.getAmount() * dish.getPrice();
-			else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
-				totalprice += detail.getAmount() * dish.getPrice() * detail.getWeight();
+			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT){
+				totalprice += detail.getAmount() * detail.getDishPrice();
+			} else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT){
+				totalprice += detail.getAmount() * detail.getDishPrice() * detail.getWeight();
+			}
 			indent.addItem(detail);
-//			indentDetailDA.save(detail);
 		}
 		indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 		indentDA.save(indent);
@@ -216,15 +223,15 @@ public class IndentService implements IIndentService {
 			detail.setAmount(amount);
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
-			detail.setDishPrice(dish.getPrice());
+			detail.setDishPrice(o.getDouble("dishPrice"));
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("additionalRequirements"))
 				detail.setAdditionalRequirements(o.getString("additionalRequirements"));
 			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
-				totalprice += detail.getAmount() * dish.getPrice();
+				totalprice += detail.getAmount() * detail.getDishPrice();
 			else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
-				totalprice += detail.getAmount() * dish.getPrice() * detail.getWeight();
+				totalprice += detail.getAmount() * detail.getDishPrice() * detail.getWeight();
 			indent.addItem(detail);
 			//update originIndent and originIndentDetail
 			originDetail.setAmount(originDetail.getAmount() - amount);
@@ -236,9 +243,9 @@ public class IndentService implements IIndentService {
 			}
 			double totalPrice_OriginIndent = originIndent.getTotalPrice();
 			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
-				totalPrice_OriginIndent -= detail.getAmount() * dish.getPrice();
+				totalPrice_OriginIndent -= detail.getAmount() * detail.getDishPrice() ;
 			else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
-				totalPrice_OriginIndent -= detail.getAmount() * dish.getPrice() * detail.getWeight();
+				totalPrice_OriginIndent -= detail.getAmount() * detail.getDishPrice()  * detail.getWeight();
 			originIndent.setTotalPrice(Double.parseDouble(doubleFormat.format(totalPrice_OriginIndent)));
 		}
 		indent.setTotalPrice(Double.parseDouble(doubleFormat.format(totalprice)));
@@ -696,6 +703,8 @@ public class IndentService implements IIndentService {
 		Indent indent = indentDA.getIndentById(indentId);
 		if (indent == null)
 			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
+		UserData selfUser = userDA.getUserById(userId);
+		Date operateDate = new Date();
 		String logtype = LogData.LogType.INDENT_PAY.toString();
 		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_CANCEL){
 			logtype = LogData.LogType.INDENT_CANCEL.toString();
@@ -707,8 +716,28 @@ public class IndentService implements IIndentService {
 			indent.setPaidPrice(Double.parseDouble(doubleFormat.format(paidPrice)));
 			indent.setPayWay(payWay);
 			indent.setMemberCard(memberCard);
+			//record material consume
+			for (int i = 0; indent.getItems() != null && i < indent.getItems().size(); i++) {
+				IndentDetail detail = indent.getItems().get(i);
+				Dish dish = dishDA.getDishById(detail.getDishId());
+				if (dish.getMaterialConsumes()!= null){
+					for (int j = 0; j < dish.getMaterialConsumes().size(); j++) {
+						DishMaterialConsume dmc = dish.getMaterialConsumes().get(j);
+						Material m = dmc.getMaterial();
+						m.setLeftAmount(m.getLeftAmount() - dmc.getAmount() * detail.getAmount());
+						MaterialRecord mr = new MaterialRecord();
+						mr.setMaterial(m);
+						mr.setAmount(detail.getAmount() * dmc.getAmount() * (-1));
+						mr.setLeftAmount(m.getLeftAmount());
+						mr.setType(ConstantValue.MATERIALRECORD_TYPE_SELLDISH);
+						mr.setDate(operateDate);
+						mr.setIndentDetailId(detail.getId());
+						materialRecordDA.save(mr);
+					}
+				}
+			}
 		}
-		indent.setEndTime(new Date());
+		indent.setEndTime(operateDate);
 		indentDA.update(indent);
 		
 		//clear merge table record if exists
@@ -733,7 +762,7 @@ public class IndentService implements IIndentService {
 			printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", false);
 		}
 		// write log.
-		UserData selfUser = userDA.getUserById(userId);
+		
 		logService.write(selfUser, logtype,
 						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
 		return new OperateIndentResult(Result.OK, true);
@@ -910,16 +939,17 @@ public class IndentService implements IIndentService {
 			detail.setAmount(o.getInt("amount"));
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
-			detail.setDishPrice(dish.getPrice());
+			detail.setDishPrice(o.getDouble("dishPrice"));
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("additionalRequirements"))
 				detail.setAdditionalRequirements(o.getString("additionalRequirements"));
 			double totalprice = 0;
-			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
-				totalprice = indent.getTotalPrice() + detail.getAmount() * dish.getPrice();
-			else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
-				totalprice = indent.getTotalPrice() + detail.getAmount() * dish.getPrice() * detail.getWeight();
+			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT){
+				totalprice = indent.getTotalPrice() + detail.getAmount() * detail.getDishPrice() ;
+			} else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT){
+				totalprice = indent.getTotalPrice() + detail.getAmount() * detail.getDishPrice()  * detail.getWeight();
+			}
 			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 //			indent.addItem(detail);//这里不能把detail加入indent集合, 在最终提交前, 如果调用indent.getItems, 会有两个相同的detail出现在集合中; 
 									//如果此处不添加, 不影响对数据库的存储. 具体原理不清楚.
