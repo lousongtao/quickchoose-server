@@ -58,4 +58,9 @@ public interface ICommonService {
 	ObjectResult uploadErrorLog(String machineCode, MultipartFile logfile);
 	
 	ObjectResult queryConfigMap();
+	
+	ObjectResult saveBranchName(int userId, String branchName);
+	
+	ObjectResult saveMemberManagementWay(int userId, boolean byScore, boolean byDeposit, double scorePerDollar, boolean needPassword);
+	
 }

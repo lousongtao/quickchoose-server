@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.ConstantValue;
+import com.shuishou.digitalmenu.DataCheckException;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
 import com.shuishou.digitalmenu.indent.services.IIndentService;
@@ -67,12 +68,16 @@ public class IndentController extends BaseController {
 			@RequestParam(value = "originIndentId", required = true) int originIndentId,
 			@RequestParam(value = "indents", required = true) String indents,
 			@RequestParam(value = "paidCash", required = true) double paidCash,
-			@RequestParam(value = "paidPrice", required = false, defaultValue = "0") double paidPrice,
-			@RequestParam(value = "payWay", required = false, defaultValue = ConstantValue.INDENT_PAYWAY_CASH) String payWay,
-			@RequestParam(value = "memberCard", required = false, defaultValue = "0") String memberCard) throws Exception{
+			@RequestParam(value = "paidPrice", required = true) double paidPrice,
+			@RequestParam(value = "payWay", required = true) String payWay,
+			@RequestParam(value = "memberCard", required = false) String memberCard,
+			@RequestParam(value = "memberPassword", required = false) String memberPassword) throws Exception{
 		JSONArray jsonOrder = new JSONArray(indents);
-		
-		return indentService.splitIndent(userId, confirmCode, jsonOrder, originIndentId, paidPrice, paidCash, payWay, memberCard);
+		try {
+			return indentService.splitIndent(userId, confirmCode, jsonOrder, originIndentId, paidPrice, paidCash, payWay, memberCard, memberPassword);
+		} catch(DataCheckException e){
+			return new OperateIndentResult(e.getMessage(), false);
+		}
 	}
 	
 	@RequestMapping(value="/indent/cleardesk", method = (RequestMethod.POST))
@@ -115,39 +120,51 @@ public class IndentController extends BaseController {
 		return indentService.queryIndent(start, limit, starttime, endtime, status, deskname,orderby,orderbydesc);
 	}
 	
-//	@RequestMapping(value="/indent/queryindentdetail", method = {RequestMethod.GET,RequestMethod.POST})
-//	public @ResponseBody GetIndentDetailResult queryIndentDetail(
-//			@RequestParam(value = "userId", required = true) long userId,
-//			@RequestParam(value="indentId", required = false) int indentId) throws Exception{
-//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_ORDER)){
-//			return new GetIndentDetailResult("no_permission", false, null);
-//		}
-//		return indentService.queryIndentDetail(indentId);
-//	}
+	/**
+	 * 
+	 * @param userId
+	 * @param indentId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/indent/dopayindent", method = (RequestMethod.POST))
+	public @ResponseBody OperateIndentResult doPayIndent(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="id", required = true) int indentId,
+			@RequestParam(value="paidPrice", required = false, defaultValue = "0") double paidPrice,
+			@RequestParam(value="paidCash", required = true) double paidCash,
+			@RequestParam(value="payWay", required = false, defaultValue = ConstantValue.INDENT_PAYWAY_CASH) String payWay,
+			@RequestParam(value="memberPassword", required = false) String memberPassword,
+			@RequestParam(value="memberCard", required = false) String memberCard) throws Exception{
+		
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
+			return new OperateIndentResult("no_permission", false);
+		}
+		try{
+			return indentService.doPayIndent(userId, indentId, paidPrice, paidCash, payWay, memberCard, memberPassword);
+		} catch(DataCheckException e){
+			return new OperateIndentResult(e.getMessage(), false);
+		}
+	}
 	
 	/**
 	 * 
 	 * @param userId
 	 * @param indentId
-	 * @param operateType delete/cancel/pay/
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/indent/operateindent", method = (RequestMethod.POST))
-	public @ResponseBody OperateIndentResult operateIndent(
+	@RequestMapping(value="/indent/docancelindent", method = (RequestMethod.POST))
+	public @ResponseBody OperateIndentResult doCancelIndent(
 			@RequestParam(value = "userId", required = true) int userId,
-			@RequestParam(value="id", required = true) int indentId,
-			@RequestParam(value="operatetype", required = true) byte operateType,
-			@RequestParam(value="paidPrice", required = false, defaultValue = "0") double paidPrice,
-			@RequestParam(value="paidCash", required = true) double paidCash,
-			@RequestParam(value="payWay", required = false, defaultValue = ConstantValue.INDENT_PAYWAY_CASH) String payWay,
-			@RequestParam(value="memberCard", required = false, defaultValue = "0") String memberCard) throws Exception{
+			@RequestParam(value="id", required = true) int indentId) throws Exception{
 		
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
 			return new OperateIndentResult("no_permission", false);
 		}
-		return indentService.operateIndent(userId, indentId, operateType, paidPrice, paidCash, payWay, memberCard);
+		return indentService.doCancelIndent(userId, indentId);
 	}
+	
 	
 	/**
 	 * 

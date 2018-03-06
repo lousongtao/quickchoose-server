@@ -29,11 +29,15 @@ public class DishDataAccessor extends BaseDataAccessor implements IDishDataAcces
 	@Override
 	public Dish getDishById(int id) {
 		String hql = "from Dish where id = "+ id;
-		return (Dish) sessionFactory.getCurrentSession().createQuery(hql).uniqueResult();
+		return (Dish) sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.uniqueResult();
 	}
 
 	public List<Dish> getDishesByParentId(int category2id){
 		String hql = "from Dish where category2.id ="+category2id;
-		return sessionFactory.getCurrentSession().createQuery(hql).list();
+		return sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.list();
 	}
 }

@@ -25,6 +25,7 @@ import com.shuishou.digitalmenu.common.models.Desk;
 
 @Entity
 @Table(indexes = {@Index(name = "idx_starttime", columnList = "starttime")})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Indent {
 
 	@Id

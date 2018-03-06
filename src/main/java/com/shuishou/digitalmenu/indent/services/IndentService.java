@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.shuishou.digitalmenu.ConstantValue;
+import com.shuishou.digitalmenu.DataCheckException;
+import com.shuishou.digitalmenu.ServerProperties;
 import com.shuishou.digitalmenu.account.controllers.AccountController;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.UserData;
@@ -49,6 +51,8 @@ import com.shuishou.digitalmenu.indent.views.MakeOrderResult;
 import com.shuishou.digitalmenu.indent.views.OperateIndentResult;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
+import com.shuishou.digitalmenu.member.services.IMemberCloudService;
+import com.shuishou.digitalmenu.member.services.IMemberService;
 import com.shuishou.digitalmenu.menu.models.Category2Printer;
 import com.shuishou.digitalmenu.menu.models.Dish;
 import com.shuishou.digitalmenu.menu.models.DishMaterialConsume;
@@ -101,6 +105,12 @@ public class IndentService implements IIndentService {
 	
 	@Autowired
 	private ICategory2PrinterDataAccessor category2PrinterDA;
+	
+	@Autowired
+	private IMemberService memberService;
+	
+	@Autowired
+	private IMemberCloudService memberCloudService;
 	
 	private DecimalFormat doubleFormat = new DecimalFormat("0.00");
 	
@@ -174,9 +184,9 @@ public class IndentService implements IIndentService {
 	}
 	
 	@Override
-	@Transactional
-	public synchronized ObjectResult splitIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId, 
-			double paidPrice, double paidCash, String payWay, String memberCard) {
+	@Transactional(rollbackFor = DataCheckException.class)
+	public ObjectResult splitIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId, 
+			double paidPrice, double paidCash, String payWay, String memberCard, String memberPassword) throws DataCheckException {
 		
 		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
 		if (!confirmCode.equals(configs.getValue()))
@@ -264,7 +274,7 @@ public class IndentService implements IIndentService {
 		//if originIndent is already null for items, then paid it
 		//if there are merge desks, clear them status
 		if (originIndent.getItems().isEmpty()){
-			operateIndent(userId, originIndentId, ConstantValue.INDENT_OPERATIONTYPE_PAY, 0, paidCash, ConstantValue.INDENT_PAYWAY_CASH, null);
+			doPayIndent(userId, originIndentId, 0, paidCash, ConstantValue.INDENT_PAYWAY_CASH, null, null);
 			List<Desk> desks = deskDA.queryDesks();
 			for(Desk d : desks){
 				if (d.getMergeTo() != null && d.getMergeTo().getId() == desk.getId()){
@@ -274,6 +284,19 @@ public class IndentService implements IIndentService {
 			}
 		}
 		Hibernate.initialize(originIndent.getItems());
+		
+		//record member consumption, if there are wrong, throw exception for rollback
+		if (ConstantValue.INDENT_PAYWAY_MEMBER.equals(payWay)){
+			ObjectResult result;
+			if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
+				result = memberService.recordMemberConsumption(memberCard, memberPassword, paidPrice);
+			} else {
+				result = memberCloudService.recordMemberConsumption(memberCard, memberPassword, paidPrice);
+			}
+			if (!result.success)
+				throw new DataCheckException(result.result);
+		}
+		
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
 		printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "对账单", paidCash);
 		
@@ -698,42 +721,36 @@ public class IndentService implements IIndentService {
 	}
 
 	@Override
-	@Transactional
-	public OperateIndentResult operateIndent(int userId, int indentId, byte operationType, double paidPrice, double paidCash, String payWay, String memberCard) {
+	@Transactional(rollbackFor = DataCheckException.class)
+	public OperateIndentResult doPayIndent(int userId, int indentId, double paidPrice, double paidCash, String payWay, String memberCard, String memberPassword) throws DataCheckException {
 		Indent indent = indentDA.getIndentById(indentId);
 		if (indent == null)
 			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
 		UserData selfUser = userDA.getUserById(userId);
 		Date operateDate = new Date();
 		String logtype = LogData.LogType.INDENT_PAY.toString();
-		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_CANCEL){
-			logtype = LogData.LogType.INDENT_CANCEL.toString();
-		}
-		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_CANCEL){
-			indent.setStatus(ConstantValue.INDENT_STATUS_CANCELED);
-		} else if (operationType == ConstantValue.INDENT_OPERATIONTYPE_PAY){
-			indent.setStatus(ConstantValue.INDENT_STATUS_PAID);
-			indent.setPaidPrice(Double.parseDouble(doubleFormat.format(paidPrice)));
-			indent.setPayWay(payWay);
-			indent.setMemberCard(memberCard);
-			//record material consume
-			for (int i = 0; indent.getItems() != null && i < indent.getItems().size(); i++) {
-				IndentDetail detail = indent.getItems().get(i);
-				Dish dish = dishDA.getDishById(detail.getDishId());
-				if (dish.getMaterialConsumes()!= null){
-					for (int j = 0; j < dish.getMaterialConsumes().size(); j++) {
-						DishMaterialConsume dmc = dish.getMaterialConsumes().get(j);
-						Material m = dmc.getMaterial();
-						m.setLeftAmount(m.getLeftAmount() - dmc.getAmount() * detail.getAmount());
-						MaterialRecord mr = new MaterialRecord();
-						mr.setMaterial(m);
-						mr.setAmount(detail.getAmount() * dmc.getAmount() * (-1));
-						mr.setLeftAmount(m.getLeftAmount());
-						mr.setType(ConstantValue.MATERIALRECORD_TYPE_SELLDISH);
-						mr.setDate(operateDate);
-						mr.setIndentDetailId(detail.getId());
-						materialRecordDA.save(mr);
-					}
+
+		indent.setStatus(ConstantValue.INDENT_STATUS_PAID);
+		indent.setPaidPrice(Double.parseDouble(doubleFormat.format(paidPrice)));
+		indent.setPayWay(payWay);
+		indent.setMemberCard(memberCard);
+		//record material consume
+		for (int i = 0; indent.getItems() != null && i < indent.getItems().size(); i++) {
+			IndentDetail detail = indent.getItems().get(i);
+			Dish dish = dishDA.getDishById(detail.getDishId());
+			if (dish.getMaterialConsumes()!= null){
+				for (int j = 0; j < dish.getMaterialConsumes().size(); j++) {
+					DishMaterialConsume dmc = dish.getMaterialConsumes().get(j);
+					Material m = dmc.getMaterial();
+					m.setLeftAmount(m.getLeftAmount() - dmc.getAmount() * detail.getAmount());
+					MaterialRecord mr = new MaterialRecord();
+					mr.setMaterial(m);
+					mr.setAmount(detail.getAmount() * dmc.getAmount() * (-1));
+					mr.setLeftAmount(m.getLeftAmount());
+					mr.setType(ConstantValue.MATERIALRECORD_TYPE_SELLDISH);
+					mr.setDate(operateDate);
+					mr.setIndentDetailId(detail.getId());
+					materialRecordDA.save(mr);
 				}
 			}
 		}
@@ -753,21 +770,65 @@ public class IndentService implements IIndentService {
 				}
 			}
 		}
-		
-		if (operationType == ConstantValue.INDENT_OPERATIONTYPE_PAY){
-			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-			printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "结账单", paidCash);
-		} else if (operationType == ConstantValue.INDENT_OPERATIONTYPE_CANCEL){
-			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-			printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", false);
+		//record member consumption, if there are wrong, throw exception for rollback
+		if (ConstantValue.INDENT_PAYWAY_MEMBER.equals(payWay)){
+			ObjectResult result = null;
+			if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
+				result = memberService.recordMemberConsumption(memberCard, memberPassword, paidPrice);
+			} else {
+				result = memberCloudService.recordMemberConsumption(memberCard, memberPassword, paidPrice);
+			}
+			if (!result.success)
+				throw new DataCheckException(result.result);
 		}
+		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+		printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "结账单", paidCash);
+		
 		// write log.
 		
 		logService.write(selfUser, logtype,
 						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
 		return new OperateIndentResult(Result.OK, true);
 	}
+	
+	@Override
+	@Transactional
+	public OperateIndentResult doCancelIndent(int userId, int indentId) {
+		Indent indent = indentDA.getIndentById(indentId);
+		if (indent == null)
+			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
+		UserData selfUser = userDA.getUserById(userId);
+		Date operateDate = new Date();
+		String logtype = LogData.LogType.INDENT_CANCEL.toString();
+			
+		indent.setStatus(ConstantValue.INDENT_STATUS_CANCELED);
+		indent.setEndTime(operateDate);
+		indentDA.update(indent);
+		
+		//clear merge table record if exists
+		Desk maindesk = deskDA.getDeskByName(indent.getDeskName());
+		if (maindesk == null){
+			logger.error(ConstantValue.DFYMDHMS.format(new Date()) + "\n");
+			logger.error("cannot find desk by name : " + indent.getDeskName());
+		} else {
+			List<Desk> alldesks = deskDA.queryDesks();
+			for(Desk d : alldesks){
+				if (d.getMergeTo() != null && d.getMergeTo().getId() == maindesk.getId()){
+					d.setMergeTo(null);
+				}
+			}
+		}
 
+		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+		printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", false);
+		
+		// write log.
+		
+		logService.write(selfUser, logtype,
+						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
+		return new OperateIndentResult(Result.OK, true);
+	}
+	
 	@Override
 	@Transactional
 	/**

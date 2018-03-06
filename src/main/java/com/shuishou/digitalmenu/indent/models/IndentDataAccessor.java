@@ -38,13 +38,17 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 	@Override
 	public Indent getIndentById(int id) {
 		String hql = "from Indent where id="+id;
-		return (Indent) sessionFactory.getCurrentSession().createQuery(hql).uniqueResult();
+		return (Indent) sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.uniqueResult();
 	}
 
 	@Override
 	public List<Indent> getAllIndent() {
 		String hql = "from Indent";
-		return sessionFactory.getCurrentSession().createQuery(hql).list();
+		return sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.list();
 	}
 
 	@Override
@@ -138,13 +142,17 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 	@Override
 	public List<Indent> getUnpaidIndent() {
 		String hql = "from Indent where status = " + ConstantValue.INDENT_STATUS_OPEN;
-		return sessionFactory.getCurrentSession().createQuery(hql).list();
+		return sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.list();
 	}
 	
 	@Override
 	public List<Indent> getUnpaidIndent(String deskName) {
 		String hql = "from Indent where status = " + ConstantValue.INDENT_STATUS_OPEN + " and deskName='"+deskName+"'";
-		return sessionFactory.getCurrentSession().createQuery(hql).list();
+		return sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.list();
 	}
 
 	/**
@@ -158,7 +166,9 @@ public class IndentDataAccessor extends BaseDataAccessor implements IIndentDataA
 		c.add(Restrictions.eq("status", ConstantValue.INDENT_STATUS_PAID));
 		c.add(Restrictions.ge("endTime", starttime));
 		c.add(Restrictions.le("endTime", endtime));
-		return (List<Indent>)c.list();
+		return (List<Indent>)c
+				.setCacheable(true)
+				.list();
 	}
 
 }

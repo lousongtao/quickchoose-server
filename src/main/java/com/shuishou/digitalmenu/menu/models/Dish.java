@@ -31,6 +31,7 @@ import com.shuishou.digitalmenu.ConstantValue;
 
 @Entity
 @Table
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Dish implements Serializable{
 
 	@Id

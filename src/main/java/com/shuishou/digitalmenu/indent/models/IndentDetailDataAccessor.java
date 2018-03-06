@@ -30,25 +30,33 @@ public class IndentDetailDataAccessor extends BaseDataAccessor implements IInden
 	@Override
 	public IndentDetail getIndentDetailById(int id) {
 		String hql = "from IndentDetail where id="+id;
-		return (IndentDetail) sessionFactory.getCurrentSession().createQuery(hql).uniqueResult();
+		return (IndentDetail) sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.uniqueResult();
 	}
 
 	@Override
 	public List<IndentDetail> getAllIndentDetail() {
 		String hql = "from IndentDetail";
-		return (List<IndentDetail>)sessionFactory.getCurrentSession().createQuery(hql).list();
+		return (List<IndentDetail>)sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.list();
 	}
 
 	@Override
 	public List<IndentDetail> getIndentDetailByIndentId(int indentId) {
 		String hql = "select d.* from IndentDetail d where d.indent_id = "+ indentId;
-		return (List<IndentDetail>)sessionFactory.getCurrentSession().createQuery(hql).list();
+		return (List<IndentDetail>)sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.list();
 	}
 
 	@Override
 	public IndentDetail getIndentDetailByParent(int indentId, int dishId) {
 		String sql = "select * from indentdetail where indent_id = "+ indentId + " and dish_id = "+dishId;
-		return (IndentDetail) sessionFactory.getCurrentSession().createSQLQuery(sql).uniqueResult();
+		return (IndentDetail) sessionFactory.getCurrentSession().createSQLQuery(sql)
+				.setCacheable(true)
+				.uniqueResult();
 	}
 
 }

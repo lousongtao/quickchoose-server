@@ -32,6 +32,12 @@ public class ConstantValue {
 	public static final String PERMISSION_EDIT_PAYWAY = "EDIT_PAYWAY";
 	public static final String PERMISSION_STATISTICS = "STATISTICS";
 	public static final String PERMISSION_RAWMATERIAL = "RAWMATERIAL";
+	public static final String PERMISSION_QUERY_MEMBER = "QUERY_MEMBER";
+	public static final String PERMISSION_UPDATE_MEMBER = "UPDATE_MEMBER";
+	public static final String PERMISSION_UPDATE_MEMBERSCORE = "UPDATE_MEMBERSCORE";
+	public static final String PERMISSION_UPDATE_MEMBERBALANCE = "UPDATE_MEMBERBALANCE";
+	public static final String PERMISSION_UPDATE_MEMBERPASSWORD = "UPDATE_MEMBERPASSWORD";
+	public static final String PERMISSION_UPDATE_PACKAGEBIND = "UPDATE_PACKAGEBIND";
 	
 	public final static String SPLITTAG_PERMISSION = ";";
 	
@@ -62,7 +68,7 @@ public class ConstantValue {
 	public static final byte INDENT_STATUS_FORCEEND = 5;//强制清台
 	
 	public static final byte INDENT_OPERATIONTYPE_ADD = 1;
-	public static final byte INDENT_OPERATIONTYPE_DELETE = 2;
+//	public static final byte INDENT_OPERATIONTYPE_DELETE = 2;
 	public static final byte INDENT_OPERATIONTYPE_CANCEL = 3;
 	public static final byte INDENT_OPERATIONTYPE_PAY = 4;
 	
@@ -105,6 +111,11 @@ public class ConstantValue {
 	public static final String CONFIGS_FIRSTLANGUAGEABBR = "FIRSTLANGUAGEABBR";
 	public static final String CONFIGS_SECONDLANGUAGENAME= "SECONDLANGUAGENAME";
 	public static final String CONFIGS_SECONDLANGUAGEABBR = "SECONDLANGUAGEABBR";
+	public static final String CONFIGS_MEMBERMGR_NEEDPASSWORD = "MEMBERMGR_NEEDPASSWORD";
+	public static final String CONFIGS_BRANCHNAME= "BRANCHNAME";
+	public static final String CONFIGS_MEMBERMGR_BYSCORE= "MEMBERMGR_BYSCORE";
+	public static final String CONFIGS_MEMBERMGR_BYDEPOSIT = "MEMBERMGR_BYDEPOSIT";
+	public static final String CONFIGS_MEMBERMGR_SCOREPERDOLLAR = "MEMBERMGR_SCOREPERDOLLAR";
 	
 	public static final int STATISTICS_DIMENSTION_PAYWAY = 1;
 	public static final int STATISTICS_DIMENSTION_SELL = 2;
@@ -124,5 +135,13 @@ public class ConstantValue {
 	public static final int MATERIALRECORD_TYPE_PURCHASE = 1;//采购入库
 	public static final int MATERIALRECORD_TYPE_CHANGEAMOUNT = 2;//操作员手动调整库存
 	public static final int MATERIALRECORD_TYPE_SELLDISH = 3;//卖菜自动减库存
+	
+	public static final int MEMBERSCORE_CONSUM = 1;//积分类型-消费
+	public static final int MEMBERSCORE_REFUND = 2;//积分类型-退货
+	public static final int MEMBERSCORE_ADJUST = 3;//积分类型-调整
+	public static final int MEMBERDEPOSIT_CONSUM = 1;//消费余额类型-消费
+	public static final int MEMBERDEPOSIT_REFUND = 2;//消费余额类型-退款
+	public static final int MEMBERDEPOSIT_RECHARGE = 3;//消费余额类型-充值
+	public static final int MEMBERDEPOSIT_ADJUST = 4;//消费余额类型-调整
 	
 }

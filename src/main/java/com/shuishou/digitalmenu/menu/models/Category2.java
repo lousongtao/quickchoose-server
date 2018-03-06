@@ -26,6 +26,7 @@ import com.shuishou.digitalmenu.common.models.Printer;
 
 @Entity
 @Table
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Category2 implements Serializable{
 
 	@Id
