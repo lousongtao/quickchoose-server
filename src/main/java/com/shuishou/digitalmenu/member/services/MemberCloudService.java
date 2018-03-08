@@ -270,6 +270,7 @@ public class MemberCloudService implements IMemberCloudService{
 		double scorePerDollar = 0;
 		boolean byDeposit = false;
 		String branchName = "";
+		boolean needPassword = false;
 		List<Configs> configs = configDA.queryConfigs();
 		for(Configs config : configs){
 			if (ConstantValue.CONFIGS_MEMBERMGR_BYSCORE.equals(config.getName())){
@@ -280,13 +281,17 @@ public class MemberCloudService implements IMemberCloudService{
 				branchName = config.getValue();
 			} else if (ConstantValue.CONFIGS_MEMBERMGR_BYDEPOSIT.equals(config.getName())){
 				byDeposit = Boolean.valueOf(config.getValue());
-			} 
+			} else if (ConstantValue.CONFIGS_MEMBERMGR_NEEDPASSWORD.equals(config.getName())){
+				needPassword = Boolean.valueOf(config.getValue());
+			}
 		}
 		
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
 		params.put("memberCard",memberCard);
-		params.put("memberPassword", memberPassword);
+		if (needPassword){
+			params.put("memberPassword", memberPassword);
+		}
 		params.put("consumptionPrice", String.format(ConstantValue.FORMAT_DOUBLE, consumptionPrice));
 		params.put("scorePerDollar", String.valueOf(scorePerDollar));
 		params.put("byDeposit", String.valueOf(byDeposit));

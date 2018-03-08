@@ -284,13 +284,12 @@ public class MemberService implements IMemberService{
 		if (member == null){
 			throw new DataCheckException("cannot find member by card " + memberCard);
 		}
-		if (memberPassword != null && !memberPassword.equals(member.getPassword())){
-			throw new DataCheckException("password is wrong");
-		}
+		
 		Date time = new Date();
 		boolean byScore = false;
 		double scorePerDollar = 0;
 		boolean byDeposit = false;
+		boolean needPassword = false;
 		String branchName = "";
 		List<Configs> configs = configsDA.queryConfigs();
 		for(Configs config : configs){
@@ -302,7 +301,9 @@ public class MemberService implements IMemberService{
 				branchName = config.getValue();
 			} else if (ConstantValue.CONFIGS_MEMBERMGR_BYDEPOSIT.equals(config.getName())){
 				byDeposit = Boolean.valueOf(config.getValue());
-			} 
+			} else if (ConstantValue.CONFIGS_MEMBERMGR_NEEDPASSWORD.equals(config.getName())){
+				needPassword = Boolean.valueOf(config.getValue());
+			}
 		}
 		if (byScore && scorePerDollar > 0){
 			MemberScore ms = new MemberScore();
@@ -324,6 +325,11 @@ public class MemberService implements IMemberService{
 		if (byDeposit){
 			if (member.getBalanceMoney() < consumptionPrice){
 				throw new DataCheckException("Meber's balance is not enought to pay");
+			}
+			if (needPassword){
+				if (memberPassword == null || !memberPassword.equals(member.getPassword())){
+					throw new DataCheckException("password is wrong");
+				}
 			}
 			MemberBalance mc = new MemberBalance();
 			mc.setAmount(consumptionPrice);
