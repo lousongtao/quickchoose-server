@@ -11,7 +11,7 @@ import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 
 public interface IIndentService {
-	MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount, String comments);
+	MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount, String comments) throws DataCheckException;
 	ObjectResult splitIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId, double paidPrice, 
 			double paidCash, String payWay, String memberCard, String memberPassword) throws DataCheckException;
 	ObjectListResult queryIndent(int start, int limit, String sstarttime, String sendtime, String status, String deskname, 
@@ -22,7 +22,7 @@ public interface IIndentService {
 	OperateIndentResult doPayIndent(int userId, int indentId, double paidPrice, double paidCash, String payWay, String memberCard, String memberPassword) throws DataCheckException;
 	OperateIndentResult doCancelIndent(int userId, int indentId);
 	OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType);
-	MakeOrderResult addDishToIndent(int deskId, JSONArray jsonOrder);
+	MakeOrderResult addDishToIndent(int deskId, JSONArray jsonOrder) throws DataCheckException;
 	ObjectResult printIndent(int userId, int indentId);
 //	ObjectResult printIndentDetail(int userId, int indentDetailId);
 	ObjectResult clearDesk(int userId, int deskId);

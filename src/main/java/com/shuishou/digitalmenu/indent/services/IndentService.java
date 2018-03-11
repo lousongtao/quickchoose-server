@@ -116,7 +116,7 @@ public class IndentService implements IIndentService {
 	
 	@Override
 	@Transactional
-	public synchronized MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount, String comments) {
+	public synchronized MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount, String comments) throws DataCheckException{
 		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
 		if (!confirmCode.equals(configs.getValue()))
 			return new MakeOrderResult("The confirm code is wrong, cannot make order.", false, -1);
@@ -153,9 +153,9 @@ public class IndentService implements IIndentService {
 			int dishid = o.getInt("id");
 			Dish dish = dishDA.getDishById(dishid);
 			if (dish == null)
-				return new MakeOrderResult("cannot find dish by id "+ dishid, false, -1);
+				throw new DataCheckException("cannot find dish by id "+ dishid);
 			if (dish.isSoldOut()){
-				return new MakeOrderResult("dish "+ dish.getSecondLanguageName() + " is Sold Out, cannot make order", false, -1);
+				throw new DataCheckException("dish "+ dish.getSecondLanguageName() + " is Sold Out, cannot make order");
 			}
 			IndentDetail detail = new IndentDetail();
 			detail.setIndent(indent);
@@ -297,11 +297,14 @@ public class IndentService implements IIndentService {
 				throw new DataCheckException(result.result);
 		}
 		
-		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-		printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "对账单", paidCash);
+//		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+//		printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "对账单", paidCash);
 		
-		
-		return new ObjectResult(Result.OK, true, originIndent);
+		//把原始订单和新订单一起返回
+		ArrayList<Indent> indents = new ArrayList<>();
+		indents.add(originIndent);
+		indents.add(indent);
+		return new ObjectResult(Result.OK, true, indents);
 	}
 	
 	
@@ -326,9 +329,9 @@ public class IndentService implements IIndentService {
 				keys.put("printTime", ConstantValue.DFYMDHMS.format(new Date()));
 				keys.put("payway", indent.getPayWay());
 				if (paidCash > indent.getPaidPrice()){
-					keys.put("charge", String.format(ConstantValue.FORMAT_DOUBLE,paidCash - indent.getPaidPrice()));
+					keys.put("change", String.format(ConstantValue.FORMAT_DOUBLE,paidCash - indent.getPaidPrice()));
 				} else {
-					keys.put("charge", "0");
+					keys.put("change", "0");
 				}
 				List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 				for(IndentDetail d : indent.getItems()){
@@ -707,8 +710,8 @@ public class IndentService implements IIndentService {
 			}
 		}
 		int count = indentDA.getIndentCount(starttime, endtime, bStatus, deskname);
-		if (count >= 300)
-			return new ObjectListResult("Record is over 300, please change the filter", false, null, count);
+		if (count >= 1000)
+			return new ObjectListResult("Record is over 1000, please change the filter", false, null, count);
 		List<Indent> indents = indentDA.getIndents(start, limit, starttime, endtime, bStatus, deskname, orderbys, orderbydescs);
 		if (indents == null || indents.isEmpty())
 			return new ObjectListResult(Result.OK, true, null, 0);
@@ -781,8 +784,8 @@ public class IndentService implements IIndentService {
 			if (!result.success)
 				throw new DataCheckException(result.result);
 		}
-		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-		printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "结账单", paidCash);
+//		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+//		printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "结账单", paidCash);
 		
 		// write log.
 		
@@ -973,8 +976,8 @@ public class IndentService implements IIndentService {
 	}
 
 	@Override
-	@Transactional
-	public MakeOrderResult addDishToIndent(int deskId, JSONArray jsonOrder) {
+	@Transactional(rollbackFor=DataCheckException.class)
+	public MakeOrderResult addDishToIndent(int deskId, JSONArray jsonOrder) throws DataCheckException {
 		Desk desk = deskDA.getDeskById(deskId);
 		if (desk == null){
 			return new MakeOrderResult("cannot find desk by id " + deskId, false, -1);
@@ -990,9 +993,9 @@ public class IndentService implements IIndentService {
 			int dishid = o.getInt("id");
 			Dish dish = dishDA.getDishById(dishid);
 			if (dish == null)
-				return new MakeOrderResult("cannot find dish by id "+ dishid, false, -1);
+				throw new DataCheckException("cannot find dish by id "+ dishid);
 			if (dish.isSoldOut()){
-				return new MakeOrderResult("dish "+ dish.getSecondLanguageName() + " is Sold Out, cannot make order", false, -1);
+				throw new DataCheckException("dish "+ dish.getSecondLanguageName() + " is Sold Out, cannot make order");
 			}
 			IndentDetail detail = new IndentDetail();
 			detail.setIndent(indent);

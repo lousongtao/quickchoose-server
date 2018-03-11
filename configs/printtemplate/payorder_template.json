@@ -152,7 +152,7 @@
 		"type": 0
 	},
 	{
-		"text": "找零:                    ${$charge}",
+		"text": "找零:                    ${$change}",
 		"size": 9,
 		"bold": false,
 		"align": 0,

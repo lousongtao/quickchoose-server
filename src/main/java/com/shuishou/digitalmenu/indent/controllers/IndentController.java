@@ -49,8 +49,11 @@ public class IndentController extends BaseController {
 			@RequestParam(value="customerAmount", required = true) int customerAmount,
 			@RequestParam(value="comments", required = false, defaultValue = "") String comments) throws Exception{
 		JSONArray jsonOrder = new JSONArray(indents);
-		
-		return indentService.saveIndent(confirmCode, jsonOrder, deskid, customerAmount, comments);
+		try{
+			return indentService.saveIndent(confirmCode, jsonOrder, deskid, customerAmount, comments);
+		} catch (DataCheckException e){
+			return new MakeOrderResult(e.getMessage(), false, 0);
+		}
 	}
 	
 	/**
@@ -195,7 +198,11 @@ public class IndentController extends BaseController {
 			@RequestParam(value="deskid", required = true) int deskId,
 			@RequestParam(value="indents", required = true) String indents) throws Exception{
 		JSONArray jsonOrder = new JSONArray(indents);
-		return indentService.addDishToIndent(deskId, jsonOrder);
+		try{
+			return indentService.addDishToIndent(deskId, jsonOrder);
+		} catch(DataCheckException e){
+			return new MakeOrderResult(e.getMessage(), false, 0);
+		}
 	}
 	
 	@RequestMapping(value="/indent/printindent", method = (RequestMethod.POST))
