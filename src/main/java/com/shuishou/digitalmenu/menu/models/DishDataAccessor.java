@@ -40,4 +40,12 @@ public class DishDataAccessor extends BaseDataAccessor implements IDishDataAcces
 				.setCacheable(true)
 				.list();
 	}
+	
+	@Override
+	public List<Dish> getAllDish(){
+		String hql = "from Dish";
+		return sessionFactory.getCurrentSession().createQuery(hql)
+				.setCacheable(true)
+				.list();
+	}
 }

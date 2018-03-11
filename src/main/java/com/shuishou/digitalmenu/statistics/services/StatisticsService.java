@@ -3,6 +3,8 @@ package com.shuishou.digitalmenu.statistics.services;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,7 +20,11 @@ import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.indent.models.IIndentDataAccessor;
 import com.shuishou.digitalmenu.indent.models.Indent;
 import com.shuishou.digitalmenu.indent.models.IndentDetail;
+import com.shuishou.digitalmenu.menu.models.Category1;
+import com.shuishou.digitalmenu.menu.models.Category2;
 import com.shuishou.digitalmenu.menu.models.Dish;
+import com.shuishou.digitalmenu.menu.models.ICategory1DataAccessor;
+import com.shuishou.digitalmenu.menu.models.ICategory2DataAccessor;
 import com.shuishou.digitalmenu.menu.models.IDishDataAccessor;
 import com.shuishou.digitalmenu.statistics.views.StatItem;
 import com.shuishou.digitalmenu.views.ObjectResult;
@@ -32,21 +38,39 @@ public class StatisticsService implements IStatisticsService{
 	private IDishDataAccessor dishDA;
 	
 	@Autowired
+	private ICategory1DataAccessor category1DA;
+	
+	@Autowired
+	private ICategory2DataAccessor category2DA;
+	
+	@Autowired
 	private IIndentDataAccessor indentDA;
 	
 	private DecimalFormat doubleFormat = new DecimalFormat("0.00");
+	
+	private HashMap<Integer, Dish> mapDish;
+	
+	private HashMap<Integer, Category2> mapCategory2;
+	
+	private HashMap<Integer, Category1> mapCategory1;
 	
 	@Override
 	@Transactional
 	public ObjectResult statistics(int userId, Date startDate, Date endDate, int dimension, int sellGranularity,
 			int sellByPeriod) {
+		long l3 = 0;
+		long l1 = System.currentTimeMillis();
 		List<Indent> indents = indentDA.getIndentsByPaidTime(startDate, endDate);
 		if (indents == null || indents.isEmpty())
 			return new ObjectResult("No order paid in this period", false);
+		long l2 = System.currentTimeMillis();
+		
 		ObjectResult result = new ObjectResult(Result.OK, true);
 		if (dimension == ConstantValue.STATISTICS_DIMENSTION_PAYWAY){
 			ArrayList<StatItem> stats = statisticsPayway(indents);
 			result.data = stats;
+			l3 = System.currentTimeMillis();
+			logger.debug("do statistics by payway use time  " + (l3-l2));
 		} else if (dimension == ConstantValue.STATISTICS_DIMENSTION_SELL){
 			if (sellGranularity != ConstantValue.STATISTICS_SELLGRANULARITY_BYDISH
 					&& sellGranularity != ConstantValue.STATISTICS_SELLGRANULARITY_BYCATEGORY2
@@ -55,6 +79,8 @@ public class StatisticsService implements IStatisticsService{
 			}
 			ArrayList<StatItem> stats = statisticsSell(indents, sellGranularity);
 			result.data = stats;
+			l3 = System.currentTimeMillis();
+			logger.debug("do statistics by payway use time  " + (l3-l2));
 		} else if (dimension == ConstantValue.STATISTICS_DIMENSTION_PERIODSELL){
 			if (sellByPeriod != ConstantValue.STATISTICS_PERIODSELL_PERDAY
 					&& sellByPeriod != ConstantValue.STATISTICS_PERIODSELL_PERHOUR){
@@ -62,7 +88,13 @@ public class StatisticsService implements IStatisticsService{
 			}
 			ArrayList<StatItem> stats = statisticsSellByPeriod(indents, sellByPeriod, startDate, endDate);
 			result.data = stats;
+			l3 = System.currentTimeMillis();
+			logger.debug("do statistics by payway use time  " + (l3-l2));
 		}
+		logger.debug("statistics, query use time = " + (l2 - l1) + ", stat use time = " + (l3 - l2) 
+				+ ", dimension = " + dimension + ", sellGranularity = " + sellGranularity + ", sellByPeriod = " + sellByPeriod 
+				+ ", indent size = " + indents.size() 
+				+ ", start = " + ConstantValue.DFYMD.format(startDate) + ", end = " + ConstantValue.DFYMD.format(endDate));
 		//format double value
 		if (result.data != null){
 			for(StatItem si : (ArrayList<StatItem>)result.data){
@@ -72,6 +104,31 @@ public class StatisticsService implements IStatisticsService{
 			}
 		}
 		return result;
+	}
+	
+	@Transactional
+	private void initDishMap(){
+		List<Dish> dishes = dishDA.getAllDish();
+		mapDish = new HashMap<>();
+		for (Dish dish : dishes) {
+			mapDish.put(dish.getId(), dish);
+		}
+	}
+	
+	@Transactional
+	private void initCategory1Map(){
+		List<Category1> c1s = category1DA.getAllCategory1();
+		for(Category1 c1 : c1s){
+			mapCategory1.put(c1.getId(), c1);
+		}
+	}
+	
+	@Transactional
+	private void initCategory2Map(){
+		List<Category2> c2s = category2DA.getAllCategory2();
+		for(Category2 c2 : c2s){
+			mapCategory2.put(c2.getId(), c2);
+		}
 	}
 	
 	/**
@@ -149,17 +206,25 @@ public class StatisticsService implements IStatisticsService{
 		while(its.hasNext()){
 			stats.add(its.next());
 		}
+		Collections.sort(stats, new Comparator<StatItem>(){
+
+			@Override
+			public int compare(StatItem o1, StatItem o2) {
+				return o1.itemName.compareTo(o2.itemName);
+			}});
 		return stats;
 	}
 	
 	/**
-	 * 根据统计粒度, 讲每个indent的ditail下对应的dish/category进行分类统计, 如果对应的dish/category已经删除, 则记录为UNFOUND
+	 * 根据统计粒度, 将每个indent的detail下对应的dish/category进行分类统计, 如果对应的dish/category已经删除, 则记录为UNFOUND
 	 * @param indents
 	 * @param sellGranularity
 	 * @return
 	 */
 	@Transactional
 	private ArrayList<StatItem> statisticsSell(List<Indent> indents, int sellGranularity){
+		if (mapDish == null)
+			initDishMap();
 		ArrayList<StatItem> stats = new ArrayList<>();
 		HashMap<String, StatItem> mapSell = new HashMap<>();
 		//first define one UNFOUND for those dish/category1/category2 cannot be found
@@ -169,7 +234,7 @@ public class StatisticsService implements IStatisticsService{
 		for(Indent indent : indents){
 			List<IndentDetail> details = indent.getItems();
 			for(IndentDetail detail : details){
-				Dish dish = dishDA.getDishById(detail.getDishId());
+				Dish dish = mapDish.get(detail.getDishId());
 				if (sellGranularity == ConstantValue.STATISTICS_SELLGRANULARITY_BYDISH){
 					if (dish == null){
 						ssUnfound.soldAmount += detail.getAmount();

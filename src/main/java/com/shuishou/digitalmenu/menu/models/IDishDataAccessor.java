@@ -17,5 +17,7 @@ public Session getSession();
 	
 	public Dish getDishById(int id);
 	
+	public List<Dish> getAllDish();
+	
 	public List<Dish> getDishesByParentId(int category2id);
 }
