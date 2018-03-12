@@ -96,11 +96,17 @@ public class DriverPos {
         		}
         		//换行
         		bodyList.add(new _PagerBody().setFeeLine(true));
-        		//单独一行打印需求
+        		//格外需求用回车区分不同项, 每项打印一行
         		if(goods.get("requirement") != null && goods.get("requirement").toString().length() > 0){
-        			bodyList.add(new _PagerBody().setFeeLine(true));
-        			bodyList.add(new _PagerBody().setFeeLine(true));
-        			bodyList.add(printRemark(goods.get("requirement")+"", 12, true));
+        			
+        			String reqs = String.valueOf(goods.get("requirement"));
+        			String[] reqlist = reqs.split("\n");
+        			for (int i = 0; i < reqlist.length; i++) {
+        				bodyList.add(new _PagerBody().setFeeLine(true));
+            			bodyList.add(new _PagerBody().setFeeLine(true));
+            			bodyList.add(printRemark(reqlist[i], 12, true));
+					}
+        			
         		}
         		//换行
         		bodyList.add(new _PagerBody().setFeeLine(true));
