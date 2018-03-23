@@ -1,5 +1,7 @@
 package com.shuishou.digitalmenu.rawmaterial.controllers;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +149,27 @@ public class MaterialController {
 			return new ObjectResult("no_permission", false);
 		}
 		ObjectResult result = materialService.deleteMaterial(userId, id);
+		return result;
+	}
+	
+	@RequestMapping (value = "/material/statisticsconsume", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody ObjectListResult statisticsConsume(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "startTime", required = true) String sStartTime,
+			@RequestParam(value = "usePreDay", required = true) boolean usePreDay,
+			@RequestParam(value = "endTime", required = true) String sEndTime) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_RAWMATERIAL)){
+			return new ObjectListResult("no_permission", false);
+		}
+		Date startTime = ConstantValue.DFYMDHMS.parse(sStartTime);
+		Date endTime = ConstantValue.DFYMDHMS.parse(sEndTime);
+		ObjectListResult result = materialService.statisticsConsume(startTime, usePreDay, endTime);
+		return result;
+	}
+	
+	@RequestMapping (value = "/material/test", method = {RequestMethod.GET})
+	public @ResponseBody ObjectResult test() throws Exception{
+		ObjectResult result = materialService.test();
 		return result;
 	}
 }

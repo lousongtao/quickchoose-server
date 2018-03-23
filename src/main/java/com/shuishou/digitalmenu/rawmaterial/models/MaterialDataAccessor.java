@@ -38,6 +38,12 @@ public class MaterialDataAccessor extends BaseDataAccessor implements IMaterialD
 		String hql = "from Material";
 		return sessionFactory.getCurrentSession().createQuery(hql).list();
 	}
+	
+	@Override
+	public List<Material> getAllMaterialWithCategory() {
+		String hql = "from Material left join fetch MaterialCategory";
+		return sessionFactory.getCurrentSession().createQuery(hql).list();
+	}
 
 	@Override
 	public Material getMaterialByName(String name) {

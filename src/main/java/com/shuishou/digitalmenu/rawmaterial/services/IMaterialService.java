@@ -1,5 +1,7 @@
 package com.shuishou.digitalmenu.rawmaterial.services;
 
+import java.util.Date;
+
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 
@@ -20,4 +22,7 @@ public interface IMaterialService {
 	public ObjectResult queryMaterialByName(String name);
 	public ObjectListResult queryMaterialRecordByMaterial(int materialId);
 	public ObjectResult purchaseMaterial(int userId, int materialId, double amount);
+	public ObjectListResult statisticsConsume(Date startTime, boolean usePreDay, Date endTime);
+	
+	public ObjectResult test();
 }

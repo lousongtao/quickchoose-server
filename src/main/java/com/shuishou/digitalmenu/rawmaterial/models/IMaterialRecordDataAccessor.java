@@ -1,6 +1,7 @@
 package com.shuishou.digitalmenu.rawmaterial.models;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -17,4 +18,6 @@ public interface IMaterialRecordDataAccessor {
 	public MaterialRecord getMaterialRecordById(int id);
 	
 	public List<MaterialRecord> getMaterialRecordByMaterial(int materialId);
+	
+	public List<MaterialRecord> getMaterialRecordByTime(int materialId, Date startTime, Date endTime);
 }

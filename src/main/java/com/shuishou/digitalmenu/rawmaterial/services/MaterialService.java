@@ -1,6 +1,8 @@
 package com.shuishou.digitalmenu.rawmaterial.services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -20,6 +22,7 @@ import com.shuishou.digitalmenu.rawmaterial.models.IMaterialRecordDataAccessor;
 import com.shuishou.digitalmenu.rawmaterial.models.Material;
 import com.shuishou.digitalmenu.rawmaterial.models.MaterialCategory;
 import com.shuishou.digitalmenu.rawmaterial.models.MaterialRecord;
+import com.shuishou.digitalmenu.rawmaterial.view.MaterialRecordInfo;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -252,5 +255,79 @@ public class MaterialService implements IMaterialService {
 	public ObjectListResult queryMaterialRecordByMaterial(int materialId){
 		List<MaterialRecord> records = materialRecordDA.getMaterialRecordByMaterial(materialId);
 		return new ObjectListResult(Result.OK, true, records);
+	}
+
+	/**
+	 * 1.	取得所有的material
+	 * 2.	遍历material, 根据时间和materialid, 查找对应的record(列表), 并根据record.id排序
+	 * 3.	上一步的record列表, 取第一个和最后一个点货记录, 其差值作为消耗量
+	 * 4.	统计前述列表中的进货记录, 加上消耗量, 作为最新的消耗量值
+	 * 5.	将materialId, 消耗量, 采购量返回客户端
+	 * 6.	客户端根据materialId, 组装material和category的信息
+	 * 
+	 * @param usePreDay 使用前一天的数据作为统计值, 有的店家是晚上盘点, 所以当日消耗要使用前一天的数据作为起始数据
+	 * 
+	 * TODO: 目前只做usePreDay=false的情况
+	 */
+	@Override
+	@Transactional
+	public ObjectListResult statisticsConsume(Date startTime, boolean usePreDay, Date endTime) {
+		long l1 = System.currentTimeMillis();
+		List<Material> materials = materialDA.getAllMaterial();
+		
+		ArrayList<MaterialRecordInfo> infolist = new ArrayList<>();
+		//1. 查找所有的material, 按循序查找对应的点货记录, 时间范围在startTime和endTime之间
+//		List<Material> materials = materialDA.getAllMaterial();
+		for (int i = 0; i < materials.size(); i++) {
+			Material m = materials.get(i);
+			MaterialRecordInfo info = new MaterialRecordInfo(m.getId(), m.getName(), m.getMaterialCategory().getName(), m.getUnit(), m.getPrice());
+			infolist.add(info);
+			//根据material.id和时间, 查询这段时间内的record, 返回结果已按照id排序
+			List<MaterialRecord> recordList = materialRecordDA.getMaterialRecordByTime(m.getId(), startTime, endTime);
+			Double firstRecordAmount = null; //使用对象Double, 后面用非空判断, 是否有足够的数据进行统计
+			Double endRecordAmount = null; //使用对象Double, 后面用非空判断, 是否有足够的数据进行统计
+			double purchase = 0;
+			if (recordList != null && !recordList.isEmpty()){
+				for (int j = 0; j < recordList.size(); j++) {
+					MaterialRecord mr = recordList.get(j);
+					if (mr.getType() == ConstantValue.MATERIALRECORD_TYPE_PURCHASE){
+						purchase += mr.getAmount();
+					}
+					if (firstRecordAmount == null){
+						//如果第一条是销售的记录, 则其实数量是leftAmount + Amount
+						if (mr.getType() == ConstantValue.MATERIALRECORD_TYPE_SELLDISH){
+							firstRecordAmount = mr.getAmount() + mr.getLeftAmount();
+						} 
+						//如果第一条记录是修改数量, 那直接取这个的LeftAmount
+						else if (mr.getType() == ConstantValue.MATERIALRECORD_TYPE_CHANGEAMOUNT){
+							firstRecordAmount = mr.getLeftAmount();
+						}
+					} else {
+						//当firstRecordAmount不为空时, 后面的记录依次设定到endRecordAmount上面, 这样在循环结束后, 最终的值就是endRecordAmount
+						if (mr.getType() == ConstantValue.MATERIALRECORD_TYPE_SELLDISH){
+							endRecordAmount = mr.getAmount() + mr.getLeftAmount();
+						} else if (mr.getType() == ConstantValue.MATERIALRECORD_TYPE_CHANGEAMOUNT){
+							endRecordAmount = mr.getLeftAmount();
+						}
+					}
+				}
+			}
+			info.purchaseAmount = purchase;
+			if (firstRecordAmount != null && endRecordAmount != null){
+				info.consumeAmount = firstRecordAmount - endRecordAmount + purchase;
+				info.totalPrice = info.consumeAmount * info.price;
+			}
+		}
+		long l2 = System.currentTimeMillis();
+		logger.debug("query material records in time " + (l2 - l1));
+		
+		return new ObjectListResult(Result.OK, true, infolist);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectResult test() {
+		
+		return new ObjectResult(Result.OK, true);
 	}
 }

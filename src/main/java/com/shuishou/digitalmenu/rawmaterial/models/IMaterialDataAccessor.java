@@ -21,4 +21,6 @@ public interface IMaterialDataAccessor {
 	public List<Material> getMaterialByCategory(int categoryId);
 	
 	public List<Material> getAllMaterial();
+	
+	public List<Material> getAllMaterialWithCategory();
 }

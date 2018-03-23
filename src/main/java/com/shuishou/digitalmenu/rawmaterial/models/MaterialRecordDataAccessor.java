@@ -1,8 +1,10 @@
 package com.shuishou.digitalmenu.rawmaterial.models;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -37,5 +39,15 @@ public class MaterialRecordDataAccessor extends BaseDataAccessor implements IMat
 	public List<MaterialRecord> getMaterialRecordByMaterial(int materialId) {
 		String hql = "from MaterialRecord where material.id="+materialId;
 		return sessionFactory.getCurrentSession().createQuery(hql).list();
+	}
+
+	@Override
+	public List<MaterialRecord> getMaterialRecordByTime(int materialId, Date startTime, Date endTime) {
+		String hql = "from MaterialRecord where date >= ? and date <= ? and material.id = " + materialId + " order by id";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setDate(0, startTime);
+		query.setDate(1, endTime);
+		
+		return query.list();
 	}
 }
