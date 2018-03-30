@@ -148,6 +148,7 @@ public class IndentService implements IIndentService {
 		} else {
 			indent.setDeskName(desk.getMergeTo().getName());
 		}
+		Date now = new Date();
 		for(int i = 0; i< jsonOrder.length(); i++){
 			JSONObject o = (JSONObject) jsonOrder.get(i);
 			int dishid = o.getInt("id");
@@ -160,6 +161,7 @@ public class IndentService implements IIndentService {
 			IndentDetail detail = new IndentDetail();
 			detail.setIndent(indent);
 			detail.setDishId(dishid);
+			detail.setTime(now);
 			detail.setAmount(o.getInt("amount"));
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
@@ -205,6 +207,7 @@ public class IndentService implements IIndentService {
 		indent.setDailySequence(sequence);
 		indent.setComments(originIndent.getComments());
 		indent.setDeskName(desk.getName());
+		Date now = new Date();
 		for(int i = 0; i< jsonOrder.length(); i++){
 			JSONObject o = (JSONObject) jsonOrder.get(i);
 			int dishid = o.getInt("dishid");
@@ -231,6 +234,7 @@ public class IndentService implements IIndentService {
 			detail.setIndent(indent);
 			detail.setDishId(dishid);
 			detail.setAmount(amount);
+			detail.setTime(now);
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 			detail.setDishPrice(o.getDouble("dishPrice"));
@@ -264,7 +268,7 @@ public class IndentService implements IIndentService {
 		indent.setPaidPrice(Double.parseDouble(doubleFormat.format(paidPrice)));
 		indent.setPayWay(payWay);
 		indent.setMemberCard(memberCard);
-		indent.setEndTime(new Date());
+		indent.setEndTime(now);
 		indentDA.save(indent);
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.INDENT_SPLITANDPAY.toString(),
@@ -988,6 +992,7 @@ public class IndentService implements IIndentService {
 		}
 		ArrayList<IndentDetail> listPrintDetails = new ArrayList<>();
 		Indent indent = indents.get(0);
+		Date now = new Date();
 		for(int i = 0; i< jsonOrder.length(); i++){
 			JSONObject o = (JSONObject) jsonOrder.get(i);
 			int dishid = o.getInt("id");
@@ -1000,6 +1005,7 @@ public class IndentService implements IIndentService {
 			IndentDetail detail = new IndentDetail();
 			detail.setIndent(indent);
 			detail.setDishId(dishid);
+			detail.setTime(now);
 			detail.setAmount(o.getInt("amount"));
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());

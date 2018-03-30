@@ -1,5 +1,7 @@
 package com.shuishou.digitalmenu.indent.models;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +13,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shuishou.digitalmenu.ConstantValue;
 
 @Entity
 @Table
@@ -55,6 +59,10 @@ public class IndentDetail {
 	
 	@Column(precision = 8, scale = 2)
 	private double weight;
+	
+	@JsonFormat(pattern=ConstantValue.DATE_PATTERN_YMDHMS, timezone="GMT+8:00")
+	@Column
+	private Date time;
 	
 	
 
@@ -137,6 +145,14 @@ public class IndentDetail {
 
 	public void setDishSecondLanguageName(String dishSecondLanguageName) {
 		this.dishSecondLanguageName = dishSecondLanguageName;
+	}
+
+	public Date getTime() {
+		return time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
 	}
 
 	@Override
