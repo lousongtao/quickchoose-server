@@ -59,6 +59,9 @@ public class Indent {
 	@Column(name = "pay_way")
 	private String payWay;//付款方式
 	
+	@Column
+	private String discountTemplate;
+	
 	@Column(name = "member_card")
 	private String memberCard;
 	
@@ -169,6 +172,14 @@ public class Indent {
 
 	
 	
+	public String getDiscountTemplate() {
+		return discountTemplate;
+	}
+
+	public void setDiscountTemplate(String discountTemplate) {
+		this.discountTemplate = discountTemplate;
+	}
+
 	public String getDeskName() {
 		return deskName;
 	}

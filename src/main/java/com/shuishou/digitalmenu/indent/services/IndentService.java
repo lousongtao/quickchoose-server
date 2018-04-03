@@ -188,7 +188,7 @@ public class IndentService implements IIndentService {
 	@Override
 	@Transactional(rollbackFor = DataCheckException.class)
 	public ObjectResult splitIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId, 
-			double paidPrice, double paidCash, String payWay, String memberCard, String memberPassword) throws DataCheckException {
+			double paidPrice, double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException {
 		
 		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
 		if (!confirmCode.equals(configs.getValue()))
@@ -267,6 +267,7 @@ public class IndentService implements IIndentService {
 		indent.setStatus(ConstantValue.INDENT_STATUS_PAID);
 		indent.setPaidPrice(Double.parseDouble(doubleFormat.format(paidPrice)));
 		indent.setPayWay(payWay);
+		indent.setDiscountTemplate(discountTemplate);
 		indent.setMemberCard(memberCard);
 		indent.setEndTime(now);
 		indentDA.save(indent);
@@ -278,7 +279,7 @@ public class IndentService implements IIndentService {
 		//if originIndent is already null for items, then paid it
 		//if there are merge desks, clear them status
 		if (originIndent.getItems().isEmpty()){
-			doPayIndent(userId, originIndentId, 0, paidCash, ConstantValue.INDENT_PAYWAY_CASH, null, null);
+			doPayIndent(userId, originIndentId, 0, paidCash, ConstantValue.INDENT_PAYWAY_CASH, discountTemplate, null, null);
 			List<Desk> desks = deskDA.queryDesks();
 			for(Desk d : desks){
 				if (d.getMergeTo() != null && d.getMergeTo().getId() == desk.getId()){
@@ -729,7 +730,7 @@ public class IndentService implements IIndentService {
 
 	@Override
 	@Transactional(rollbackFor = DataCheckException.class)
-	public OperateIndentResult doPayIndent(int userId, int indentId, double paidPrice, double paidCash, String payWay, String memberCard, String memberPassword) throws DataCheckException {
+	public OperateIndentResult doPayIndent(int userId, int indentId, double paidPrice, double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException {
 		Indent indent = indentDA.getIndentById(indentId);
 		if (indent == null)
 			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
@@ -740,6 +741,7 @@ public class IndentService implements IIndentService {
 		indent.setStatus(ConstantValue.INDENT_STATUS_PAID);
 		indent.setPaidPrice(Double.parseDouble(doubleFormat.format(paidPrice)));
 		indent.setPayWay(payWay);
+		indent.setDiscountTemplate(discountTemplate);
 		indent.setMemberCard(memberCard);
 		//record material consume
 		for (int i = 0; indent.getItems() != null && i < indent.getItems().size(); i++) {

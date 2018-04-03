@@ -73,11 +73,12 @@ public class IndentController extends BaseController {
 			@RequestParam(value = "paidCash", required = true) double paidCash,
 			@RequestParam(value = "paidPrice", required = true) double paidPrice,
 			@RequestParam(value = "payWay", required = true) String payWay,
+			@RequestParam(value = "discountTemplate", required = false) String discountTemplate,
 			@RequestParam(value = "memberCard", required = false) String memberCard,
 			@RequestParam(value = "memberPassword", required = false) String memberPassword) throws Exception{
 		JSONArray jsonOrder = new JSONArray(indents);
 		try {
-			return indentService.splitIndent(userId, confirmCode, jsonOrder, originIndentId, paidPrice, paidCash, payWay, memberCard, memberPassword);
+			return indentService.splitIndent(userId, confirmCode, jsonOrder, originIndentId, paidPrice, paidCash, payWay, discountTemplate, memberCard, memberPassword);
 		} catch(DataCheckException e){
 			return new OperateIndentResult(e.getMessage(), false);
 		}
@@ -137,6 +138,7 @@ public class IndentController extends BaseController {
 			@RequestParam(value="paidPrice", required = false, defaultValue = "0") double paidPrice,
 			@RequestParam(value="paidCash", required = true) double paidCash,
 			@RequestParam(value="payWay", required = false, defaultValue = ConstantValue.INDENT_PAYWAY_CASH) String payWay,
+			@RequestParam(value="discountTemplate", required = false) String discountTemplate,
 			@RequestParam(value="memberPassword", required = false) String memberPassword,
 			@RequestParam(value="memberCard", required = false) String memberCard) throws Exception{
 		
@@ -144,7 +146,7 @@ public class IndentController extends BaseController {
 			return new OperateIndentResult("no_permission", false);
 		}
 		try{
-			return indentService.doPayIndent(userId, indentId, paidPrice, paidCash, payWay, memberCard, memberPassword);
+			return indentService.doPayIndent(userId, indentId, paidPrice, paidCash, payWay, discountTemplate, memberCard, memberPassword);
 		} catch(DataCheckException e){
 			return new OperateIndentResult(e.getMessage(), false);
 		}

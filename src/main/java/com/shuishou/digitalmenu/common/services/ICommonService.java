@@ -43,7 +43,7 @@ public interface ICommonService {
 	
 	ObjectListResult getDiscountTemplates();
 	
-	ObjectResult saveDiscountTemplate(long userId, String name, double rate);
+	ObjectResult saveDiscountTemplate(long userId, String name, double value, int type);
 	
 	ObjectResult deleteDiscountTemplate(long userId, int id);
 	
