@@ -127,11 +127,12 @@ public class CommonController extends BaseController {
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="amount", required = true) int amount,
 			@RequestParam(value="firstName", required = true) String firstName,
-			@RequestParam(value="secondName", required = false, defaultValue = "") String secondName) throws Exception{
+			@RequestParam(value="secondName", required = false, defaultValue = "") String secondName,
+			@RequestParam(value = "print2ndLanguage", required = false, defaultValue = "false") boolean print2ndLanguage) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
 			return new Result("no_permission");
 		}
-		return commonService.saveLanguageSet(userId,amount, firstName, secondName);
+		return commonService.saveLanguageSet(userId,amount, firstName, secondName, print2ndLanguage);
 	}
 	
 	@RequestMapping(value="/common/getdesks", method = {RequestMethod.POST, RequestMethod.GET})

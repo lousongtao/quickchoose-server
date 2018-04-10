@@ -224,7 +224,7 @@ public class CommonService implements ICommonService {
 
 	@Override
 	@Transactional
-	public ObjectResult saveLanguageSet(long userId, int amount, String firstName, String secondName){
+	public ObjectResult saveLanguageSet(long userId, int amount, String firstName, String secondName, boolean print2ndLanguage){
 		Configs c1 = configsDA.getConfigsByName(ConstantValue.CONFIGS_LANGUAGEAMOUNT);
 		if (c1 == null){
 			c1 = new Configs();
@@ -248,6 +248,15 @@ public class CommonService implements ICommonService {
 		} 
 		c3.setValue(secondName);
 		configsDA.saveConfigs(c3);
+		
+		Configs c4 = configsDA.getConfigsByName(ConstantValue.CONFIGS_PRINT2NDLANGUAGENAME);
+		if (c4 == null){
+			c4 = new Configs();
+			c4.setName(ConstantValue.CONFIGS_PRINT2NDLANGUAGENAME);
+		}
+		c4.setValue(String.valueOf(print2ndLanguage));
+		configsDA.saveConfigs(c4);
+		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change language. amount " + amount 
