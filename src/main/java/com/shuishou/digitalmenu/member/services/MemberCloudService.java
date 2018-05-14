@@ -326,7 +326,7 @@ public class MemberCloudService implements IMemberCloudService{
 		if (response == null){
 			return new ObjectListResult("get null from server for query member balance. URL = " + url + ", param = "+ params, false);
 		}
-		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMD).create();
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
 		HttpResult<ArrayList<MemberBalance>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberBalance>>>(){}.getType());
 		if (!result.success){
 			return new ObjectListResult("return false while query member balance. URL = " + url + ", response = "+response, false);
@@ -343,7 +343,7 @@ public class MemberCloudService implements IMemberCloudService{
 		if (response == null){
 			return new ObjectListResult("get null from server for query member score. URL = " + url + ", param = "+ params, false);
 		}
-		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMD).create();
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
 		HttpResult<ArrayList<MemberScore>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberScore>>>(){}.getType());
 		if (!result.success){
 			return new ObjectListResult("return false while query member score. URL = " + url + ", response = "+response, false);
