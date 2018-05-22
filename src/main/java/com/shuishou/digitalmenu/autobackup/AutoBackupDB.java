@@ -40,8 +40,11 @@ public class AutoBackupDB implements InitializingBean{
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		String osname = System.getProperty("os.name");
 		String path = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-		path = path.substring(1);//remove the first char '/'
+		if (osname.toLowerCase().startsWith("windows")){
+			path = path.substring(1);//remove the first char '/'
+		}
 		final String dbdirPath = path + "../../../" + ConstantValue.CATEGORY_BACKUPDB;
 		File dbdir = new File(dbdirPath);
 		if (!dbdir.exists()){
@@ -57,13 +60,13 @@ public class AutoBackupDB implements InitializingBean{
 		mysqlDirectory = prop.getProperty("MySQLDirectory") + "\\bin";
 		String dbfileWhole = dbdirPath + "/" +ConstantValue.DFYMDHMS_2.format(new Date()) + "-Whole.sql";
 		String dumpCmd = null;
-		String osname = System.getProperty("os.name");
+		
 		if (osname.toLowerCase().startsWith("windows")){
 			dumpCmd = "cmd.exe /c " + mysqlDirectory + "\\mysqldump";
 		} else if (osname.toLowerCase().startsWith("mac")) {
-			dumpCmd = "/bin/sh -c " + mysqlDirectory + "\\mysqldump";
+			dumpCmd = "mysqldump";
 		} else if (osname.toLowerCase().startsWith("linux")){
-			dumpCmd = "/bin/sh -c " + mysqlDirectory + "\\mysqldump";
+			dumpCmd = "mysqldump";
 		}
 		final String dumpCommand = dumpCmd;
 		String dumpParam = " -u"+username+" -p"+password+" --databases digitalmenu > " + dbfileWhole;

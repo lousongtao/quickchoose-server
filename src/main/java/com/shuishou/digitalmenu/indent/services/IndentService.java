@@ -166,6 +166,7 @@ public class IndentService implements IIndentService {
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 			detail.setDishPrice(o.getDouble("dishPrice"));
+			detail.setOperator(o.getString("operator"));
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("additionalRequirements"))
@@ -381,6 +382,7 @@ public class IndentService implements IIndentService {
 		Map<Printer, List<IndentDetail_PrintStyle>> mapPrintDish = new HashMap<>();
 		
 		int totalamount = 0;
+		
 		for (int i = 0; i < indent.getItems().size(); i++) {
 			IndentDetail detail = indent.getItems().get(i);
 			totalamount += detail.getAmount();
@@ -407,6 +409,7 @@ public class IndentService implements IIndentService {
 		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(indent.getStartTime()));
 		keyMap.put("amountOnThisTable", totalamount + "");
 		keyMap.put("indentcomments", indent.getComments() == null ? "" : indent.getComments());
+		keyMap.put("operator", indent.getItems().get(0).getOperator());
 		printCucaigoudan2KitchenWithPrintStyle(mapPrintDish, tempfile, keyMap, isAdd);
 	}
 	
@@ -650,6 +653,7 @@ public class IndentService implements IIndentService {
 		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(new Date()));
 		keyMap.put("amountOnThisTable", totalamount + "");
 		keyMap.put("indentcomments", indent.getComments() == null ? "" : indent.getComments());
+		keyMap.put("operator", details.get(0).getOperator());//取第一个detail的操作人即可
 		printCucaigoudan2KitchenWithPrintStyle(mapPrintDish, tempfile, keyMap, true);
 		
 	}
@@ -1012,6 +1016,7 @@ public class IndentService implements IIndentService {
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 			detail.setDishPrice(o.getDouble("dishPrice"));
+			detail.setOperator(o.getString("operator"));
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("additionalRequirements"))

@@ -65,6 +65,7 @@ public class MainFrame extends JFrame {
 			conn = DriverManager.getConnection(ps.getProperty("db"), ps.getProperty("username"), ps.getProperty("password"));
 			stmt = conn.createStatement();
 			for (int i = 0; i < sqls.size(); i++) {
+				System.out.println(sqls.get(i));
 				stmt.execute(sqls.get(i));
 				lbStatus.setText("execute " + (i+1) + "/" + sqls.size() +" sentences...");
 			}
@@ -105,6 +106,8 @@ public class MainFrame extends JFrame {
 		btnChoose.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				File workingDir = new File(System.getProperty("user.dir"));
+				fc.setCurrentDirectory(workingDir);
 				fc.setMultiSelectionEnabled(false);
 //				fc.setFileFilter(new ImportFileFilter("csv"));
 //				fc.setFileFilter(new ImportFileFilter("xls"));
@@ -144,7 +147,12 @@ public class MainFrame extends JFrame {
 		sqls.clear();
 		sqls.add("delete from dishchoose_popinfo");
 		sqls.add("delete from dishchoose_subitem");
+		sqls.add("delete from dishchoose_subitem");
+		sqls.add("delete from dishconfig");
+		sqls.add("delete from dishconfiggroup");
+		sqls.add("delete from dish_dishconfiggroup");
 		sqls.add("delete from dish;");
+		sqls.add("delete from category2_printer");
 		sqls.add("delete from category2;");
 		sqls.add("delete from category1;");
 		try {
@@ -175,23 +183,42 @@ public class MainFrame extends JFrame {
 				XSSFRow row = sheetDish.getRow(i);
 				String sql = "insert into dish(id, first_language_name, second_language_name, sequence, category2_id, price, isNew, isSpecial, hotLevel, isSoldOut, "
 						+ "abbreviation, choose_mode, automerge_whilechoose, purchaseType, allowFlavor, isPromotion, originPrice ) values (";
-				sql += (int)row.getCell(0).getNumericCellValue() + ",";
-				sql += "'" + row.getCell(1).getStringCellValue() + "',";
-				sql += "'" + row.getCell(2).getStringCellValue() + "',";
-				sql += (int)row.getCell(3).getNumericCellValue() + ",";
+				if (row.getCell(0) == null)
+					break; //XSSFSheet is stupid, always get null row
+				sql += (int)row.getCell(0).getNumericCellValue() + ",";//id
+				sql += "'" + row.getCell(1).getStringCellValue() + "',";//first_language_name
+				//second_language_name
+				if (row.getCell(2) != null)
+					sql += "'" + row.getCell(2).getStringCellValue() + "',";
+				else 
+					sql += "'', ";
+				//sequence
+				if (row.getCell(3) != null)
+					sql += (int)row.getCell(3).getNumericCellValue() + ",";
+				else 
+					sql += "'',";
+				//category2_id
 				sql += (int)row.getCell(4).getNumericCellValue() + ",";
+				//price
 				sql += row.getCell(5).getNumericCellValue() + ",";
+				//isNew
 				sql += (int)row.getCell(6).getNumericCellValue() + ",";
+				//isSpecial
 				sql += (int)row.getCell(7).getNumericCellValue() + ",";
+				//hotlevel
 				sql += (int)row.getCell(8).getNumericCellValue() + ",";
+				//isSoldout
 				sql += "0,";
-				sql += "'" + row.getCell(9).getStringCellValue() + "',";
-				sql += (int)row.getCell(10).getNumericCellValue()+ ",";
-				sql += (int)row.getCell(11).getNumericCellValue()+ ",";
+				//abbreviation
+				sql += "'" + row.getCell(10).getStringCellValue() + "',";
+				//choose_mode
+				sql += "'" + row.getCell(11).getNumericCellValue()+ "',";
+				//automerge_whilechoose
 				sql += (int)row.getCell(12).getNumericCellValue()+ ",";
-				sql += (int)row.getCell(13).getNumericCellValue()+ ",";
-				sql += (int)row.getCell(14).getNumericCellValue()+ ",";
-				sql += "0)";
+				sql += (int)row.getCell(13).getNumericCellValue()+ ",";//purchaseType
+				sql += (int)row.getCell(14).getNumericCellValue()+ ",";//allowFlavor
+				sql += (int)row.getCell(15).getNumericCellValue()+ ",";//isPromotion
+				sql += "0)";//originPrice
 				sqls.add(sql);
 			}
 			sqls.add("commit");

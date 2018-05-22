@@ -98,6 +98,12 @@ public class AccountController extends BaseController {
 
 		return accountService.getAccounts();
 	}
+	
+	@RequestMapping(value = "/account/queryaccount", method = { RequestMethod.GET })
+	public @ResponseBody ObjectListResult getAccountList()
+			throws Exception {
+		return accountService.getAccounts();
+	}
 
 	/**
 	 * change password.

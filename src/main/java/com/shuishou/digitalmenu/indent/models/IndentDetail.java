@@ -65,6 +65,9 @@ public class IndentDetail {
 	private Date time;
 	
 	
+	@Column
+	private String operator;//记录操作员名称, waiter的名称
+	
 
 //	public double getAdjustPrice() {
 //		return adjustPrice;
@@ -153,6 +156,14 @@ public class IndentDetail {
 
 	public void setTime(Date time) {
 		this.time = time;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
 	@Override
