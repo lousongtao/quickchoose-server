@@ -29,6 +29,7 @@ import com.shuishou.digitalmenu.menu.models.IDishDataAccessor;
 import com.shuishou.digitalmenu.statistics.views.StatItem;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
+import com.sun.istack.internal.NotNull;
 
 @Service
 public class StatisticsService implements IStatisticsService{
@@ -83,7 +84,9 @@ public class StatisticsService implements IStatisticsService{
 			logger.debug("do statistics by payway use time  " + (l3-l2));
 		} else if (dimension == ConstantValue.STATISTICS_DIMENSTION_PERIODSELL){
 			if (sellByPeriod != ConstantValue.STATISTICS_PERIODSELL_PERDAY
-					&& sellByPeriod != ConstantValue.STATISTICS_PERIODSELL_PERHOUR){
+					&& sellByPeriod != ConstantValue.STATISTICS_PERIODSELL_PERHOUR
+					&& sellByPeriod != ConstantValue.STATISTICS_PERIODSELL_PERWEEK
+					&& sellByPeriod != ConstantValue.STATISTICS_PERIODSELL_PERMONTH){
 				return new ObjectResult("Wrong param of Sell By Period.", false);
 			}
 			ArrayList<StatItem> stats = statisticsSellByPeriod(indents, sellByPeriod, startDate, endDate);
@@ -133,12 +136,13 @@ public class StatisticsService implements IStatisticsService{
 	
 	/**
 	 * 首先根据sellByPeriod把时间段按粒度划分开, 然后遍历indent的列表, 找到对应的时间段的数据, 添加进去
+	 * 客户端保证起始 结束 时间非空
 	 * @param indents
 	 * @param sellByPeriod
 	 * @return
 	 */
 	@Transactional
-	private ArrayList<StatItem> statisticsSellByPeriod(List<Indent> indents, int sellByPeriod, Date startDate, Date endDate){
+	private ArrayList<StatItem> statisticsSellByPeriod(List<Indent> indents, int sellByPeriod, @NotNull Date startDate, @NotNull Date endDate){
 		ArrayList<StatItem> stats = new ArrayList<>();
 		//initial time period into map
 		HashMap<String, StatItem> mapPeriod = new HashMap<>();
@@ -167,6 +171,41 @@ public class StatisticsService implements IStatisticsService{
 				mapPeriod.put(si.itemName, si);
 				c.set(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY) + 1);
 			} while (c.getTime().getTime() <= endDate.getTime());
+		} else if (sellByPeriod == ConstantValue.STATISTICS_PERIODSELL_PERWEEK){
+			c.setFirstDayOfWeek(Calendar.SUNDAY);
+			do{
+				c.set(Calendar.HOUR_OF_DAY, 0);
+				c.set(Calendar.MINUTE, 0);
+				c.set(Calendar.SECOND, 0);
+				Date time1 = c.getTime(); //取当天的0时作为起始点, 后面需要用这个时间进行比较订单
+				c.set(Calendar.DAY_OF_WEEK, c.getActualMaximum(Calendar.DAY_OF_WEEK));
+				c.set(Calendar.HOUR_OF_DAY, 23);
+				c.set(Calendar.MINUTE, 59);
+				c.set(Calendar.SECOND, 59);
+				Date time2 = c.getTime();//取当天的24时作为结束点, 后面需要用这个时间进行比较订单
+				if (time2.getTime() > endDate.getTime())
+					time2 = endDate;
+				StatItem si = new StatItem(time1, time2);
+				mapPeriod.put(si.itemName, si);
+				c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 1);// set to next day
+			} while (c.getTime().getTime() < endDate.getTime());
+		} else if (sellByPeriod == ConstantValue.STATISTICS_PERIODSELL_PERMONTH){
+			do{
+				c.set(Calendar.HOUR_OF_DAY, 0);
+				c.set(Calendar.MINUTE, 0);
+				c.set(Calendar.SECOND, 0);
+				Date time1 = c.getTime();//取当天的0时作为起始点, 后面需要用这个时间进行比较订单
+				c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+				c.set(Calendar.HOUR_OF_DAY, 23);
+				c.set(Calendar.MINUTE, 59);
+				c.set(Calendar.SECOND, 59);
+				Date time2 = c.getTime();//取当天的24时作为结束点, 后面需要用这个时间进行比较订单
+				if (time2.getTime() > endDate.getTime())
+					time2 = endDate;
+				StatItem si = new StatItem(time1, time2);
+				mapPeriod.put(si.itemName, si);
+				c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 1);// set to next day
+			} while (c.getTime().getTime() < endDate.getTime());
 		}
 		//start loop indents list
 		for(Indent indent : indents){
@@ -200,7 +239,21 @@ public class StatisticsService implements IStatisticsService{
 				si.soldAmount += 1;
 				si.totalPrice += indent.getTotalPrice();
 				si.paidPrice += indent.getPaidPrice();
-			}
+			} else if (sellByPeriod == ConstantValue.STATISTICS_PERIODSELL_PERWEEK
+					|| sellByPeriod == ConstantValue.STATISTICS_PERIODSELL_PERMONTH){
+				//比较StatItem的前后时间即可
+				Iterator<StatItem> it = mapPeriod.values().iterator();
+				while (it.hasNext()){
+					StatItem si = it.next();
+					if (indent.getEndTime().getTime() > si.startTime.getTime()
+							&& indent.getEndTime().getTime() < si.endTime.getTime()){
+						si.soldAmount ++;
+						si.totalPrice += indent.getTotalPrice();
+						si.paidPrice += indent.getPaidPrice();
+						break;
+					}
+				}
+			} 
 		}
 		Iterator<StatItem> its = mapPeriod.values().iterator();
 		while(its.hasNext()){

@@ -1,2 +1,5 @@
 20180523
 	1. add operator on indentdetail
+	
+20180525
+	1. statistics orders by WEEK & MONTH

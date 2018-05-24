@@ -145,39 +145,39 @@ public class MainFrame extends JFrame {
 		if (fc.getSelectedFile() == null)
 			return;
 		sqls.clear();
-		sqls.add("delete from dishchoose_popinfo");
-		sqls.add("delete from dishchoose_subitem");
-		sqls.add("delete from dishchoose_subitem");
-		sqls.add("delete from dishconfig");
-		sqls.add("delete from dishconfiggroup");
-		sqls.add("delete from dish_dishconfiggroup");
-		sqls.add("delete from dish;");
-		sqls.add("delete from category2_printer");
-		sqls.add("delete from category2;");
-		sqls.add("delete from category1;");
+//		sqls.add("delete from dishchoose_popinfo");
+//		sqls.add("delete from dishchoose_subitem");
+//		sqls.add("delete from dishchoose_subitem");
+//		sqls.add("delete from dishconfig");
+//		sqls.add("delete from dishconfiggroup");
+//		sqls.add("delete from dish_dishconfiggroup");
+//		sqls.add("delete from dish;");
+//		sqls.add("delete from category2_printer");
+//		sqls.add("delete from category2;");
+//		sqls.add("delete from category1;");
 		try {
 			Workbook wb = WorkbookFactory.create(fc.getSelectedFile());
-			XSSFSheet sheetC1 = (XSSFSheet) wb.getSheetAt(0);
-			for (int i = 1; i < sheetC1.getPhysicalNumberOfRows(); i++) {
-				XSSFRow row = sheetC1.getRow(i);
-				String sql = "insert into category1(id, first_language_name, second_language_name, sequence) values (";
-				sql += (int)row.getCell(0).getNumericCellValue() + ",";
-				sql += "'" + row.getCell(1).getStringCellValue() + "',";
-				sql += "'" + row.getCell(2).getStringCellValue() + "',";
-				sql += (int)row.getCell(3).getNumericCellValue() +");";
-				sqls.add(sql);
-			}
-			XSSFSheet sheetC2 = (XSSFSheet) wb.getSheetAt(1);
-			for (int i = 1; i < sheetC2.getPhysicalNumberOfRows(); i++) {
-				XSSFRow row = sheetC2.getRow(i);
-				String sql = "insert into category2(id, first_language_name, second_language_name, sequence, category1_id) values (";
-				sql += (int)row.getCell(0).getNumericCellValue() + ",";
-				sql += "'" + row.getCell(1).getStringCellValue() + "',";
-				sql += "'" + row.getCell(2).getStringCellValue() + "',";
-				sql += (int)row.getCell(3).getNumericCellValue() +",";
-				sql += (int)row.getCell(4).getNumericCellValue() +");";
-				sqls.add(sql);
-			}
+//			XSSFSheet sheetC1 = (XSSFSheet) wb.getSheetAt(0);
+//			for (int i = 1; i < sheetC1.getPhysicalNumberOfRows(); i++) {
+//				XSSFRow row = sheetC1.getRow(i);
+//				String sql = "insert into category1(id, first_language_name, second_language_name, sequence) values (";
+//				sql += (int)row.getCell(0).getNumericCellValue() + ",";
+//				sql += "'" + row.getCell(1).getStringCellValue() + "',";
+//				sql += "'" + row.getCell(2).getStringCellValue() + "',";
+//				sql += (int)row.getCell(3).getNumericCellValue() +");";
+//				sqls.add(sql);
+//			}
+//			XSSFSheet sheetC2 = (XSSFSheet) wb.getSheetAt(1);
+//			for (int i = 1; i < sheetC2.getPhysicalNumberOfRows(); i++) {
+//				XSSFRow row = sheetC2.getRow(i);
+//				String sql = "insert into category2(id, first_language_name, second_language_name, sequence, category1_id) values (";
+//				sql += (int)row.getCell(0).getNumericCellValue() + ",";
+//				sql += "'" + row.getCell(1).getStringCellValue() + "',";
+//				sql += "'" + row.getCell(2).getStringCellValue() + "',";
+//				sql += (int)row.getCell(3).getNumericCellValue() +",";
+//				sql += (int)row.getCell(4).getNumericCellValue() +");";
+//				sqls.add(sql);
+//			}
 			XSSFSheet sheetDish = (XSSFSheet) wb.getSheetAt(2);
 			for (int i = 1; i < sheetDish.getPhysicalNumberOfRows(); i++) {
 				XSSFRow row = sheetDish.getRow(i);
@@ -186,11 +186,16 @@ public class MainFrame extends JFrame {
 				if (row.getCell(0) == null)
 					break; //XSSFSheet is stupid, always get null row
 				sql += (int)row.getCell(0).getNumericCellValue() + ",";//id
-				sql += "'" + row.getCell(1).getStringCellValue() + "',";//first_language_name
+				//first_language_name
+				String firstname = row.getCell(1).getStringCellValue();
+				firstname = firstname.replaceAll("'", "''").replaceAll("\"", "\"\"");
+				sql += "'" + firstname + "',";
 				//second_language_name
-				if (row.getCell(2) != null)
-					sql += "'" + row.getCell(2).getStringCellValue() + "',";
-				else 
+				if (row.getCell(2) != null){
+					String secondname = row.getCell(2).getStringCellValue();
+					secondname = secondname.replaceAll("'", "''").replaceAll("\"", "\"\"");
+					sql += "'" + secondname + "',";
+				} else 
 					sql += "'', ";
 				//sequence
 				if (row.getCell(3) != null)
