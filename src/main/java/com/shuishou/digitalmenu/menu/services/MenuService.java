@@ -230,6 +230,12 @@ public class MenuService implements IMenuService {
 		dish.setDescription_2ndlang(description_2ndlang);
 		dishDA.save(dish);
 		
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dish.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHADD);
+		menuVersionDA.save(mv);
+//				
 		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE 
 				|| chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOQUIT){
 			popinfo.setDish(dish);
@@ -366,7 +372,11 @@ public class MenuService implements IMenuService {
 				file.delete();
 		}
 		
-		
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dish.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHDELETE);
+		menuVersionDA.save(mv);
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
@@ -500,6 +510,12 @@ public class MenuService implements IMenuService {
 		dish.setDescription_2ndlang(description_2ndlang);
 		dishDA.save(dish);
 		
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dish.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHUPDATE);
+		menuVersionDA.save(mv);
+				
 		//save sub property
 		if (chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOCHOOSE 
 				|| chooseMode == ConstantValue.DISH_CHOOSEMODE_POPINFOQUIT){
@@ -615,6 +631,13 @@ public class MenuService implements IMenuService {
 		dish.setPrice(newprice);
 		dishDA.save(dish);
 		hibernateInitialDish(dish);
+		
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dish.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHUPDATE);
+		menuVersionDA.save(mv);
+				
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
@@ -665,6 +688,12 @@ public class MenuService implements IMenuService {
 				e.printStackTrace();
 			} 
 			
+			//add record to menu_version
+			MenuVersion mv = new MenuVersion();
+			mv.setObjectId(dish.getId());
+			mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHPICTURE);
+			menuVersionDA.save(mv);
+			
 			// write log.
 			UserData selfUser = userDA.getUserById(userId);
 			logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
@@ -683,6 +712,12 @@ public class MenuService implements IMenuService {
 		dish.setSpecial(isSpecial);
 		dishDA.save(dish);
 		
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dish.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHUPDATE);
+		menuVersionDA.save(mv);
+				
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),
@@ -751,6 +786,12 @@ public class MenuService implements IMenuService {
 		dish.setNew(isNew);
 		dishDA.save(dish);
 		
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dish.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHUPDATE);
+		menuVersionDA.save(mv);
+				
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISH_CHANGE.toString(),

@@ -86,7 +86,11 @@ public class ConstantValue {
 	
 	public static final byte MENUCHANGE_TYPE_DISHSOLDOUT = 0;//设置soldout或取消soldout
 	public static final byte MENUCHANGE_TYPE_CHANGEPROMOTION = 1;//设置promotion或取消promotion
-	public static final byte MENUCHANGE_TYPE_DISHCONFIGSOLDOUT = 2;//设置soldout或取消soldout
+	public static final byte MENUCHANGE_TYPE_DISHCONFIGSOLDOUT = 2;//设置dishconfig的soldout或取消soldout
+	public static final byte MENUCHANGE_TYPE_DISHADD = 3; //增加菜品
+	public static final byte MENUCHANGE_TYPE_DISHUPDATE = 4;//修改菜品属性
+	public static final byte MENUCHANGE_TYPE_DISHPICTURE = 5;//修改菜品图片
+	public static final byte MENUCHANGE_TYPE_DISHDELETE = 6;//delete菜品
 	
 	public static final byte PRINT_STYLE_TOGETHER = 0;
 	public static final byte PRINT_STYLE_SEPARATELY = 1;
