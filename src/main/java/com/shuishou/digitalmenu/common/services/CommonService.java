@@ -368,7 +368,7 @@ public class CommonService implements ICommonService {
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " add printer "+ printerName);
+		logService.write(selfUser, LogData.LogType.CHANGE_PRINTER.toString(), "User "+ selfUser + " update printer "+ printerName);
 
 		return new ObjectResult(Result.OK, true);
 	}
