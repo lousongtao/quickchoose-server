@@ -211,6 +211,8 @@ public class StatisticsService implements IStatisticsService{
 		for(Indent indent : indents){
 			if (indent.getEndTime() == null)
 				continue;
+			if (indent.getStatus() != ConstantValue.INDENT_STATUS_PAID)
+				continue;
 			double weight = 0;
 			for(IndentDetail detail : indent.getItems()){
 				weight += detail.getWeight();
@@ -285,6 +287,8 @@ public class StatisticsService implements IStatisticsService{
 		StatItem ssUnfound = new StatItem(sUnfound);
 		mapSell.put(sUnfound, ssUnfound);
 		for(Indent indent : indents){
+			if (indent.getStatus() != ConstantValue.INDENT_STATUS_PAID)
+				continue;
 			List<IndentDetail> details = indent.getItems();
 			for(IndentDetail detail : details){
 				Dish dish = mapDish.get(detail.getDishId());
@@ -358,6 +362,8 @@ public class StatisticsService implements IStatisticsService{
 		HashMap<String, StatItem> mapPayway = new HashMap<>();
 		for(Indent indent : indents){
 			if (indent.getPayWay() == null)
+				continue;
+			if (indent.getStatus() != ConstantValue.INDENT_STATUS_PAID)
 				continue;
 			StatItem sp = mapPayway.get(indent.getPayWay());
 			if (sp == null){

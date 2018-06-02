@@ -67,6 +67,7 @@ public class ConstantValue {
 	public static final byte INDENT_STATUS_PAID = 3;
 	public static final byte INDENT_STATUS_CANCELED = 4;
 	public static final byte INDENT_STATUS_FORCEEND = 5;//强制清台
+	public static final byte INDENT_STATUS_REFUND = 6;
 	
 	public static final byte INDENT_OPERATIONTYPE_ADD = 1;
 //	public static final byte INDENT_OPERATIONTYPE_DELETE = 2;

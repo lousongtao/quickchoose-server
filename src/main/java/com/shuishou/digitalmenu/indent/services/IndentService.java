@@ -156,7 +156,7 @@ public class IndentService implements IIndentService {
 			if (dish == null)
 				throw new DataCheckException("cannot find dish by id "+ dishid);
 			if (dish.isSoldOut()){
-				throw new DataCheckException("dish "+ dish.getSecondLanguageName() + " is Sold Out, cannot make order");
+				throw new DataCheckException("dish "+ dish.getFirstLanguageName() + " is Sold Out, cannot make order");
 			}
 			IndentDetail detail = new IndentDetail();
 			detail.setIndent(indent);
@@ -844,6 +844,33 @@ public class IndentService implements IIndentService {
 	
 	@Override
 	@Transactional
+	public OperateIndentResult doRefundIndent(int userId, int indentId) {
+		Indent indent = indentDA.getIndentById(indentId);
+		if (indent == null)
+			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
+		if (indent.getStatus() != ConstantValue.INDENT_STATUS_PAID)
+			return new OperateIndentResult("The order's current status is not PAID", false);
+		UserData selfUser = userDA.getUserById(userId);
+		Date operateDate = new Date();
+		String logtype = LogData.LogType.INDENT_REFUND.toString();
+			
+		indent.setStatus(ConstantValue.INDENT_STATUS_REFUND);
+		indent.setEndTime(operateDate);
+		indentDA.update(indent);
+		
+
+		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+		printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", false);
+		
+		// write log.
+		
+		logService.write(selfUser, logtype,
+						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
+		return new OperateIndentResult(Result.OK, true);
+	}
+	
+	@Override
+	@Transactional
 	/**
 	 * 
 	 * @param indentId
@@ -1006,7 +1033,7 @@ public class IndentService implements IIndentService {
 			if (dish == null)
 				throw new DataCheckException("cannot find dish by id "+ dishid);
 			if (dish.isSoldOut()){
-				throw new DataCheckException("dish "+ dish.getSecondLanguageName() + " is Sold Out, cannot make order");
+				throw new DataCheckException("dish "+ dish.getFirstLanguageName() + " is Sold Out, cannot make order");
 			}
 			IndentDetail detail = new IndentDetail();
 			detail.setIndent(indent);

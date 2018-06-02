@@ -21,6 +21,7 @@ public interface IIndentService {
 //			String memberCard, String memberPassword) throws DataCheckException;
 	OperateIndentResult doPayIndent(int userId, int indentId, double paidPrice, double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException;
 	OperateIndentResult doCancelIndent(int userId, int indentId);
+	OperateIndentResult doRefundIndent(int userId, int indentId);
 	OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType);
 	MakeOrderResult addDishToIndent(int deskId, JSONArray jsonOrder) throws DataCheckException;
 	ObjectResult printIndent(int userId, int indentId);

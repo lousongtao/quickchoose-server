@@ -170,6 +170,23 @@ public class IndentController extends BaseController {
 		return indentService.doCancelIndent(userId, indentId);
 	}
 	
+	/**
+	 * 
+	 * @param userId
+	 * @param indentId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/indent/dorefundindent", method = (RequestMethod.POST))
+	public @ResponseBody OperateIndentResult doRefundIndent(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="id", required = true) int indentId) throws Exception{
+		
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
+			return new OperateIndentResult("no_permission", false);
+		}
+		return indentService.doRefundIndent(userId, indentId);
+	}
 	
 	/**
 	 * 
