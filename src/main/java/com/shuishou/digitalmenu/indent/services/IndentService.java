@@ -166,7 +166,8 @@ public class IndentService implements IIndentService {
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 			detail.setDishPrice(o.getDouble("dishPrice"));
-			detail.setOperator(o.getString("operator"));
+			if (o.has("operator"))
+				detail.setOperator(o.getString("operator"));
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("additionalRequirements"))
@@ -1043,7 +1044,8 @@ public class IndentService implements IIndentService {
 			detail.setDishFirstLanguageName(dish.getFirstLanguageName());
 			detail.setDishSecondLanguageName(dish.getSecondLanguageName());
 			detail.setDishPrice(o.getDouble("dishPrice"));
-			detail.setOperator(o.getString("operator"));
+			if (o.has("operator"))
+				detail.setOperator(o.getString("operator"));
 			if (o.has("weight"))
 				detail.setWeight(Double.parseDouble(o.getString("weight")));
 			if (o.has("additionalRequirements"))
