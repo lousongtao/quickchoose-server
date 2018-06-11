@@ -1,0 +1,1 @@
+alter table digitalmenu.material add column price null default 0;
