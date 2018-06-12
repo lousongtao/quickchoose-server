@@ -3,3 +3,16 @@
 	
 20180525
 	1. statistics orders by WEEK & MONTH
+	
+20180529
+	1. extend the auto sync function. Sync the dish with new insert, updated, deleted and changed picture
+	
+20180603
+	1. add refund choice for paid order
+
+20180612
+	1. dish is probably null. Add the null check for all operation, including make order, add dish, change amount, etc
+	
+20180613
+	1. correct the bug about that the REQUIREMENT in indentdetail cannot be controlled by font and bold
+	   REMEMBER: update the print template file while the restaurant do upgrade.
