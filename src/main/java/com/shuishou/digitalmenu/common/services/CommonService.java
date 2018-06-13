@@ -432,8 +432,8 @@ public class CommonService implements ICommonService {
 							return NO_SUCH_PAGE;
 						String txt = ConstantValue.DFYMDHMS.format(new Date());
 						
-						g2.drawString("This is a print test", 0, 20);
-						g2.drawString("Current time is " + txt, 0, 40);
+						g2.drawString("This is a print test", 9, 20);
+						g2.drawString("Current time is " + txt, 9, 40);
 						
 						return PAGE_EXISTS;
 					}
