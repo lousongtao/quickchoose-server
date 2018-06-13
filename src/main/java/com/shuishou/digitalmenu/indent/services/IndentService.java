@@ -343,6 +343,8 @@ public class IndentService implements IIndentService {
 				List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 				for(IndentDetail d : indent.getItems()){
 					Dish dish = dishDA.getDishById(d.getDishId());
+					if (dish == null)
+						continue;
 					Map<String, String> mg = new HashMap<String, String>();
 					mg.put("name", d.getDishFirstLanguageName());
 					mg.put("price", String.format("%.2f",d.getDishPrice()));
@@ -388,6 +390,8 @@ public class IndentService implements IIndentService {
 			IndentDetail detail = indent.getItems().get(i);
 			totalamount += detail.getAmount();
 			Dish dish = dishDA.getDishById(detail.getDishId());
+			if (dish == null)
+				continue;
 			List<Category2Printer> cps = dish.getCategory2().getCategory2PrinterList();
 			for(Category2Printer cp : cps){
 				Printer printer = cp.getPrinter();
@@ -450,6 +454,8 @@ public class IndentService implements IIndentService {
 				IndentDetail_PrintStyle idsp = printSeparateDetailList.get(j);
 				Map<String, String> mg = new HashMap<String, String>();
 				Dish dish = dishDA.getDishById(idsp.indentDetail.getDishId());
+				if (dish == null)
+					continue;
 				for (int i = 0; i < idsp.indentDetail.getAmount(); i++) {
 					List<Map<String, String>> goods = new ArrayList<Map<String, String>>();
 					if (isAdd)
@@ -488,6 +494,8 @@ public class IndentService implements IIndentService {
 					IndentDetail_PrintStyle idsp = detailList.get(ij);
 					Map<String, String> mg = new HashMap<String, String>();
 					Dish dish = dishDA.getDishById(idsp.indentDetail.getDishId());
+					if (dish == null)
+						continue;
 					for (int i = 0; i < idsp.indentDetail.getAmount(); i++) {// 每个菜品单独打印一行,重复的打印多行
 						if (isAdd)
 							mg.put("name", idsp.indentDetail.getDishFirstLanguageName());
@@ -530,7 +538,8 @@ public class IndentService implements IIndentService {
 		
 		Indent indent = detail.getIndent();
 		Dish dish = dishDA.getDishById(detail.getDishId());
-		
+		if (dish == null)
+			return;
 		int totalamount = 0;
 		for (IndentDetail d : indent.getItems()){
 			totalamount += d.getAmount();
@@ -634,6 +643,8 @@ public class IndentService implements IIndentService {
 		}
 		for (int i = 0; i < details.size(); i++) {
 			Dish dish = dishDA.getDishById(details.get(i).getDishId());
+			if (dish == null)
+				continue;
 			List<Category2Printer> cps = dish.getCategory2().getCategory2PrinterList();
 			for(Category2Printer cp : cps){
 				Printer printer = cp.getPrinter();
@@ -752,6 +763,9 @@ public class IndentService implements IIndentService {
 		for (int i = 0; indent.getItems() != null && i < indent.getItems().size(); i++) {
 			IndentDetail detail = indent.getItems().get(i);
 			Dish dish = dishDA.getDishById(detail.getDishId());
+			if (dish == null){
+				throw new DataCheckException("cannot find dish by id " + detail.getDishId());
+			}
 			if (dish.getMaterialConsumes()!= null){
 				for (int j = 0; j < dish.getMaterialConsumes().size(); j++) {
 					DishMaterialConsume dmc = dish.getMaterialConsumes().get(j);
@@ -871,7 +885,7 @@ public class IndentService implements IIndentService {
 	}
 	
 	@Override
-	@Transactional
+	@Transactional(rollbackFor=DataCheckException.class)
 	/**
 	 * 
 	 * @param indentId
@@ -881,7 +895,7 @@ public class IndentService implements IIndentService {
 	 * @param operateType
 	 * @return
 	 */
-	public OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType) {
+	public OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType) throws DataCheckException{
 		String logtype = null;
 		Indent indent = null;
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
@@ -900,6 +914,9 @@ public class IndentService implements IIndentService {
 			double totalprice = 0.0d;
 			for(IndentDetail d : indent.getItems()){
 				Dish dish = dishDA.getDishById(d.getDishId());
+				if (dish == null){
+					throw new DataCheckException("cannot find dish by id " + detail.getDishId());
+				}
 				if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
 					totalprice += d.getAmount() * d.getDishPrice();
 				else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)

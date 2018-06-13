@@ -63,6 +63,13 @@
 		"size":12,
 		"bold": false,
 		"variable": "amount"
+	},
+	{
+		"name": "requirement",
+		"width": 10,
+		"size":6,
+		"bold": false,
+		"variable": "requirement"
 	}],
 
 	"msg": [{
