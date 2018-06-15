@@ -16,3 +16,6 @@
 20180613
 	1. correct the bug about that the REQUIREMENT in indentdetail cannot be controlled by font and bold
 	   REMEMBER: update the print template file while the restaurant do upgrade.
+
+20180615
+	1. record consume time into log file for indent function

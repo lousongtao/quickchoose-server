@@ -117,6 +117,7 @@ public class IndentService implements IIndentService {
 	@Override
 	@Transactional
 	public synchronized MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount, String comments) throws DataCheckException{
+		long l1 = System.currentTimeMillis();
 		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
 		if (!confirmCode.equals(configs.getValue()))
 			return new MakeOrderResult("The confirm code is wrong, cannot make order.", false, -1);
@@ -184,6 +185,8 @@ public class IndentService implements IIndentService {
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
 		printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", true);
 //		printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to make indent"); 
 		return new MakeOrderResult(Result.OK, true, sequence);
 	}
 	
@@ -191,7 +194,7 @@ public class IndentService implements IIndentService {
 	@Transactional(rollbackFor = DataCheckException.class)
 	public ObjectResult splitIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId, 
 			double paidPrice, double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException {
-		
+		long l1 = System.currentTimeMillis();
 		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
 		if (!confirmCode.equals(configs.getValue()))
 			return new ObjectResult("The confirm code is wrong, cannot make order.", false, null);
@@ -311,6 +314,8 @@ public class IndentService implements IIndentService {
 		ArrayList<Indent> indents = new ArrayList<>();
 		indents.add(originIndent);
 		indents.add(indent);
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to make indent");
 		return new ObjectResult(Result.OK, true, indents);
 	}
 	
@@ -673,6 +678,7 @@ public class IndentService implements IIndentService {
 	@Override
 	@Transactional
 	public ObjectListResult queryIndent(int start, int limit, String sstarttime, String sendtime, String status, String deskname, String orderby, String orderbydesc) {
+		long l1 = System.currentTimeMillis();
 		if (orderby != null && orderby.length() > 0
 				&& orderbydesc != null && orderbydesc.length() > 0){
 			return new ObjectListResult("orderby and orderbydesc are conplicted", false);
@@ -741,12 +747,15 @@ public class IndentService implements IIndentService {
 			Hibernate.initialize(indent);
 			Hibernate.initialize(indent.getItems());
 		}
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to query indent, params : start = " + start + ", limit = " + limit + ", sStartTime = " + sstarttime + ", sEndTime = " + sendtime + ", status = " + status + ", deskName = " + deskname + ", orderby = " + orderby + ", orderByDesc = " + orderbydesc);
 		return new ObjectListResult(Result.OK, true, (ArrayList<Indent>)indents, count);
 	}
 
 	@Override
 	@Transactional(rollbackFor = DataCheckException.class)
 	public OperateIndentResult doPayIndent(int userId, int indentId, double paidPrice, double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException {
+		long l1 = System.currentTimeMillis();
 		Indent indent = indentDA.getIndentById(indentId);
 		if (indent == null)
 			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
@@ -816,12 +825,15 @@ public class IndentService implements IIndentService {
 		
 		logService.write(selfUser, logtype,
 						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to pay indent");
 		return new OperateIndentResult(Result.OK, true);
 	}
 	
 	@Override
 	@Transactional
 	public OperateIndentResult doCancelIndent(int userId, int indentId) {
+		long l1 = System.currentTimeMillis();
 		Indent indent = indentDA.getIndentById(indentId);
 		if (indent == null)
 			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
@@ -854,12 +866,15 @@ public class IndentService implements IIndentService {
 		
 		logService.write(selfUser, logtype,
 						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to cancel indent");
 		return new OperateIndentResult(Result.OK, true);
 	}
 	
 	@Override
 	@Transactional
 	public OperateIndentResult doRefundIndent(int userId, int indentId) {
+		long l1 = System.currentTimeMillis();
 		Indent indent = indentDA.getIndentById(indentId);
 		if (indent == null)
 			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
@@ -881,6 +896,8 @@ public class IndentService implements IIndentService {
 		
 		logService.write(selfUser, logtype,
 						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to refund indent");
 		return new OperateIndentResult(Result.OK, true);
 	}
 	
@@ -896,6 +913,7 @@ public class IndentService implements IIndentService {
 	 * @return
 	 */
 	public OperateIndentResult operateIndentDetail(int userId, int indentId, int dishId, int indentDetailId, int amount, byte operateType) throws DataCheckException{
+		long l1 = System.currentTimeMillis();
 		String logtype = null;
 		Indent indent = null;
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
@@ -978,6 +996,8 @@ public class IndentService implements IIndentService {
 				+ ", amount = " + amount + ", operationType = " + logtype + ".");
 		}
 		
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to operate indent detail. operate type = " + operateType);
 		return result;
 		
 	}
@@ -1005,6 +1025,7 @@ public class IndentService implements IIndentService {
 	@Override
 	@Transactional
 	public ObjectResult clearDesk(int userId, int deskId) {
+		long l1 = System.currentTimeMillis();
 		Desk desk = deskDA.getDeskById(deskId);
 		if (desk == null){
 			return new ObjectResult("cannot find desk by id " + deskId, false);
@@ -1026,13 +1047,15 @@ public class IndentService implements IIndentService {
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.INDENT_FORCEEND.toString(),
 				"User " + selfUser + " clear table id("+deskId+"), affect indentId (" + indentIds + ").");
-		
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to clear desk");
 		return new ObjectResult(Result.OK, true);
 	}
 
 	@Override
 	@Transactional(rollbackFor=DataCheckException.class)
 	public MakeOrderResult addDishToIndent(int deskId, JSONArray jsonOrder) throws DataCheckException {
+		long l1 = System.currentTimeMillis();
 		Desk desk = deskDA.getDeskById(deskId);
 		if (desk == null){
 			return new MakeOrderResult("cannot find desk by id " + deskId, false, -1);
@@ -1085,12 +1108,15 @@ public class IndentService implements IIndentService {
 		printCucaigoudan2Kitchen(listPrintDetails, tempfilePath + "/cucaigoudan.json");
 //		printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
 		listPrintDetails.clear();//release this beans from collection to avoid hibernate exception
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to add dish into indent");
 		return new MakeOrderResult(Result.OK, true, indent.getDailySequence());
 	}
 
 	@Override
 	@Transactional
 	public ObjectResult changeDesks(int userId, int srcDeskId, int destDeskId) {
+		long l1 = System.currentTimeMillis();
 		Desk srcDesk = deskDA.getDeskById(srcDeskId);
 		if (srcDesk == null){
 			return new MakeOrderResult("cannot find desk by id " + srcDeskId, false, -1);
@@ -1156,6 +1182,8 @@ public class IndentService implements IIndentService {
 			PrintQueue.add(job);
 		}
 		
+		long l2 = System.currentTimeMillis();
+		logger.debug((l2 - l1) + "ms to change desk for indent");
 		return new ObjectResult(Result.OK, true, deskinfos);
 	}
 
