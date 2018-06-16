@@ -19,3 +19,6 @@
 
 20180615
 	1. record consume time into log file for indent function
+	
+20180617
+	1. add log to track exception in print thread

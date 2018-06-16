@@ -31,7 +31,7 @@ public class PrintThread implements InitializingBean{
 	
 
 	public void afterPropertiesSet() {
-		new Thread(new Runnable() {
+		Thread t = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
 					try {
@@ -53,7 +53,15 @@ public class PrintThread implements InitializingBean{
 					}
 				}
 			}
-		}, "driverPosPrint_thread").start();
+		}, "driverPosPrint_thread");
+		t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			
+			@Override
+			public void uncaughtException(Thread t, Throwable e) {
+				logger.error("print exception", e);
+			}
+		});
+		t.start();
 	}
 
 	/**
