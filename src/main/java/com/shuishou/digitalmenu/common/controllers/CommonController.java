@@ -39,6 +39,11 @@ public class CommonController extends BaseController {
 		return new Result(Result.OK);
 	}
 	
+	@RequestMapping(value="/common/checkupgradeapk", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result checkUpgradeApk() throws Exception{
+		return commonService.checkUpgradeApk();
+	}
+	
 	@RequestMapping(value="/common/queryconfigmap", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody ObjectResult queryConfigMap() throws Exception{
 		return commonService.queryConfigMap();

@@ -46,6 +46,7 @@ public class ConstantValue {
 	public static final String TYPE_DISHINFO = "DISH";
 	
 	public static final String CATEGORY_ERRORLOG = "errorlog";
+	public static final String CATEGORY_UPGRADEAPK = "upgradeApk";
 	public static final String CATEGORY_BACKUPDB = "backupDB";
 	public static final String CATEGORY_DISHIMAGE_BIG = "dishimage_big";
 	public static final String CATEGORY_DISHIMAGE_MIDDLE = "dishimage_middle";

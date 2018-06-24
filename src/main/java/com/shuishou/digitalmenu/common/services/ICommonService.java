@@ -13,6 +13,8 @@ public interface ICommonService {
 //	
 //	GetConfirmCodeResult getConfirmCode();
 //	
+	ObjectResult checkUpgradeApk();
+	
 	ObjectResult saveConfirmCode(long userId, String oldCode, String code);
 	ObjectResult saveClearTableCode(long userId, String oldCode, String code);
 	ObjectResult saveCancelOrderCode(long userId, String oldCode, String code);

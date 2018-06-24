@@ -110,6 +110,18 @@ public class CommonService implements ICommonService {
 	
 	@Override
 	@Transactional
+	public ObjectResult checkUpgradeApk(){
+		File file = new File(request.getSession().getServletContext().getRealPath("/")+"..\\" + ConstantValue.CATEGORY_UPGRADEAPK);
+		if (!file.exists()){
+			file.mkdir();
+			return new ObjectResult(Result.OK, true, null);
+		}
+		String[] filenames = file.list();
+		return new ObjectResult(Result.OK, true, filenames);
+	}
+	
+	@Override
+	@Transactional
 	public ObjectResult queryConfigMap(){
 		List<Configs> configs = configsDA.queryConfigs();
 		HashMap<String, String> maps = new HashMap<>();
