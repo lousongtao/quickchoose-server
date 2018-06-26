@@ -104,7 +104,7 @@ public class DriverPos {
                 			String reqs = String.valueOf(goods.get("requirement"));
                 			String[] reqlist = reqs.split("\n");
                 			for (int i = 0; i < reqlist.length; i++) {
-                				bodyList.add(new _PagerBody().setFeeLine(true));
+//                				bodyList.add(new _PagerBody().setFeeLine(true));
                     			bodyList.add(new _PagerBody().setFeeLine(true));
                     			bodyList.add(printRequirement(reqlist[i], goodTitle));
         					}
@@ -263,7 +263,7 @@ public class DriverPos {
 		//根据variable替换字段
 
 		pagerBody.setContent(addBlank(req, goodTitle.getWidth()))
-					.setFeeLine(false)
+					.setFeeLine(true)
 					.setFontSize(goodTitle.getSize())
 					.isBold(goodTitle.isBold());
 		

@@ -479,6 +479,7 @@ public class IndentService implements IIndentService {
 					goods.add(mg);
 					
 					keyMap.put("amountOnThisTicket", "1");
+
 					Map<String, Object> params = new HashMap<String, Object>();
 					params.put("keys", keyMap);
 					params.put("goods", goods);
@@ -519,6 +520,7 @@ public class IndentService implements IIndentService {
 						goods.add(mg);
 					}
 				}
+
 				keyMap.put("amountOnThisTicket", amount + "");
 				Map<String, Object> params = new HashMap<String, Object>();
 				params.put("keys", keyMap);
@@ -564,6 +566,7 @@ public class IndentService implements IIndentService {
 			keyMap.put("title", "出菜勾单");
 		else 
 			keyMap.put("title", "出菜勾单-取消单");
+		keyMap.put("operator", detail.getOperator());
 		keyMap.put("tableNumb", indent.getDeskName());
 		keyMap.put("orderId", indent.getDailySequence()+"");
 		keyMap.put("dateTime", ConstantValue.DFYMDHMS.format(indent.getStartTime()));
@@ -963,11 +966,36 @@ public class IndentService implements IIndentService {
 			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(newPrice)));
 			indentDA.update(detail.getIndent());
 			printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", detail.getAmount() * (-1));
+		} else if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_REFUND){
+			logtype = LogData.LogType.INDENTDETAIL_REFUND.toString();
+			IndentDetail detail = indentDetailDA.getIndentDetailById(indentDetailId);
+			indent = detail.getIndent();
+			if (detail == null)
+				return new OperateIndentResult("cannot find IndentDetail by IndentId:" + indentId + " + dishId:" + dishId, false);
+			Dish dish = dishDA.getDishById(detail.getDishId());
+			if (dish == null)
+				return new OperateIndentResult("cannot find dish by id:" + detail.getDishId(), false);
+			indent.getItems().remove(detail);//must remove from the collection firstly, otherwise hibernate will rebuild the detail object by cascade
+			indentDetailDA.delete(detail);
+			double newPrice = detail.getIndent().getTotalPrice();
+			double newPaidPrice = detail.getIndent().getPaidPrice();
+			if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT){
+				newPrice -= detail.getAmount() * detail.getWeight() * detail.getDishPrice();
+				newPaidPrice -= detail.getAmount() * detail.getWeight() * detail.getDishPrice();
+			} else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT){
+				newPrice -= detail.getAmount() * detail.getDishPrice();
+				newPaidPrice -= detail.getAmount() * detail.getDishPrice();
+			}
+			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(newPrice)));
+			indent.setPaidPrice(Double.parseDouble(new DecimalFormat("0.00").format(newPaidPrice)));
+			indentDA.update(detail.getIndent());
+			printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", detail.getAmount() * (-1));
 		} 
 		OperateIndentResult result = new OperateIndentResult("ok", true);
 		if (indent != null){
 			result.data = new OperateIndentResult.Indent();
 			result.data.id = indent.getId();
+			result.data.dailySequence = indent.getDailySequence();
 			result.data.startTime = ConstantValue.DFHMS.format(indent.getStartTime());
 			result.data.customerAmount = indent.getCustomerAmount();
 			result.data.deskName = indent.getDeskName();

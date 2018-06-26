@@ -10,6 +10,7 @@ public class OperateIndentResult extends ObjectResult {
 		public int id;
 		public String deskName;
 		public String startTime;
+		public int dailySequence;
 		public int customerAmount;
 		public ArrayList<IndentDetail> items = new ArrayList<>();
 		public double totalPrice;
