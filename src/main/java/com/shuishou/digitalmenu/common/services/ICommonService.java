@@ -21,6 +21,8 @@ public interface ICommonService {
 	
 	ObjectResult saveOpenCashdrawerCode(long userId, String oldCode, String code);
 	
+	ObjectResult savePrintTicket(long userId, String printTicket);
+	
 	ObjectResult saveLanguageSet(long userId, int amount, String firstName, String secondName, boolean print2ndLanguage);
 	
 	GetDeskResult getDesks();

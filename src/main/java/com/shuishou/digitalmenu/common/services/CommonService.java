@@ -735,4 +735,24 @@ public class CommonService implements ICommonService {
 
 		return new ObjectResult(Result.OK, true);
 	}
+
+	@Transactional
+	@Override
+	public ObjectResult savePrintTicket(long userId, String printTicket) {
+		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_PRINTTICKET);
+		String oldValue = null;
+		if (c == null){
+			c = new Configs();
+			c.setName(ConstantValue.CONFIGS_PRINTTICKET);
+		} else {
+			oldValue = c.getValue();
+		}
+		c.setValue(printTicket);
+		configsDA.saveConfigs(c);
+		// write log.
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change Print Ticket Way from " + oldValue + " to " + printTicket);
+
+		return new ObjectResult(Result.OK, true);
+	}
 }

@@ -182,9 +182,12 @@ public class IndentService implements IIndentService {
 		}
 		indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 		indentDA.save(indent);
-		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-		printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", true);
-//		printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
+		configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_PRINTTICKET);//默认在订单创建好后打印
+		if (configs == null || configs.getValue().equals(ConstantValue.CONFIGS_PRINTTICKET_AFTERMAKEORDER)){
+			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+			printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", true);
+		}
+		
 		long l2 = System.currentTimeMillis();
 		logger.debug((l2 - l1) + "ms to make indent"); 
 		return new MakeOrderResult(Result.OK, true, sequence);
@@ -821,11 +824,14 @@ public class IndentService implements IIndentService {
 			if (!result.success)
 				throw new DataCheckException(result.result);
 		}
-//		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-//		printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "结账单", paidCash);
+
+		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_PRINTTICKET);
+		if (configs != null && configs.getValue().equals(ConstantValue.CONFIGS_PRINTTICKET_AFTERPAY)){
+			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+			printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", true);
+		}
 		
 		// write log.
-		
 		logService.write(selfUser, logtype,
 						"User " + selfUser + " operate indent, id =" + indentId + ", operationType = " + logtype + ".");
 		long l2 = System.currentTimeMillis();
@@ -862,8 +868,11 @@ public class IndentService implements IIndentService {
 			}
 		}
 
-		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-		printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", false);
+		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_PRINTTICKET);//默认在订单创建好后打印
+		if (configs == null || configs.getValue().equals(ConstantValue.CONFIGS_PRINTTICKET_AFTERMAKEORDER)){
+			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+			printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", false);
+		}
 		
 		// write log.
 		
@@ -891,9 +900,11 @@ public class IndentService implements IIndentService {
 		indent.setEndTime(operateDate);
 		indentDA.update(indent);
 		
-
-		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-		printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", false);
+		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_PRINTTICKET);//默认在订单创建好后打印
+		if (configs == null || configs.getValue().equals(ConstantValue.CONFIGS_PRINTTICKET_AFTERMAKEORDER)){
+			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+			printCucaigoudan2Kitchen(indent, tempfilePath + "/cucaigoudan.json", false);
+		}
 		
 		// write log.
 		
@@ -919,6 +930,7 @@ public class IndentService implements IIndentService {
 		long l1 = System.currentTimeMillis();
 		String logtype = null;
 		Indent indent = null;
+		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_PRINTTICKET);//默认在订单创建好后打印
 		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
 		if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_CHANGEAMOUNT){
 			logtype = LogData.LogType.INDENTDETAIL_CHANGEAMOUNT.toString();
@@ -945,7 +957,8 @@ public class IndentService implements IIndentService {
 			}
 			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(totalprice)));
 			indentDA.update(indent);
-			printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", amount - originalAmount);
+			if (configs == null || configs.getValue().equals(ConstantValue.CONFIGS_PRINTTICKET_AFTERMAKEORDER))
+				printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", amount - originalAmount);
 		} else if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_DELETE){
 			logtype = LogData.LogType.INDENTDETAIL_DELETE.toString();
 			IndentDetail detail = indentDetailDA.getIndentDetailById(indentDetailId);
@@ -965,7 +978,8 @@ public class IndentService implements IIndentService {
 			}
 			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(newPrice)));
 			indentDA.update(detail.getIndent());
-			printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", detail.getAmount() * (-1));
+			if (configs == null || configs.getValue().equals(ConstantValue.CONFIGS_PRINTTICKET_AFTERMAKEORDER))
+				printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", detail.getAmount() * (-1));
 		} else if (operateType == ConstantValue.INDENTDETAIL_OPERATIONTYPE_REFUND){
 			logtype = LogData.LogType.INDENTDETAIL_REFUND.toString();
 			IndentDetail detail = indentDetailDA.getIndentDetailById(indentDetailId);
@@ -989,7 +1003,8 @@ public class IndentService implements IIndentService {
 			indent.setTotalPrice(Double.parseDouble(new DecimalFormat("0.00").format(newPrice)));
 			indent.setPaidPrice(Double.parseDouble(new DecimalFormat("0.00").format(newPaidPrice)));
 			indentDA.update(detail.getIndent());
-			printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", detail.getAmount() * (-1));
+			if (configs == null || configs.getValue().equals(ConstantValue.CONFIGS_PRINTTICKET_AFTERMAKEORDER))
+				printCucaigoudan2Kitchen4ChangeAmount(detail, tempfilePath + "/cucaigoudan.json", detail.getAmount() * (-1));
 		} 
 		OperateIndentResult result = new OperateIndentResult("ok", true);
 		if (indent != null){
@@ -1131,10 +1146,13 @@ public class IndentService implements IIndentService {
 			listPrintDetails.add(detail);
 		}
 		indentDA.update(indent);
-		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
-//		logger.debug("addDishToIndent : " + ConstantValue.DFYMDHMS.format(new Date()) + "\njsonOrder="+jsonOrder.toString()+"\nlistPrintDetails="+listPrintDetails);
-		printCucaigoudan2Kitchen(listPrintDetails, tempfilePath + "/cucaigoudan.json");
-//		printTicket2Counter(indent, tempfilePath + "/newIndent_template.json", "对账单");
+		
+		Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_PRINTTICKET);//默认在订单创建好后打印
+		if (configs == null || configs.getValue().equals(ConstantValue.CONFIGS_PRINTTICKET_AFTERMAKEORDER)){
+			String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+			printCucaigoudan2Kitchen(listPrintDetails, tempfilePath + "/cucaigoudan.json");
+		}
+		
 		listPrintDetails.clear();//release this beans from collection to avoid hibernate exception
 		long l2 = System.currentTimeMillis();
 		logger.debug((l2 - l1) + "ms to add dish into indent");

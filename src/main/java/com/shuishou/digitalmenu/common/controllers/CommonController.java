@@ -60,6 +60,16 @@ public class CommonController extends BaseController {
 //		return commonService.getConfirmCode();
 //	}
 	
+	@RequestMapping(value="/common/saveprintticket", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result savePrintTicket(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="PRINTTICKET", required = true) String printTicket) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+			return new Result("no_permission");
+		}
+		return commonService.savePrintTicket(userId, printTicket);
+	}
+	
 	@RequestMapping(value="/common/savebranchname", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody Result saveBranchName(
 			@RequestParam(value = "userId", required = true) int userId,
