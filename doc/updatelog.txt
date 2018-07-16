@@ -25,3 +25,6 @@
 	
 20180624
 	1. provide a new interface for client to query the avaible apk files list
+	
+20180716
+	add null check for endDate when print shiftwork ticket.

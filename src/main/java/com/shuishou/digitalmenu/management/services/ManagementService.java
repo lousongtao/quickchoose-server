@@ -152,6 +152,8 @@ public class ManagementService implements IManagementService{
 		List<Printer> printers = printerDA.queryPrinters();
 		if (printers == null || printers.isEmpty())
 			return;
+		if (endTime == null)
+			return;
 		List<PayWay> otherPayWays = paywayDA.queryPayWays();
 		//calculate period
 		long millsecs = endTime.getTime() - startTime.getTime();
