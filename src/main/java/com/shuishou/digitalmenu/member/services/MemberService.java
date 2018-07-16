@@ -110,12 +110,21 @@ public class MemberService implements IMemberService{
 		m.setScore(newScore);
 		m.setLastModifyTime(new Date());
 		memberDA.save(m);
+		
+		String branchName = "";
+		List<Configs> configs = configsDA.queryConfigs();
+		for(Configs config : configs){
+			if (ConstantValue.CONFIGS_BRANCHNAME.equals(config.getName())){
+				branchName = config.getValue();
+			} 
+		}
+		
 		MemberScore ms = new MemberScore();
 		ms.setAmount(newScore - oldScore);
 		ms.setDate(new Date());
 		ms.setMember(m);
 		ms.setNewValue(newScore);
-		ms.setPlace("");
+		ms.setPlace(branchName);
 		ms.setType(ConstantValue.MEMBERSCORE_ADJUST);
 		memberScoreDA.save(ms);
 		UserData selfUser = userDA.getUserById(userId);
@@ -136,12 +145,21 @@ public class MemberService implements IMemberService{
 		m.setBalanceMoney(newBalance);
 		m.setLastModifyTime(new Date());
 		memberDA.save(m);
+		
+		String branchName = "";
+		List<Configs> configs = configsDA.queryConfigs();
+		for(Configs config : configs){
+			if (ConstantValue.CONFIGS_BRANCHNAME.equals(config.getName())){
+				branchName = config.getValue();
+			} 
+		}
+		
 		MemberBalance mb = new MemberBalance();
 		mb.setAmount(newBalance - oldBalance);
 		mb.setDate(new Date());
 		mb.setMember(m);
 		mb.setNewValue(newBalance);
-		mb.setPlace("");
+		mb.setPlace(branchName);
 		mb.setType(ConstantValue.MEMBERDEPOSIT_ADJUST);
 		memberBalanceDA.save(mb);
 		UserData selfUser = userDA.getUserById(userId);

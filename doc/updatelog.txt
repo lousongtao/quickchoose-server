@@ -28,3 +28,6 @@
 	
 20180716
 	add null check for endDate when print shiftwork ticket.
+	
+20180717
+	add branchName for update member's balance and score;
