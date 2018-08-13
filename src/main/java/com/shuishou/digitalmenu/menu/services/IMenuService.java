@@ -47,6 +47,10 @@ public interface IMenuService {
 	public ObjectResult queryDishById(int dishId);
 	public ObjectListResult queryDishByIdList(ArrayList<Integer> dishIdList);
 	public ObjectResult queryDishByName(String dishName);
+	public ObjectResult queryCategory1ById(int id);
+	public ObjectResult queryCategory2ById(int id);
+	public ObjectResult queryDishConfigGroupById(int id);
+	public ObjectResult queryDishConfigById(int id);
 	public ObjectListResult queryFlavor();
 	public ObjectListResult queryDishConfig();
 	public ObjectListResult queryDishConfigGroup();

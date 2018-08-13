@@ -25,7 +25,7 @@ public class MenuVersionDataAccessor extends BaseDataAccessor implements IMenuVe
 
 	@Override
 	public List<MenuVersion> getMenuVersionFromId(int id){
-		String hql = "from MenuVersion where id > "+ id;
+		String hql = "from MenuVersion where id > "+ id + " order by id";
 		return sessionFactory.getCurrentSession().createQuery(hql).list();
 	}
 

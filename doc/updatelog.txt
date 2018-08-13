@@ -30,4 +30,8 @@
 	add null check for endDate when print shiftwork ticket.
 	
 20180717
-	add branchName for update member's balance and score;
+	1. add branchName for update member's balance and score;
+	2. add config param for when print ticket to kitchen
+	
+20180813
+	1. complete the synchronize function, including the operation add/update/delete/picture/soldout on Category1, Category2, Dish, DishConfigGroup, DishConfig.

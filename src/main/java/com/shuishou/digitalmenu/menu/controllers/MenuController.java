@@ -379,6 +379,27 @@ public class MenuController extends BaseController {
 		return result;
 	}
 	
+	@RequestMapping(value="/menu/querycategory1byid", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody ObjectResult queryCategory1ById(
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		ObjectResult result = menuService.queryCategory1ById(id);
+		return result;
+	}
+	
+	@RequestMapping(value="/menu/querycategory2byid", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody ObjectResult queryCategory2ById(
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		ObjectResult result = menuService.queryCategory2ById(id);
+		return result;
+	}
+	
+	@RequestMapping(value="/menu/querydishconfiggroupbyid", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody ObjectResult queryDishConfigGroupById(
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		ObjectResult result = menuService.queryDishConfigGroupById(id);
+		return result;
+	}
+	
 	/**
 	 * 
 	 * @param sIdList Id seperate by comma
@@ -412,6 +433,19 @@ public class MenuController extends BaseController {
 			idList.add(Integer.parseInt(sIds[i]));
 		}
 		ObjectListResult result = menuService.queryDishConfigByIdList(idList);
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param sIdList Id seperate by comma
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/menu/querydishconfigbyid", method = {RequestMethod.POST})
+	public @ResponseBody ObjectResult queryDishConfigById(
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		ObjectResult result = menuService.queryDishConfigById(id);
 		return result;
 	}
 	

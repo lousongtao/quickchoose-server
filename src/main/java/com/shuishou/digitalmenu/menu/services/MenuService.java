@@ -140,6 +140,12 @@ public class MenuService implements IMenuService {
 		category1DA.save(c1);
 		hibernateInitialCategory1(c1);
 		
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(c1.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_CATEGORY1ADD);
+		menuVersionDA.save(mv);
+				
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY1_CHANGE.toString(), "User " + selfUser 
@@ -184,6 +190,12 @@ public class MenuService implements IMenuService {
 		}
 		
 		hibernateInitialCategory2(c2);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(c2.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_CATEGORY2ADD);
+		menuVersionDA.save(mv);
 		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
@@ -291,6 +303,46 @@ public class MenuService implements IMenuService {
 	
 	@Override
 	@Transactional
+	public ObjectResult queryCategory1ById(int id){
+		Category1 c1 = category1DA.getCategory1ById(id);
+		if (c1 == null)
+			return new ObjectResult("cannot find Category1 by id "+ id, false, null);
+		hibernateInitialCategory1(c1);
+		return new ObjectResult(Result.OK, true, c1);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectResult queryCategory2ById(int id){
+		Category2 c2 = category2DA.getCategory2ById(id);
+		if (c2 == null)
+			return new ObjectResult("cannot find Category2 by id "+ id, false, null);
+		hibernateInitialCategory2(c2);
+		return new ObjectResult(Result.OK, true, c2);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectResult queryDishConfigGroupById(int id){
+		DishConfigGroup group = dishConfigGroupDA.getDishConfigGroupById(id);
+		if (group == null)
+			return new ObjectResult("cannot find DishConfigGroup by id "+ id, false, null);
+		hibernateInitialConfigGroup(group);
+		return new ObjectResult(Result.OK, true, group);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectResult queryDishConfigById(int id){
+		DishConfig dc = dishConfigDA.getDishConfigById(id);
+		if (dc == null)
+			return new ObjectResult("cannot find DishConfig by id "+ id, false, null);
+		
+		return new ObjectResult(Result.OK, true, dc);
+	}
+	
+	@Override
+	@Transactional
 	public ObjectListResult queryAllMenu() {
 		List<Category1> c1s = category1DA.getAllCategory1();
 		hibernateInitialCategory1(c1s);
@@ -320,6 +372,13 @@ public class MenuService implements IMenuService {
 		if (c1.getCategory2s() != null && !c1.getCategory2s().isEmpty())
 			return new ObjectResult("this category is not empty", false);
 		category1DA.delete(c1);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(c1.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_CATEGORY1DELETE);
+		menuVersionDA.save(mv);
+		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY1_CHANGE.toString(),
@@ -340,6 +399,13 @@ public class MenuService implements IMenuService {
 		//deleted object would be re-saved by cascade (remove deleted object from associations)
 		c2.getCategory1().getCategory2s().remove(c2);
 		category2DA.delete(c2);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(c2.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_CATEGORY2DELETE);
+		menuVersionDA.save(mv);
+		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY2_CHANGE.toString(),
@@ -414,6 +480,13 @@ public class MenuService implements IMenuService {
 		c1.setSequence(sequence);
 		category1DA.save(c1);
 		hibernateInitialCategory1(c1);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(c1.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_CATEGORY1UPDATE);
+		menuVersionDA.save(mv);
+		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY1_CHANGE.toString(),
@@ -462,6 +535,13 @@ public class MenuService implements IMenuService {
 		category2DA.save(c2);
 		
 		hibernateInitialCategory2(c2);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(c2.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_CATEGORY2UPDATE);
+		menuVersionDA.save(mv);
+		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.CATEGORY2_CHANGE.toString(),
@@ -923,6 +1003,12 @@ public class MenuService implements IMenuService {
 		dc.setGroup(group);
 		dishConfigDA.save(dc);
 		
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dc.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHCONFIGADD);
+		menuVersionDA.save(mv);
+		
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " add dishconfig : firstLanguageName = " + firstLanguageName);
@@ -942,6 +1028,12 @@ public class MenuService implements IMenuService {
 		dg.setRequiredQuantity(requiredQuantity);
 		dg.setAllowDuplicate(allowDuplicate);
 		dishConfigGroupDA.save(dg);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dg.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHCONFIGGROUPADD);
+		menuVersionDA.save(mv);
 		
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " add dishconfiggroup : firstLanguageName = " + firstLanguageName
@@ -963,6 +1055,12 @@ public class MenuService implements IMenuService {
 		dc.setSequence(sequence);
 		dc.setPrice(price);
 		dishConfigDA.save(dc);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dc.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHCONFIGUPDATE);
+		menuVersionDA.save(mv);
 		
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " modify dishconfig : firstLanguageName = " + firstLanguageName);
@@ -986,6 +1084,12 @@ public class MenuService implements IMenuService {
 		dg.setRequiredQuantity(requiredQuantity);
 		dishConfigGroupDA.save(dg);
 		hibernateInitialConfigGroup(dg);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dg.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHCONFIGGROUPUPDATE);
+		menuVersionDA.save(mv);
 		
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " modify dishconfiggroup : firstLanguageName = " + firstLanguageName
@@ -1002,6 +1106,12 @@ public class MenuService implements IMenuService {
 			return new ObjectResult("cannot find dishConfig object by id "+ configId, false);
 		}
 		dishConfigDA.delete(dc);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dc.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHCONFIGDELETE);
+		menuVersionDA.save(mv);
 		
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " delete dishconfig : firstLanguageName = " + dc.getFirstLanguageName());
@@ -1017,6 +1127,12 @@ public class MenuService implements IMenuService {
 			return new ObjectResult("cannot find dishConfigGroup object by id "+ configGroupId, false);
 		}
 		dishConfigGroupDA.delete(dg);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dg.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHCONFIGGROUPDELETE);
+		menuVersionDA.save(mv);
 		
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " delete dishconfiggroup : firstLanguageName = " + dg.getFirstLanguageName()
@@ -1041,6 +1157,13 @@ public class MenuService implements IMenuService {
 		dish.addConfigGroup(dg);
 		dish.setAutoMergeWhileChoose(false);
 		hibernateInitialDish(dish);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dish.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHMOVEINCONFIGGROUP);
+		menuVersionDA.save(mv);
+
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " bind dishConfigGroup : firstLanguageName = " + dg.getFirstLanguageName()
 				+ ", uniqueName = "+ dg.getUniqueName() +" to Dish : "+dish.getFirstLanguageName());
@@ -1063,6 +1186,13 @@ public class MenuService implements IMenuService {
 		
 		dish.getConfigGroups().remove(dg);
 		hibernateInitialDish(dish);
+
+		//add record to menu_version
+		MenuVersion mv = new MenuVersion();
+		mv.setObjectId(dish.getId());
+		mv.setType(ConstantValue.MENUCHANGE_TYPE_DISHMOVEOUTCONFIGGROUP);
+		menuVersionDA.save(mv);
+
 		UserData selfUser = userDA.getUserById(userId);
 		logService.write(selfUser, LogData.LogType.DISHCONFIG_CHANGE.toString(), "User " + selfUser + " unbind dishConfigGroup : firstLanguageName = " + dg.getFirstLanguageName()
 				+ ", uniqueName = "+ dg.getUniqueName() +" from Dish : "+dish.getFirstLanguageName());
