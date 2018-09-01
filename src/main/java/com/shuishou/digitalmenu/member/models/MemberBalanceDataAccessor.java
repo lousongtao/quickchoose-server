@@ -1,9 +1,13 @@
 package com.shuishou.digitalmenu.member.models;
 
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.models.BaseDataAccessor;
 
 @Repository
@@ -29,6 +33,18 @@ public class MemberBalanceDataAccessor extends BaseDataAccessor implements IMemb
 	public void deleteByMember(int memberId) {
 		String hql = "delete from MemberBalance mc where mc.member.id = "+ memberId;
 		sessionFactory.getCurrentSession().createQuery(hql).executeUpdate();
+	}
+
+	@Override
+	public List<MemberBalance> getMemberBalanceByDate(Date startTime, Date endTime) {
+		Criteria c = sessionFactory.getCurrentSession().createCriteria(MemberBalance.class);
+		c.add(Restrictions.eq("type", ConstantValue.MEMBERDEPOSIT_RECHARGE));
+		if (startTime != null)
+			c.add(Restrictions.ge("date", startTime));
+		if (endTime != null)
+			c.add(Restrictions.le("date", endTime));
+		
+		return c.list();
 	}
 
 

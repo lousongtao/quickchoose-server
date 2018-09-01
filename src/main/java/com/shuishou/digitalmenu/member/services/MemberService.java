@@ -208,7 +208,7 @@ public class MemberService implements IMemberService{
 	
 	@Override
 	@Transactional
-	public ObjectResult memberRecharge(int userId, int id, double rechargeValue) {
+	public ObjectResult memberRecharge(int userId, int id, double rechargeValue, String payway) {
 		Member m = memberDA.getMemberById(id);
 		
 		if (m == null)
@@ -232,6 +232,7 @@ public class MemberService implements IMemberService{
 		mb.setNewValue(m.getBalanceMoney());
 		mb.setPlace(branchName);
 		mb.setType(ConstantValue.MEMBERDEPOSIT_RECHARGE);
+		mb.setPayway(payway);
 		memberBalanceDA.save(mb);
 		UserData selfUser = userDA.getUserById(userId);
 		
@@ -288,6 +289,13 @@ public class MemberService implements IMemberService{
 		return new ObjectListResult(Result.OK, true, mbs, mbs.size());
 	}
 
+	@Override
+	@Transactional
+	public ObjectListResult queryMemberRecharge(Date startTime, Date endTime) {
+		List<MemberBalance> mbs = memberBalanceDA.getMemberBalanceByDate(startTime, endTime);
+		return new ObjectListResult(Result.OK, true, mbs, mbs.size());
+	}
+	
 	@Override
 	@Transactional
 	public ObjectListResult queryMemberScore(int memberId) {

@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +24,7 @@ import com.shuishou.digitalmenu.common.models.IConfigsDataAccessor;
 import com.shuishou.digitalmenu.member.models.Member;
 import com.shuishou.digitalmenu.member.models.MemberBalance;
 import com.shuishou.digitalmenu.member.models.MemberScore;
+import com.shuishou.digitalmenu.member.views.MemberBalanceInfo;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -89,11 +91,15 @@ public class MemberCloudService implements IMemberCloudService{
 	}
 
 	@Override
+	@Transactional
 	public ObjectResult updateMemberScore(int userId, int id, double newScore) {
+		Configs configs = configDA.getConfigsByName(ConstantValue.CONFIGS_BRANCHNAME);
+		String branchName = configs == null? "" : configs.getValue();
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
 		params.put("newScore", String.valueOf(newScore));
 		params.put("id", String.valueOf(id));
+		params.put("branchName", branchName);
 		String url = "member/updatememberscore";
 		String response = HttpUtil.getJSONObjectByPost(ServerProperties.MEMBERCLOUDLOCATION + url, params);
 		if (response == null){
@@ -108,11 +114,15 @@ public class MemberCloudService implements IMemberCloudService{
 	}
 
 	@Override
+	@Transactional
 	public ObjectResult updateMemberBalance(int userId, int id, double newBalance) {
+		Configs configs = configDA.getConfigsByName(ConstantValue.CONFIGS_BRANCHNAME);
+		String branchName = configs == null? "" : configs.getValue();
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
 		params.put("id",String.valueOf(id));
 		params.put("newBalance", String.valueOf(newBalance));
+		params.put("branchName", branchName);
 		String url = "member/updatememberbalance";
 		String response = HttpUtil.getJSONObjectByPost(ServerProperties.MEMBERCLOUDLOCATION + url, params);
 		if (response == null){
@@ -165,11 +175,16 @@ public class MemberCloudService implements IMemberCloudService{
 	}
 
 	@Override
-	public ObjectResult memberRecharge(int userId, int id, double recharge) {
+	@Transactional
+	public ObjectResult memberRecharge(int userId, int id, double recharge, String payway) {
+		Configs configs = configDA.getConfigsByName(ConstantValue.CONFIGS_BRANCHNAME);
+		String branchName = configs == null? "" : configs.getValue();
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
 		params.put("id",String.valueOf(id));
 		params.put("rechargeValue", String.valueOf(recharge));
+		params.put("branchName", branchName);
+		params.put("payway", payway);
 		String url = "member/memberrecharge";
 		String response = HttpUtil.getJSONObjectByPost(ServerProperties.MEMBERCLOUDLOCATION + url, params);
 		if (response == null){
@@ -265,6 +280,7 @@ public class MemberCloudService implements IMemberCloudService{
 	}
 
 	@Override
+	@Transactional
 	public ObjectResult recordMemberConsumption(String memberCard, String memberPassword, double consumptionPrice) throws DataCheckException {
 		boolean byScore = false;
 		double scorePerDollar = 0;
@@ -328,6 +344,26 @@ public class MemberCloudService implements IMemberCloudService{
 		}
 		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
 		HttpResult<ArrayList<MemberBalance>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberBalance>>>(){}.getType());
+		if (!result.success){
+			return new ObjectListResult("return false while query member balance. URL = " + url + ", response = "+response, false);
+		}
+		return new ObjectListResult(Result.OK, true, result.data);
+	}
+	
+	public ObjectListResult queryMemberRecharge(Date startTime, Date endTime){
+		String url = "member/querymemberrecharge";
+		Map<String, String> params = new HashMap<>();
+		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
+		if (startTime != null)
+			params.put("startTime", ConstantValue.DFYMDHMS.format(startTime));
+		if (endTime != null)
+			params.put("endTime", ConstantValue.DFYMDHMS.format(endTime));
+		String response = HttpUtil.getJSONObjectByPost(ServerProperties.MEMBERCLOUDLOCATION + url, params);
+		if (response == null){
+			return new ObjectListResult("get null from server for query member recharge. URL = " + url + ", param = "+ params, false);
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
+		HttpResult<ArrayList<MemberBalanceInfo>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberBalanceInfo>>>(){}.getType());
 		if (!result.success){
 			return new ObjectListResult("return false while query member balance. URL = " + url + ", response = "+response, false);
 		}

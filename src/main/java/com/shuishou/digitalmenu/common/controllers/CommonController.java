@@ -49,16 +49,17 @@ public class CommonController extends BaseController {
 		return commonService.queryConfigMap();
 	}
 	
-//	@RequestMapping(value="/common/checkconfirmcode", method = (RequestMethod.POST))
-//	public @ResponseBody CheckConfirmCodeResult checkConfirmCode(
-//			@RequestParam(value="code", required = true) String code) throws Exception{
-//		return commonService.checkConfirmCode(code);
-//	}
-//	
-//	@RequestMapping(value="/common/getconfirmcode", method = {RequestMethod.GET,RequestMethod.POST})
-//	public @ResponseBody GetConfirmCodeResult getConfirmCode() throws Exception{
-//		return commonService.getConfirmCode();
-//	}
+	@RequestMapping(value="/common/savecode", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody Result saveCode(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="oldCode", required = true) String oldCode,
+			@RequestParam(value="code", required = true) String code,
+			@RequestParam(value="key", required = true) String key) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+			return new Result("no_permission");
+		}
+		return commonService.saveCode(userId, oldCode, code, key);
+	}
 	
 	@RequestMapping(value="/common/saveprintticket", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody Result savePrintTicket(
@@ -93,49 +94,49 @@ public class CommonController extends BaseController {
 		return commonService.saveMemberManagementWay(userId, byScore, byDeposit, scorePerDollar, needPassword);
 	}
 	
-	@RequestMapping(value="/common/saveconfirmcode", method = {RequestMethod.POST, RequestMethod.GET})
-	public @ResponseBody Result saveConfirmCode(
-			@RequestParam(value = "userId", required = true) int userId,
-			@RequestParam(value="oldCode", required = true) String oldCode,
-			@RequestParam(value="code", required = true) String code) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
-			return new Result("no_permission");
-		}
-		return commonService.saveConfirmCode(userId, oldCode,code);
-	}
-	
-	@RequestMapping(value="/common/savecleartablecode", method = {RequestMethod.POST, RequestMethod.GET})
-	public @ResponseBody Result saveClearTableCode(
-			@RequestParam(value = "userId", required = true) int userId,
-			@RequestParam(value="oldCode", required = true) String oldCode,
-			@RequestParam(value="code", required = true) String code) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
-			return new Result("no_permission");
-		}
-		return commonService.saveClearTableCode(userId, oldCode,code);
-	}
-	
-	@RequestMapping(value="/common/savecancelordercode", method = {RequestMethod.POST, RequestMethod.GET})
-	public @ResponseBody Result saveCancelOrderCode(
-			@RequestParam(value = "userId", required = true) int userId,
-			@RequestParam(value="oldCode", required = true) String oldCode,
-			@RequestParam(value="code", required = true) String code) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
-			return new Result("no_permission");
-		}
-		return commonService.saveCancelOrderCode(userId, oldCode,code);
-	}
-	
-	@RequestMapping(value="/common/saveopencashdrawercode", method = {RequestMethod.POST, RequestMethod.GET})
-	public @ResponseBody Result saveOpenCashdrawerCode(
-			@RequestParam(value = "userId", required = true) int userId,
-			@RequestParam(value="oldCode", required = true) String oldCode,
-			@RequestParam(value="code", required = true) String code) throws Exception{
-		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
-			return new Result("no_permission");
-		}
-		return commonService.saveOpenCashdrawerCode(userId,oldCode, code);
-	}
+//	@RequestMapping(value="/common/saveconfirmcode", method = {RequestMethod.POST, RequestMethod.GET})
+//	public @ResponseBody Result saveConfirmCode(
+//			@RequestParam(value = "userId", required = true) int userId,
+//			@RequestParam(value="oldCode", required = true) String oldCode,
+//			@RequestParam(value="code", required = true) String code) throws Exception{
+//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+//			return new Result("no_permission");
+//		}
+//		return commonService.saveConfirmCode(userId, oldCode,code);
+//	}
+//	
+//	@RequestMapping(value="/common/savecleartablecode", method = {RequestMethod.POST, RequestMethod.GET})
+//	public @ResponseBody Result saveClearTableCode(
+//			@RequestParam(value = "userId", required = true) int userId,
+//			@RequestParam(value="oldCode", required = true) String oldCode,
+//			@RequestParam(value="code", required = true) String code) throws Exception{
+//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+//			return new Result("no_permission");
+//		}
+//		return commonService.saveClearTableCode(userId, oldCode,code);
+//	}
+//	
+//	@RequestMapping(value="/common/savecancelordercode", method = {RequestMethod.POST, RequestMethod.GET})
+//	public @ResponseBody Result saveCancelOrderCode(
+//			@RequestParam(value = "userId", required = true) int userId,
+//			@RequestParam(value="oldCode", required = true) String oldCode,
+//			@RequestParam(value="code", required = true) String code) throws Exception{
+//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+//			return new Result("no_permission");
+//		}
+//		return commonService.saveCancelOrderCode(userId, oldCode,code);
+//	}
+//	
+//	@RequestMapping(value="/common/saveopencashdrawercode", method = {RequestMethod.POST, RequestMethod.GET})
+//	public @ResponseBody Result saveOpenCashdrawerCode(
+//			@RequestParam(value = "userId", required = true) int userId,
+//			@RequestParam(value="oldCode", required = true) String oldCode,
+//			@RequestParam(value="code", required = true) String code) throws Exception{
+//		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_CHANGE_CONFIG)){
+//			return new Result("no_permission");
+//		}
+//		return commonService.saveOpenCashdrawerCode(userId,oldCode, code);
+//	}
 	
 	@RequestMapping(value="/common/savelanguageset", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody Result saveLanguageSet(

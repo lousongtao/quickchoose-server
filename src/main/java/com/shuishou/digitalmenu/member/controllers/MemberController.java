@@ -101,6 +101,29 @@ public class MemberController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(value = "/member/querymemberrecharge", method = {RequestMethod.POST})
+	public @ResponseBody ObjectListResult queryMemberRecharge(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "startTime", required = false, defaultValue = "") String sStartTime,
+			@RequestParam(value = "endTime", required = false, defaultValue = "") String sEndTime) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_MEMBER)){
+			return new ObjectListResult("no_permission", false);
+		}
+		Date startTime = null;
+		Date endTime = null;
+		if (sStartTime != null && sStartTime.length() > 0){
+			startTime = ConstantValue.DFYMDHMS.parse(sStartTime);
+		}
+		if (sEndTime != null && sEndTime.length() > 0){
+			endTime = ConstantValue.DFYMDHMS.parse(sEndTime);
+		}
+		if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
+			return memberService.queryMemberRecharge(startTime, endTime);
+		} else {
+			return memberCloudService.queryMemberRecharge(startTime, endTime);
+		}
+	}
+	
 	@RequestMapping(value = "/member/addmember", method = {RequestMethod.POST})
 	public @ResponseBody ObjectResult addMember(
 			@RequestParam(value = "userId", required = true) int userId,
@@ -229,14 +252,15 @@ public class MemberController extends BaseController {
 	public @ResponseBody ObjectResult memberRecharge(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "id", required = true) int id,
-			@RequestParam(value = "rechargeValue", required = true) double rechargeValue) throws Exception{
+			@RequestParam(value = "rechargeValue", required = true) double rechargeValue,
+			@RequestParam(value = "payway", required = true) String payway) throws Exception{
 		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_MEMBERBALANCE)){
 			return new ObjectResult("no_permission", false);
 		}
 		if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
-			return memberService.memberRecharge(userId, id, rechargeValue);
+			return memberService.memberRecharge(userId, id, rechargeValue, payway);
 		} else {
-			return memberCloudService.memberRecharge(userId, id, rechargeValue);
+			return memberCloudService.memberRecharge(userId, id, rechargeValue, payway);
 		}
 	}
 

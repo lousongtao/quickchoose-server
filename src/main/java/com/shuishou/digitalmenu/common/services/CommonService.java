@@ -133,30 +133,13 @@ public class CommonService implements ICommonService {
 		return new ObjectResult(Result.OK, true, maps);
 	}
 	
-//	@Override
-//	@Transactional
-//	public CheckConfirmCodeResult checkConfirmCode(String code) {
-//		ConfirmCode cc = confirmCodeDA.getCode();
-//		if (code.equals(cc.getCode()))
-//			return new CheckConfirmCodeResult(Result.OK, true, true);
-//		return new CheckConfirmCodeResult(Result.FAIL, false, false);
-//	}
-//
-//	@Override
-//	@Transactional
-//	public GetConfirmCodeResult getConfirmCode() {
-//		ConfirmCode cc = confirmCodeDA.getCode();
-//		String code = cc == null ? "" : cc.getCode();
-//		return new GetConfirmCodeResult(Result.OK, true, code);
-//	}
-
 	@Override
 	@Transactional
-	public ObjectResult saveConfirmCode(long userId, String oldCode, String code) {
-		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
+	public ObjectResult saveCode(long userId, String oldCode, String code, String key) {
+		Configs c = configsDA.getConfigsByName(key);
 		if (c == null){
 			c = new Configs();
-			c.setName(ConstantValue.CONFIGS_CONFIRMCODE);
+			c.setName(key);
 		} else {
 			if (!c.getValue().equals(oldCode)){
 				return new ObjectResult("old code is wrong", false);
@@ -166,73 +149,11 @@ public class CommonService implements ICommonService {
 		configsDA.saveConfigs(c);
 		// write log.
 		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change confirm code " + code);
+		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change "+ key + " code " + code);
 
 		return new ObjectResult(Result.OK, true);
 	}
 	
-	@Override
-	@Transactional
-	public ObjectResult saveClearTableCode(long userId, String oldCode, String code) {
-		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_CLEARTABLECODE);
-		if (c == null){
-			c = new Configs();
-			c.setName(ConstantValue.CONFIGS_CLEARTABLECODE);
-		} else {
-			if (!c.getValue().equals(oldCode)){
-				return new ObjectResult("old code is wrong", false);
-			}
-		}
-		c.setValue(code);
-		configsDA.saveConfigs(c);
-		// write log.
-		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change clear table code " + code);
-
-		return new ObjectResult(Result.OK, true);
-	}
-	
-	@Override
-	@Transactional
-	public ObjectResult saveCancelOrderCode(long userId, String oldCode, String code) {
-		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_CANCELORDERCODE);
-		if (c == null){
-			c = new Configs();
-			c.setName(ConstantValue.CONFIGS_CANCELORDERCODE);
-		} else {
-			if (!c.getValue().equals(oldCode)){
-				return new ObjectResult("old code is wrong", false);
-			}
-		}
-		c.setValue(code);
-		configsDA.saveConfigs(c);
-		// write log.
-		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change cancel order code " + code);
-
-		return new ObjectResult(Result.OK, true);
-	}
-	
-	@Override
-	@Transactional
-	public ObjectResult saveOpenCashdrawerCode(long userId, String oldCode, String code) {
-		Configs c = configsDA.getConfigsByName(ConstantValue.CONFIGS_OPENCASHDRAWERCODE);
-		if (c == null){
-			c = new Configs();
-			c.setName(ConstantValue.CONFIGS_OPENCASHDRAWERCODE);
-		} else {
-			if (!c.getValue().equals(oldCode)){
-				return new ObjectResult("old code is wrong", false);
-			}
-		}
-		c.setValue(code);
-		configsDA.saveConfigs(c);
-		// write log.
-		UserData selfUser = userDA.getUserById(userId);
-		logService.write(selfUser, LogData.LogType.CHANGE_CONFIG.toString(), "User "+ selfUser + " change open cashdrawer " + code);
-
-		return new ObjectResult(Result.OK, true);
-	}
 
 	@Override
 	@Transactional

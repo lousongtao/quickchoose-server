@@ -24,7 +24,7 @@
 	1. add log to track exception in print thread
 	
 20180624
-	1. provide a new interface for client to query the avaible apk files list
+	1. provide a new interface for client to query the available apk files list
 	
 20180716
 	add null check for endDate when print shiftwork ticket.
@@ -35,3 +35,11 @@
 	
 20180813
 	1. complete the synchronize function, including the operation add/update/delete/picture/soldout on Category1, Category2, Dish, DishConfigGroup, DishConfig.
+	
+20180901
+	1. add password for member recharge & member balance change;
+	2. print ticket twice for balance change of member;
+	3. adjust the interface for update password in config dialog. Make all change password using one interface.
+	4. add payway for member balance table;
+	5. add function for Member Recharge Query; 
+	REMEMBER: run sql in database.

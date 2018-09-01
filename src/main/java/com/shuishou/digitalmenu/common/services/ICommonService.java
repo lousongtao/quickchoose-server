@@ -9,17 +9,8 @@ import com.shuishou.digitalmenu.views.ObjectResult;
 
 public interface ICommonService {
 
-//	CheckConfirmCodeResult checkConfirmCode(String code);
-//	
-//	GetConfirmCodeResult getConfirmCode();
-//	
 	ObjectResult checkUpgradeApk();
-	
-	ObjectResult saveConfirmCode(long userId, String oldCode, String code);
-	ObjectResult saveClearTableCode(long userId, String oldCode, String code);
-	ObjectResult saveCancelOrderCode(long userId, String oldCode, String code);
-	
-	ObjectResult saveOpenCashdrawerCode(long userId, String oldCode, String code);
+	ObjectResult saveCode(long userId, String oldCode, String code, String key);
 	
 	ObjectResult savePrintTicket(long userId, String printTicket);
 	

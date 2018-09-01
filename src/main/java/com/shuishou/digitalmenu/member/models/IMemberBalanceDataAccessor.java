@@ -7,6 +7,8 @@ public interface IMemberBalanceDataAccessor {
 
 	List<MemberBalance> getMemberBalanceByMemberId(int memberId);
 	
+	List<MemberBalance> getMemberBalanceByDate(Date startTime, Date endTime);
+	
 	void save(MemberBalance mc);
 	
 	void delete(MemberBalance mc);
