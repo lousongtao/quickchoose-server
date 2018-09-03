@@ -199,7 +199,7 @@ public class MemberService implements IMemberService{
 			m.setLastModifyTime(new Date());
 			memberDA.save(m);
 			UserData selfUser = userDA.getUserById(userId);
-			logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " update member password");
+			logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " update member password to 111111");
 			return new ObjectResult(Result.OK, true);
 		} catch (NoSuchAlgorithmException e) {
 			return new ObjectResult(e.getMessage(), false, null);

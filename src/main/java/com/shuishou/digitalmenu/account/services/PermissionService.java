@@ -36,6 +36,7 @@ public class PermissionService implements IPermissionService {
 		return false;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@Transactional
 	public ObjectListResult queryAllPermissions() {

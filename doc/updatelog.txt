@@ -43,3 +43,8 @@
 	4. add payway for member balance table;
 	5. add function for Member Recharge Query; 
 	REMEMBER: run sql in database.
+	
+20180903
+	1. add function of delete member
+	2. add permission's properties of DESCRIPTION & SEQUENCE;
+	REMEMBER: run sql in database.

@@ -188,6 +188,27 @@ public class MemberController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(value = "/member/deletemember", method = {RequestMethod.POST})
+	public @ResponseBody ObjectResult deleteMember(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "id", required = true) int id) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_DELETE_MEMBER)){
+			return new ObjectResult("no_permission", false);
+		}
+		try{
+			if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
+				return memberService.deleteMember(userId, id);
+			} else {
+				return memberCloudService.deleteMember(userId, id);
+			}
+		} catch(Exception e){
+			log.error(ConstantValue.DFYMDHMS.format(new Date()));
+	        log.error("", e);
+	        e.printStackTrace();
+			return new ObjectResult(e.getMessage()+"\n"+e.getCause(), false);
+		}
+	}
+	
 	@RequestMapping(value = "/member/updatememberscore", method = {RequestMethod.POST})
 	public @ResponseBody ObjectResult updateMemberScore(
 			@RequestParam(value = "userId", required = true) int userId,

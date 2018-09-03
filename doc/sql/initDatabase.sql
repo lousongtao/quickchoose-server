@@ -51,6 +51,7 @@ INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('16', 'UPDATE_MEMB
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('17', 'UPDATE_MEMBERSCORE');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('18', 'UPDATE_MEMBERBALANCE');
 INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('19', 'UPDATE_MEMBERPASSWORD');
+INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('20', 'DELETE_MEMBER');
 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('1', '1'); 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('2', '1'); 
@@ -70,4 +71,5 @@ INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('16', '1'); 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('17', '1');
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('18', '1');
-INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('19', '1'); 
+INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('19', '1');
+INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('20', '1'); 

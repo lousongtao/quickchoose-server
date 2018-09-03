@@ -19,8 +19,12 @@ import com.google.gson.reflect.TypeToken;
 import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.DataCheckException;
 import com.shuishou.digitalmenu.ServerProperties;
+import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
+import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.common.models.Configs;
 import com.shuishou.digitalmenu.common.models.IConfigsDataAccessor;
+import com.shuishou.digitalmenu.log.models.LogData;
+import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.member.models.Member;
 import com.shuishou.digitalmenu.member.models.MemberBalance;
 import com.shuishou.digitalmenu.member.models.MemberScore;
@@ -35,7 +39,14 @@ public class MemberCloudService implements IMemberCloudService{
 	@Autowired
 	private IConfigsDataAccessor configDA;
 	
+	@Autowired
+	private ILogService logService;
+	
+	@Autowired
+	private IUserDataAccessor userDA;
+	
 	@Override
+	@Transactional
 	public ObjectResult addMember(int userId, String name, String memberCard, String address, String postCode,
 			String telephone, Date birth, double discountRate, String password) {
 		Map<String, String> params = new HashMap<>();
@@ -60,10 +71,13 @@ public class MemberCloudService implements IMemberCloudService{
 		if (!result.success){
 			return new ObjectResult("return false while add member. URL = " + url + ", response = "+response, false);
 		}
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " add member name : " + name + ", card : " + memberCard);
 		return new ObjectResult(Result.OK, true, result.data);
 	}
 
 	@Override
+	@Transactional
 	public ObjectResult updateMember(int userId, int id, String name, String memberCard, String address,
 			String postCode, String telephone, Date birth, double discountRate) {
 		Map<String, String> params = new HashMap<>();
@@ -87,6 +101,11 @@ public class MemberCloudService implements IMemberCloudService{
 		if (!result.success){
 			return new ObjectResult("return false while update member. URL = " + url + ", response = "+response, false);
 		}
+		UserData selfUser = userDA.getUserById(userId);
+		
+		logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " update member info to name : " + name
+				+ ", memberCard : " + memberCard + ", address : " + address + ", postCode : "+ postCode + ", telephone : "+ telephone
+				+ ", birth" + (birth == null ? "": ConstantValue.DFYMD.format(birth)));
 		return new ObjectResult(Result.OK, true, result.data);
 	}
 
@@ -110,6 +129,10 @@ public class MemberCloudService implements IMemberCloudService{
 		if (!result.success){
 			return new ObjectResult("return false while update member score. URL = " + url + ", response = "+response, false);
 		}
+		UserData selfUser = userDA.getUserById(userId);
+		
+		logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " update member score to " + newScore
+				+ ". id = " + id + ", name = " + result.data.getName() + ", card = " + result.data.getMemberCard() );
 		return new ObjectResult(Result.OK, true, result.data);
 	}
 
@@ -133,10 +156,16 @@ public class MemberCloudService implements IMemberCloudService{
 		if (!result.success){
 			return new ObjectResult("return false while update member balance. URL = " + url + ", response = "+response, false);
 		}
+		UserData selfUser = userDA.getUserById(userId);
+		
+		logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " update member balance to " + newBalance
+				+ ". id = " + id + ", name = " + result.data.getName() + ", card = " + result.data.getMemberCard() );
+		
 		return new ObjectResult(Result.OK, true, result.data);
 	}
 	
 	@Override
+	@Transactional
 	public ObjectResult updateMemberPassword(int userId, int id, String oldPassword, String newPassword) {
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
@@ -153,10 +182,15 @@ public class MemberCloudService implements IMemberCloudService{
 		if (!result.success){
 			return new ObjectResult("return false while update member password. URL = " + url + ", response = "+response, false);
 		}
+		UserData selfUser = userDA.getUserById(userId);
+		
+		logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " update member password."
+				+ " id = " + id + ", name = " + result.data.getName() + ", card = " + result.data.getMemberCard() );
 		return new ObjectResult(Result.OK, true, result.data);
 	}
 	
 	@Override
+	@Transactional
 	public ObjectResult resetMemberPassword111111(int userId, int id) {
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
@@ -171,6 +205,9 @@ public class MemberCloudService implements IMemberCloudService{
 		if (!result.success){
 			return new ObjectResult("return false while reset member password 111111. URL = " + url + ", response = "+response, false);
 		}
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " update member password to 111111"
+				+ ". id = " + id + ", name = " + result.data.getName() + ", card = " + result.data.getMemberCard() );
 		return new ObjectResult(Result.OK, true, result.data);
 	}
 
@@ -195,10 +232,16 @@ public class MemberCloudService implements IMemberCloudService{
 		if (!result.success){
 			return new ObjectResult("return false while update member balance. URL = " + url + ", response = "+response, false);
 		}
+		UserData selfUser = userDA.getUserById(userId);
+		
+		logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " recharge member. id = " + id 
+				+ ", name = " + result.data.getName() + ", card = " + result.data.getMemberCard() 
+				+ ", recharge amount = " + recharge + " payway = " + payway);
 		return new ObjectResult(Result.OK, true, result.data);
 	}
 
 	@Override
+	@Transactional
 	public ObjectResult deleteMember(int userId, int id) {
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
@@ -213,10 +256,13 @@ public class MemberCloudService implements IMemberCloudService{
 		if (!result.success){
 			return new ObjectResult("return false while update member. URL = " + url + ", response = "+response, false);
 		}
+		UserData selfUser = userDA.getUserById(userId);
+		logService.write(selfUser, LogData.LogType.MEMBER_CHANGE.toString(), "User " + selfUser + " delete member id : " + id);
 		return new ObjectResult(Result.OK, true, result.data);
 	}
 
 	@Override
+	@Transactional
 	public ObjectListResult queryMember(String name, String memberCard, String address, String postCode,
 			String telephone) {
 		String url = "member/querymember";
@@ -245,6 +291,7 @@ public class MemberCloudService implements IMemberCloudService{
 	}
 	
 	@Override
+	@Transactional
 	public ObjectListResult queryMemberHazily(String key) {
 		String url = "member/querymemberhazily";
 		Map<String, String> params = new HashMap<>();
@@ -263,6 +310,7 @@ public class MemberCloudService implements IMemberCloudService{
 	}
 
 	@Override
+	@Transactional
 	public ObjectListResult queryAllMember() {
 		String url = "member/queryallmember";
 		Map<String, String> params = new HashMap<>();
@@ -333,6 +381,8 @@ public class MemberCloudService implements IMemberCloudService{
 		return null;
 	}
 
+	@Override
+	@Transactional
 	public ObjectListResult queryMemberBalance(int memberId){
 		String url = "member/querymemberbalance";
 		Map<String, String> params = new HashMap<>();
@@ -350,6 +400,8 @@ public class MemberCloudService implements IMemberCloudService{
 		return new ObjectListResult(Result.OK, true, result.data);
 	}
 	
+	@Override
+	@Transactional
 	public ObjectListResult queryMemberRecharge(Date startTime, Date endTime){
 		String url = "member/querymemberrecharge";
 		Map<String, String> params = new HashMap<>();
@@ -370,6 +422,8 @@ public class MemberCloudService implements IMemberCloudService{
 		return new ObjectListResult(Result.OK, true, result.data);
 	}
 	
+	@Override
+	@Transactional
 	public ObjectListResult queryMemberScore(int memberId){
 		String url = "member/querymemberscore";
 		Map<String, String> params = new HashMap<>();

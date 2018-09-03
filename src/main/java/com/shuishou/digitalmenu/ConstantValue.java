@@ -33,6 +33,7 @@ public class ConstantValue {
 	public static final String PERMISSION_STATISTICS = "STATISTICS";
 	public static final String PERMISSION_RAWMATERIAL = "RAWMATERIAL";
 	public static final String PERMISSION_QUERY_MEMBER = "QUERY_MEMBER";
+	public static final String PERMISSION_DELETE_MEMBER = "DELETE_MEMBER";
 	public static final String PERMISSION_UPDATE_MEMBER = "UPDATE_MEMBER";
 	public static final String PERMISSION_UPDATE_MEMBERSCORE = "UPDATE_MEMBERSCORE";
 	public static final String PERMISSION_UPDATE_MEMBERBALANCE = "UPDATE_MEMBERBALANCE";

@@ -19,6 +19,30 @@ public class Permission {
 	
 	@Column(nullable = false)
 	private String name;
+	
+	@Column(nullable = false)
+	private int sequence;
+	
+	@Column
+	private String description;
+	
+	
+
+	public int getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public int getId() {
 		return id;
