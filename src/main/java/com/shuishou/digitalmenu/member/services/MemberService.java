@@ -262,6 +262,17 @@ public class MemberService implements IMemberService{
 		return new ObjectListResult(Result.OK, true, members, 0);
 	}
 	
+	@Override
+	@Transactional
+	public ObjectResult queryMemberByCard(String memberCard) {
+		List<Member> members = memberDA.queryMember(null, memberCard, null, null, null);
+		Member m = null;
+		if (members != null && !members.isEmpty()){
+			m = members.get(0);
+		}
+		return new ObjectResult(Result.OK, true, m);
+	}
+	
 	/**
 	 * query member using a key
 	 * key maybe is the name, the telephone, or the code

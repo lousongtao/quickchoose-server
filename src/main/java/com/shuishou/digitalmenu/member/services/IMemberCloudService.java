@@ -18,6 +18,7 @@ public interface IMemberCloudService {
 	ObjectResult deleteMember(int userId, int id);
 	ObjectResult recordMemberConsumption(String memberCard, String memberPassword, double consumptionPrice) throws DataCheckException;
 	ObjectListResult queryMember(String name, String memberCard, String address, String postCode, String telephone);
+	ObjectResult queryMemberByCard(String memberCard);
 	ObjectListResult queryAllMember();
 	ObjectListResult queryMemberBalance(int memberId);
 	ObjectListResult queryMemberRecharge(Date startTime, Date endTime);

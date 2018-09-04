@@ -292,6 +292,30 @@ public class MemberCloudService implements IMemberCloudService{
 	
 	@Override
 	@Transactional
+	public ObjectResult queryMemberByCard(String memberCard) {
+		String url = "member/querymember";
+		Map<String, String> params = new HashMap<>();
+		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
+		if (memberCard != null && memberCard.length() > 0)
+			params.put("memberCard", memberCard);
+		String response = HttpUtil.getJSONObjectByPost(ServerProperties.MEMBERCLOUDLOCATION + url, params);
+		if (response == null){
+			return new ObjectResult("get null from server for query member By Card. URL = " + url + ", param = "+ params, false);
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMD).create();
+		HttpResult<ArrayList<Member>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<Member>>>(){}.getType());
+		if (!result.success){
+			return new ObjectResult("return false while query member By Card. URL = " + url + ", response = "+response, false);
+		}
+		Member m = null;
+		if (result.data != null && !result.data.isEmpty()){
+			m = result.data.get(0);
+		}
+		return new ObjectResult(Result.OK, true, m);
+	}
+	
+	@Override
+	@Transactional
 	public ObjectListResult queryMemberHazily(String key) {
 		String url = "member/querymemberhazily";
 		Map<String, String> params = new HashMap<>();

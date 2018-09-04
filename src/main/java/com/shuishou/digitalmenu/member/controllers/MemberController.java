@@ -51,6 +51,26 @@ public class MemberController extends BaseController {
 		}
 		return result;
 	}
+
+	/**
+	 * 这个方法给付款界面用, 不要求权限
+	 * @param userId
+	 * @param memberCard
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/member/querymemberbycard", method = {RequestMethod.POST, RequestMethod.GET})
+	public @ResponseBody ObjectResult queryMemberByCard(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "memberCard", required = true) String memberCard) throws Exception{
+		ObjectResult result = null;
+		if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
+			result = memberService.queryMemberByCard(memberCard);
+		} else {
+			result = memberCloudService.queryMemberByCard(memberCard);
+		}
+		return result;
+	}
 	
 	@RequestMapping(value = "/member/querymemberhazily", method = {RequestMethod.POST, RequestMethod.GET})
 	public @ResponseBody ObjectListResult queryMember(
