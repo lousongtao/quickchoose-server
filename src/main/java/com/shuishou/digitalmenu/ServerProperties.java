@@ -3,11 +3,16 @@ package com.shuishou.digitalmenu;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.shuishou.digitalmenu.validatelicense.services.IValidateService;
 
 
 @Component
@@ -20,6 +25,9 @@ public class ServerProperties implements InitializingBean{
 	public static String MEMBERLOCATION;
 	public static String MEMBERCLOUDLOCATION;
 	public static String MEMBERCUSTOMERNAME;
+	public static String LICENSECUSTOMERNAME;
+	public static String LICENSEKEY;
+	public static String LICENSEURL;
 	
 	private String configFile = "/server_config.properties";
 	
@@ -32,6 +40,9 @@ public class ServerProperties implements InitializingBean{
 			MEMBERLOCATION = prop.getProperty("MemberLocation");
 			MEMBERCLOUDLOCATION = prop.getProperty("MemberCloudLocation");
 			MEMBERCUSTOMERNAME = prop.getProperty("MemberCustomerName");
+			LICENSECUSTOMERNAME = prop.getProperty("LicenseCustomerName");
+			LICENSEKEY = prop.getProperty("LicenseKey");
+			LICENSEURL = prop.getProperty("LicenseURL");
 		} catch (IOException ex) {
 			ex.printStackTrace();
 			logger.error("", ex);
@@ -44,6 +55,8 @@ public class ServerProperties implements InitializingBean{
 				}
 			}
 		}
+		
+		
 	}
 
 }

@@ -174,4 +174,12 @@ public class ConstantValue {
 	public static final int MEMBERDEPOSIT_RECHARGE = 3;//消费余额类型-充值
 	public static final int MEMBERDEPOSIT_ADJUST = 4;//消费余额类型-调整
 	
+	public static final int VALIDATELICENSE_STATUS_SECCESS = 0;
+	public static final int VALIDATELICENSE_STATUS_FAILED = 1;
+	
+	public static final int VALIDATELICENSE_EXPIREDAYS = 15; //过期天数, 超过这个天数后禁止使用系统
+	public static final int VALIDATELICENSE_FAILEDTIMES = 15; //验证失败次数, 超过这个次数后禁止使用系统
+	
+	
+	
 }

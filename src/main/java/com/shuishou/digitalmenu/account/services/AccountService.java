@@ -7,6 +7,7 @@ package com.shuishou.digitalmenu.account.services;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +32,8 @@ import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
+import com.shuishou.digitalmenu.validatelicense.models.IValidateLicenseHistoryDataAccessor;
+import com.shuishou.digitalmenu.validatelicense.models.ValidateLicenseHistory;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -56,6 +59,9 @@ public class AccountService implements IAccountService {
 	
 	@Autowired
 	private IUserPermissionDataAccessor userPermissionDA;
+	
+	@Autowired
+	private IValidateLicenseHistoryDataAccessor vlhDA;
 
 	/**
 	 * the user accessor.
@@ -133,19 +139,37 @@ public class AccountService implements IAccountService {
 	@Override
 	@Transactional(readOnly = false)
 	public LoginResult auth(String username, String password) {
+		String licenseWarning = null;
+		ValidateLicenseHistory his = vlhDA.getLastRecord();
+		if (his != null){
+			if (his.getFailureTimes() > ConstantValue.VALIDATELICENSE_FAILEDTIMES){
+				return new LoginResult("Too many failed validations for license.", "", "", "");
+			} else if (his.getFailureTimes() > 0){
+				licenseWarning = "License validation processor occurs exceptions recently. To keep software run perfectly, please report the phenomenon to administrator. The last error for " + his.getFailureReason();
+			}
+			
+			Calendar c1 = Calendar.getInstance();
+			Calendar c2 = Calendar.getInstance();
+			c1.setTime(his.getExpireDate());
+			if ((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24) > ConstantValue.VALIDATELICENSE_EXPIREDAYS){
+				return new LoginResult("License is expired.", "", "", "");
+			} else if (Math.abs((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24)) < ConstantValue.VALIDATELICENSE_EXPIREDAYS){
+				licenseWarning = "The license will be expired in " + (int)((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24)) + " days. Please recharge the fee and inform this to administrator.";
+			}
+		}
 		// check username.
 		UserData user = userDA.getUserByUsername(username);
 		if (user == null)
-			return new LoginResult("invalid_user", "", "");
+			return new LoginResult("invalid_user", "", "", "");
 
 		// check password.
 		try {
 			String hashedPassword = toSHA1(password.getBytes());
 			if (!user.getHashedPassword().equals(hashedPassword))
-				return new LoginResult("invalid_password", "", "");
+				return new LoginResult("invalid_password", "", "", "");
 		} catch (NoSuchAlgorithmException ex) {
 			logger.error("check user password failed.", ex);
-			return new LoginResult("invalid_password", "", "");
+			return new LoginResult("invalid_password", "", "", "");
 		}
 
 
@@ -153,7 +177,7 @@ public class AccountService implements IAccountService {
 		logService.write(user, LogData.LogType.ACCOUNT_LOGIN.toString(),
 				"User " + user + " login.");
 
-		return new LoginResult(Result.OK, Long.toString(user.getId()), user.getUsername());
+		return new LoginResult(Result.OK, Long.toString(user.getId()), user.getUsername(), licenseWarning);
 	}
 
 

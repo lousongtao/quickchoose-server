@@ -17,6 +17,8 @@ public class LoginResult {
 	private final String userId;
 	
 	private final String userName;
+	
+	private final String licenseWarning;
 
 
 	/**
@@ -29,10 +31,11 @@ public class LoginResult {
 	 * @param sessionId
 	 *            the session id.
 	 */
-	public LoginResult(String result, String userId, String userName) {
+	public LoginResult(String result, String userId, String userName, String licenseWarning) {
 		this.result = result;
 		this.userId = userId;
 		this.userName = userName;
+		this.licenseWarning = licenseWarning;
 	}
 
 	/**
@@ -52,6 +55,10 @@ public class LoginResult {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public String getLicenseWarning() {
+		return licenseWarning;
 	}
 
 	

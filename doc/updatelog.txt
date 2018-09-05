@@ -48,3 +48,8 @@
 	1. add function of delete member
 	2. add permission's properties of DESCRIPTION & SEQUENCE;
 	REMEMBER: run sql in database.
+	
+20180905
+	1. add function of license validation.
+	REMEMBER: update the customer's property file.
+	

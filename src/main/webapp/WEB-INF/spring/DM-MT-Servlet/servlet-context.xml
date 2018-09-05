@@ -84,6 +84,7 @@
         <beans:value>com.shuishou.digitalmenu.management.models</beans:value>
         <beans:value>com.shuishou.digitalmenu.rawmaterial.models</beans:value>
         <beans:value>com.shuishou.digitalmenu.member.models</beans:value>
+        <beans:value>com.shuishou.digitalmenu.validatelicense.models</beans:value>
       </beans:list>
     </beans:property>
     <beans:property name="hibernateProperties">

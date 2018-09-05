@@ -36,6 +36,7 @@ import com.shuishou.digitalmenu.ServerProperties;
 import com.shuishou.digitalmenu.account.controllers.AccountController;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.UserData;
+import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.common.models.Configs;
 import com.shuishou.digitalmenu.common.models.Desk;
 import com.shuishou.digitalmenu.common.models.IConfigsDataAccessor;
@@ -64,6 +65,8 @@ import com.shuishou.digitalmenu.rawmaterial.models.IMaterialRecordDataAccessor;
 import com.shuishou.digitalmenu.rawmaterial.models.Material;
 import com.shuishou.digitalmenu.rawmaterial.models.MaterialRecord;
 import com.shuishou.digitalmenu.statistics.views.StatItem;
+import com.shuishou.digitalmenu.validatelicense.models.IValidateLicenseHistoryDataAccessor;
+import com.shuishou.digitalmenu.validatelicense.models.ValidateLicenseHistory;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -111,6 +114,9 @@ public class IndentService implements IIndentService {
 	
 	@Autowired
 	private IMemberCloudService memberCloudService;
+	
+	@Autowired
+	private IValidateLicenseHistoryDataAccessor vlhDA;
 	
 	private DecimalFormat doubleFormat = new DecimalFormat("0.00");
 	
@@ -762,6 +768,19 @@ public class IndentService implements IIndentService {
 	@Transactional(rollbackFor = DataCheckException.class)
 	public OperateIndentResult doPayIndent(int userId, int indentId, double paidPrice, double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException {
 		long l1 = System.currentTimeMillis();
+		ValidateLicenseHistory his = vlhDA.getLastRecord();
+		if (his != null){
+			if (his.getFailureTimes() > ConstantValue.VALIDATELICENSE_FAILEDTIMES){
+				return new OperateIndentResult("Too many failed validations for license.", false);
+			}
+			
+			Calendar c1 = Calendar.getInstance();
+			Calendar c2 = Calendar.getInstance();
+			c1.setTime(his.getExpireDate());
+			if ((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24) > ConstantValue.VALIDATELICENSE_EXPIREDAYS){
+				return new OperateIndentResult("License is expired.", false);
+			}
+		}
 		Indent indent = indentDA.getIndentById(indentId);
 		if (indent == null)
 			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
