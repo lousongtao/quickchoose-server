@@ -65,7 +65,9 @@ public class ValidateService implements IValidateService{
 			his.setValidateDate(new Date());
 			his.setStatus(ConstantValue.VALIDATELICENSE_STATUS_FAILED);
 			//密码不匹配
-			if (result.data == null){
+			if (result == null){
+				recordErrorValidate("Exception occured for connect cloud server.");
+			} else if (result.data == null){
 				recordErrorValidate("customer and key are not matched");
 			}
 		}

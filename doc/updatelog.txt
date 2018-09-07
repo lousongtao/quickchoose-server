@@ -51,5 +51,5 @@
 	
 20180905
 	1. add function of license validation.
-	REMEMBER: update the customer's property file.
+	REMEMBER: update the customer's property file, including server.properties and spring file.
 	
