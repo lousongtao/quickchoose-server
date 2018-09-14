@@ -170,6 +170,18 @@ public class IndentController extends BaseController {
 		return indentService.doCancelIndent(userId, indentId);
 	}
 	
+	@RequestMapping(value="/indent/dochangepaywayindent", method = (RequestMethod.POST))
+	public @ResponseBody OperateIndentResult doChangeIndentPayway(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value="id", required = true) int indentId,
+			@RequestParam(value="payway", required = true) String payway) throws Exception{
+		
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_UPDATE_ORDER)){
+			return new OperateIndentResult("no_permission", false);
+		}
+		return indentService.doChangeIndentPayway(userId, indentId, payway);
+	}
+	
 	/**
 	 * 
 	 * @param userId
