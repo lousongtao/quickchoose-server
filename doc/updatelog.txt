@@ -53,3 +53,6 @@
 	1. add function of license validation.
 	REMEMBER: update the customer's property file, including server.properties and spring file.
 	
+20180914
+	1. change PAYWAY for paid order
+	

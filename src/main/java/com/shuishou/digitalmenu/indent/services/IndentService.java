@@ -860,6 +860,23 @@ public class IndentService implements IIndentService {
 	
 	@Override
 	@Transactional
+	public OperateIndentResult doChangeIndentPayway(int userId, int indentId, String payway){
+		Indent indent = indentDA.getIndentById(indentId);
+		if (indent == null)
+			return new OperateIndentResult("cannot find Indent by Id:" + indentId, false);
+		UserData selfUser = userDA.getUserById(userId);
+		String logtype = LogData.LogType.INDENT_CHANGE.toString();
+		String oldPayway = indent.getPayWay();
+		indent.setPayWay(payway);
+		indentDA.update(indent);
+		
+		// write log.
+		logService.write(selfUser, logtype, "User " + selfUser + " operate indent, change payway from " + oldPayway +" to " + payway +", id =" + indentId + ", operationType = " + logtype + ".");
+		return new OperateIndentResult(Result.OK, true);
+	}
+	
+	@Override
+	@Transactional
 	public OperateIndentResult doCancelIndent(int userId, int indentId) {
 		long l1 = System.currentTimeMillis();
 		Indent indent = indentDA.getIndentById(indentId);
