@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.persistence.Column;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.ServerProperties;
 import com.shuishou.digitalmenu.member.services.HttpResult;
 import com.shuishou.digitalmenu.member.services.HttpUtil;
+import com.shuishou.digitalmenu.validatelicense.ValidateLicense;
 import com.shuishou.digitalmenu.validatelicense.models.IValidateLicenseHistoryDataAccessor;
 import com.shuishou.digitalmenu.validatelicense.models.ValidateLicenseHistory;
 import com.shuishou.digitalmenu.views.ObjectResult;
@@ -25,6 +28,8 @@ import com.shuishou.digitalmenu.views.ObjectResult;
 @Service
 public class ValidateService implements IValidateService{
 
+	private final static Logger logger = LoggerFactory.getLogger(ValidateService.class);
+	
 	@Autowired
 	private IValidateLicenseHistoryDataAccessor vlhDA;
 	/**
@@ -39,18 +44,22 @@ public class ValidateService implements IValidateService{
 	@Override
 	@Transactional
 	public void validateLicense(String customerName, String key) {
+		logger.debug("enter validate service");
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.LICENSECUSTOMERNAME);
 		params.put("key", ServerProperties.LICENSEKEY);
 		
-		String url = "/lisence/querylisence";
+		logger.debug("validate service, before cloud service ");
 		String response = HttpUtil.getJSONObjectByPost(ServerProperties.LICENSEURL, params);
+		logger.debug("validate service, cloud service response " + response);
 		if (response == null){
 			recordErrorValidate("network exception");
+			return;
 		}
 		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMD).create();
 		HttpResult<License> result = gson.fromJson(response, new TypeToken<HttpResult<License>>(){}.getType());
 		if (result != null && result.success){
+			logger.debug("validate service, result != null && result.success");
 			//不管expire date是否过期, 都记录为成功验证
 			License l = result.data;
 			ValidateLicenseHistory his = new ValidateLicenseHistory();
@@ -60,6 +69,7 @@ public class ValidateService implements IValidateService{
 			his.setFailureTimes(0);
 			vlhDA.insert(his);
 		} else {
+			logger.debug("validate service, else ");
 			ValidateLicenseHistory lastHis = vlhDA.getLastRecord();
 			ValidateLicenseHistory his = new ValidateLicenseHistory();
 			his.setValidateDate(new Date());
@@ -80,6 +90,7 @@ public class ValidateService implements IValidateService{
 		his.setValidateDate(new Date());
 		his.setStatus(ConstantValue.VALIDATELICENSE_STATUS_FAILED);
 		his.setFailureReason(reason);
+		his.setExpireDate(new Date(90, 1,1));
 		if (lastHis == null){
 			his.setFailureTimes(1);
 		} else {

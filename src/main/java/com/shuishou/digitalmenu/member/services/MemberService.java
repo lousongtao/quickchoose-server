@@ -2,6 +2,7 @@ package com.shuishou.digitalmenu.member.services;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.shuishou.digitalmenu.member.models.IMemberScoreDataAccessor;
 import com.shuishou.digitalmenu.member.models.Member;
 import com.shuishou.digitalmenu.member.models.MemberBalance;
 import com.shuishou.digitalmenu.member.models.MemberScore;
+import com.shuishou.digitalmenu.member.views.MemberBalanceInfo;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -297,14 +299,41 @@ public class MemberService implements IMemberService{
 	@Transactional
 	public ObjectListResult queryMemberBalance(int memberId) {
 		List<MemberBalance> mbs = memberBalanceDA.getMemberBalanceByMemberId(memberId);
+		
 		return new ObjectListResult(Result.OK, true, mbs, mbs.size());
 	}
 
 	@Override
 	@Transactional
 	public ObjectListResult queryMemberRecharge(Date startTime, Date endTime) {
-		List<MemberBalance> mbs = memberBalanceDA.getMemberBalanceByDate(startTime, endTime);
-		return new ObjectListResult(Result.OK, true, mbs, mbs.size());
+		List<MemberBalance> mbs = memberBalanceDA.queryMemberRecharge(startTime, endTime);
+		List<MemberBalanceInfo> mbis = new ArrayList<>();
+		if (mbs != null && !mbs.isEmpty()){
+			List<Member> members = memberDA.queryAllMember();
+			for (int i = 0; i < mbs.size(); i++) {
+				MemberBalance mb = mbs.get(i);
+				MemberBalanceInfo mbi = new MemberBalanceInfo();
+				mbi.id = mb.getId();
+				mbi.amount = mb.getAmount();
+				mbi.date = mb.getDate();
+				mbi.memberId = mb.getMember().getId();
+				mbi.newValue = mb.getNewValue();
+				mbi.place = mb.getPlace();
+				mbi.type = mb.getType();
+				mbi.payway = mb.getPayway();
+				for (int j = 0; j < members.size(); j++) {
+					if (mbi.memberId == members.get(j).getId()){
+						mbi.memberCard = members.get(j).getMemberCard();
+						mbi.memberName = members.get(j).getName();
+						break;
+					}
+				}
+				mbis.add(mbi);
+			}
+		}
+		
+		
+		return new ObjectListResult(Result.OK, true, mbis, mbis.size());
 	}
 	
 	@Override

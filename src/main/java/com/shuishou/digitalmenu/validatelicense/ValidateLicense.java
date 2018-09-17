@@ -31,7 +31,9 @@ public class ValidateLicense implements InitializingBean{
 			@Override
 			public void run() {
 				try{
+					logger.debug("start to validate license...");
 					validateService.validateLicense(ServerProperties.LICENSECUSTOMERNAME, ServerProperties.LICENSEKEY);
+					logger.debug("validate license finish.");
 				}catch(Exception e){
 					logger.error("", e);
 				}

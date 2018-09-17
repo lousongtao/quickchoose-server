@@ -47,5 +47,15 @@ public class MemberBalanceDataAccessor extends BaseDataAccessor implements IMemb
 		return c.list();
 	}
 
-
+	@Override
+	public List<MemberBalance> queryMemberRecharge(Date startTime, Date endTime) {
+		Criteria c = sessionFactory.getCurrentSession().createCriteria(MemberBalance.class);
+		c.add(Restrictions.eq("type", ConstantValue.MEMBERDEPOSIT_RECHARGE));
+		if (startTime != null)
+			c.add(Restrictions.ge("date", startTime));
+		if (endTime != null)
+			c.add(Restrictions.le("date", endTime));
+		
+		return c.list();
+	}
 }

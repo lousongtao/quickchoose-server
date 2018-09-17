@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -150,6 +151,9 @@ public class AccountService implements IAccountService {
 			
 			Calendar c1 = Calendar.getInstance();
 			Calendar c2 = Calendar.getInstance();
+			if (his.getExpireDate() == null){
+				his.setExpireDate(new Date(90, 1,1));
+			}
 			c1.setTime(his.getExpireDate());
 			if ((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24) > ConstantValue.VALIDATELICENSE_EXPIREDAYS){
 				return new LoginResult("License is expired.", "", "", "");

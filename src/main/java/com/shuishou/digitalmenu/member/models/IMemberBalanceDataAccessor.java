@@ -9,6 +9,8 @@ public interface IMemberBalanceDataAccessor {
 	
 	List<MemberBalance> getMemberBalanceByDate(Date startTime, Date endTime);
 	
+	List<MemberBalance> queryMemberRecharge(Date startTime, Date endTime);
+	
 	void save(MemberBalance mc);
 	
 	void delete(MemberBalance mc);
