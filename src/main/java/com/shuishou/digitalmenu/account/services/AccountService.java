@@ -35,6 +35,8 @@ import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.validatelicense.models.IValidateLicenseHistoryDataAccessor;
 import com.shuishou.digitalmenu.validatelicense.models.ValidateLicenseHistory;
+import com.shuishou.digitalmenu.validatelicense.services.IValidateService;
+import com.shuishou.digitalmenu.validatelicense.view.ValidateResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -62,7 +64,7 @@ public class AccountService implements IAccountService {
 	private IUserPermissionDataAccessor userPermissionDA;
 	
 	@Autowired
-	private IValidateLicenseHistoryDataAccessor vlhDA;
+	private IValidateService validateService;
 
 	/**
 	 * the user accessor.
@@ -140,27 +142,12 @@ public class AccountService implements IAccountService {
 	@Override
 	@Transactional(readOnly = false)
 	public LoginResult auth(String username, String password) {
-		String licenseWarning = null;
-		ValidateLicenseHistory his = vlhDA.getLastRecord();
-		if (his != null){
-			if (his.getFailureTimes() > ConstantValue.VALIDATELICENSE_FAILEDTIMES){
-				return new LoginResult("Too many failed validations for license.", "", "", "");
-			} else if (his.getFailureTimes() > 0){
-				licenseWarning = "License validation processor occurs exceptions recently. To keep software run perfectly, please report the phenomenon to administrator. The last error for " + his.getFailureReason();
-			}
-			
-			Calendar c1 = Calendar.getInstance();
-			Calendar c2 = Calendar.getInstance();
-			if (his.getExpireDate() == null){
-				his.setExpireDate(new Date(90, 1,1));
-			}
-			c1.setTime(his.getExpireDate());
-			if ((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24) > ConstantValue.VALIDATELICENSE_EXPIREDAYS){
-				return new LoginResult("License is expired.", "", "", "");
-			} else if (Math.abs((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24)) < ConstantValue.VALIDATELICENSE_EXPIREDAYS){
-				licenseWarning = "The license will be expired in " + (int)((c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000 * 60 * 60 * 24)) + " days. Please recharge the fee and inform this to administrator.";
-			}
+		ValidateResult vr = validateService.getValidateResult();
+		String licenseMessage = vr.getInfo();
+		if (!vr.isSuccess()){
+			return new LoginResult(licenseMessage, "", "", "");
 		}
+		
 		// check username.
 		UserData user = userDA.getUserByUsername(username);
 		if (user == null)
@@ -178,10 +165,9 @@ public class AccountService implements IAccountService {
 
 
 		// write log.
-		logService.write(user, LogData.LogType.ACCOUNT_LOGIN.toString(),
-				"User " + user + " login.");
+		logService.write(user, LogData.LogType.ACCOUNT_LOGIN.toString(), "User " + user + " login.");
 
-		return new LoginResult(Result.OK, Long.toString(user.getId()), user.getUsername(), licenseWarning);
+		return new LoginResult(Result.OK, Long.toString(user.getId()), user.getUsername(), licenseMessage);
 	}
 
 

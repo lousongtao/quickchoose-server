@@ -174,6 +174,10 @@ public class ConstantValue {
 	public static final int MEMBERDEPOSIT_RECHARGE = 3;//消费余额类型-充值
 	public static final int MEMBERDEPOSIT_ADJUST = 4;//消费余额类型-调整
 	
+	public static final String MEMBERBALANCE_QUERYTYPE_CONSUME = "CONSUME";
+	public static final String MEMBERBALANCE_QUERYTYPE_RECHARGE = "RECHARGE";
+	public static final String MEMBERBALANCE_QUERYTYPE_ADJUST = "ADJUST";
+	
 	public static final int VALIDATELICENSE_STATUS_SECCESS = 0;
 	public static final int VALIDATELICENSE_STATUS_FAILED = 1;
 	

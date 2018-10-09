@@ -1,5 +1,6 @@
 package com.shuishou.digitalmenu.member.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,9 +49,16 @@ public class MemberBalanceDataAccessor extends BaseDataAccessor implements IMemb
 	}
 
 	@Override
-	public List<MemberBalance> queryMemberRecharge(Date startTime, Date endTime) {
+	public List<MemberBalance> queryMemberBalance(Date startTime, Date endTime, String type) {
 		Criteria c = sessionFactory.getCurrentSession().createCriteria(MemberBalance.class);
-		c.add(Restrictions.eq("type", ConstantValue.MEMBERDEPOSIT_RECHARGE));
+		ArrayList<Integer> types = new ArrayList<>(); 
+		if (type.indexOf(ConstantValue.MEMBERBALANCE_QUERYTYPE_ADJUST) >= 0)
+			types.add(ConstantValue.MEMBERDEPOSIT_ADJUST);
+		if (type.indexOf(ConstantValue.MEMBERBALANCE_QUERYTYPE_RECHARGE) >= 0)
+			types.add(ConstantValue.MEMBERDEPOSIT_RECHARGE);
+		if (type.indexOf(ConstantValue.MEMBERBALANCE_QUERYTYPE_CONSUME) >= 0)
+			types.add(ConstantValue.MEMBERDEPOSIT_CONSUM);
+		c.add(Restrictions.in("type", types));
 		if (startTime != null)
 			c.add(Restrictions.ge("date", startTime));
 		if (endTime != null)

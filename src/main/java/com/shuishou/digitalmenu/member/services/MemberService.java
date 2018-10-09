@@ -4,8 +4,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ import com.shuishou.digitalmenu.member.models.Member;
 import com.shuishou.digitalmenu.member.models.MemberBalance;
 import com.shuishou.digitalmenu.member.models.MemberScore;
 import com.shuishou.digitalmenu.member.views.MemberBalanceInfo;
+import com.shuishou.digitalmenu.member.views.MemberStatInfo;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -305,8 +309,8 @@ public class MemberService implements IMemberService{
 
 	@Override
 	@Transactional
-	public ObjectListResult queryMemberRecharge(Date startTime, Date endTime) {
-		List<MemberBalance> mbs = memberBalanceDA.queryMemberRecharge(startTime, endTime);
+	public ObjectListResult queryMemberBalance(Date startTime, Date endTime, String type) {
+		List<MemberBalance> mbs = memberBalanceDA.queryMemberBalance(startTime, endTime, type);
 		List<MemberBalanceInfo> mbis = new ArrayList<>();
 		if (mbs != null && !mbs.isEmpty()){
 			List<Member> members = memberDA.queryAllMember();
@@ -334,6 +338,48 @@ public class MemberService implements IMemberService{
 		
 		
 		return new ObjectListResult(Result.OK, true, mbis, mbis.size());
+	}
+	
+	@Override
+	@Transactional
+	public ObjectListResult statMemberByTime(Date startTime, Date endTime) {
+		String type = ConstantValue.MEMBERBALANCE_QUERYTYPE_RECHARGE + ConstantValue.MEMBERBALANCE_QUERYTYPE_ADJUST + ConstantValue.MEMBERBALANCE_QUERYTYPE_CONSUME;
+		List<MemberBalance> mbs = memberBalanceDA.queryMemberBalance(startTime, endTime, type);
+		List<Member> members = memberDA.queryAllMember();
+		HashMap<Integer, Member> hmMember = new HashMap<>();//把member数据放入map中, 可快速查询
+		for (int i = 0; i < members.size(); i++) {
+			Member m = members.get(i);
+			hmMember.put(m.getId(), m);
+		}
+		
+		HashMap<Integer, MemberStatInfo> hmStat = new HashMap<>();//key=member.id
+		if (mbs != null){
+			for (int i = 0; i < mbs.size(); i++) {
+				MemberBalance mb = mbs.get(i);
+				int memberid = mb.getMember().getId();
+				Member m = hmMember.get(memberid);
+				if (m == null)
+					continue;
+				MemberStatInfo ms = hmStat.get(memberid);
+				if (ms == null) {
+					ms = new MemberStatInfo(m.getMemberCard(), m.getName(), m.getCreateTime());
+					hmStat.put(memberid, ms);
+				}
+				if (mb.getType() == ConstantValue.MEMBERDEPOSIT_RECHARGE) {
+					ms.addRecharge(mb.getAmount());
+				}
+				if (mb.getType() == ConstantValue.MEMBERDEPOSIT_ADJUST) {
+					ms.addAdjust(mb.getAmount());
+				}
+				if (mb.getType() == ConstantValue.MEMBERDEPOSIT_CONSUM) {
+					ms.addConsume(mb.getAmount());
+				}
+			}
+		}
+		List<MemberStatInfo> msis = new ArrayList<>();
+		msis.addAll(hmStat.values());
+		
+		return new ObjectListResult(Result.OK, true, msis, msis.size());
 	}
 	
 	@Override

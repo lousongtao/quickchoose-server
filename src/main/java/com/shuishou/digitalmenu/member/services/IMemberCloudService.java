@@ -21,7 +21,8 @@ public interface IMemberCloudService {
 	ObjectResult queryMemberByCard(String memberCard);
 	ObjectListResult queryAllMember();
 	ObjectListResult queryMemberBalance(int memberId);
-	ObjectListResult queryMemberRecharge(Date startTime, Date endTime);
+	ObjectListResult queryMemberBalance(Date startTime, Date endTime, String type);
+	ObjectListResult statMemberByTime(Date startTime, Date endTime);
 	ObjectListResult queryMemberScore(int memberId);
 	/**
 	 * query member using a key

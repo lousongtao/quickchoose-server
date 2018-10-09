@@ -9,7 +9,7 @@ public interface IMemberBalanceDataAccessor {
 	
 	List<MemberBalance> getMemberBalanceByDate(Date startTime, Date endTime);
 	
-	List<MemberBalance> queryMemberRecharge(Date startTime, Date endTime);
+	List<MemberBalance> queryMemberBalance(Date startTime, Date endTime, String type);
 	
 	void save(MemberBalance mc);
 	

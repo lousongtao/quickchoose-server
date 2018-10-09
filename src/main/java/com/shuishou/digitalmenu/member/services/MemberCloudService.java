@@ -29,6 +29,7 @@ import com.shuishou.digitalmenu.member.models.Member;
 import com.shuishou.digitalmenu.member.models.MemberBalance;
 import com.shuishou.digitalmenu.member.models.MemberScore;
 import com.shuishou.digitalmenu.member.views.MemberBalanceInfo;
+import com.shuishou.digitalmenu.member.views.MemberStatInfo;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
 import com.shuishou.digitalmenu.views.Result;
@@ -426,20 +427,47 @@ public class MemberCloudService implements IMemberCloudService{
 	
 	@Override
 	@Transactional
-	public ObjectListResult queryMemberRecharge(Date startTime, Date endTime){
-		String url = "member/querymemberrecharge";
+	public ObjectListResult queryMemberBalance(Date startTime, Date endTime, String type){
+		String url = "member/querymemberbalancebytime";
 		Map<String, String> params = new HashMap<>();
 		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
-		if (startTime != null)
+		if (startTime != null){
 			params.put("startTime", ConstantValue.DFYMDHMS.format(startTime));
-		if (endTime != null)
+		}
+		if (endTime != null){
 			params.put("endTime", ConstantValue.DFYMDHMS.format(endTime));
+		}
+		params.put("type", type);
 		String response = HttpUtil.getJSONObjectByPost(ServerProperties.MEMBERCLOUDLOCATION + url, params);
 		if (response == null){
-			return new ObjectListResult("get null from server for query member recharge. URL = " + url + ", param = "+ params, false);
+			return new ObjectListResult("get null from server for query member balance. URL = " + url + ", param = "+ params, false);
 		}
 		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
 		HttpResult<ArrayList<MemberBalanceInfo>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberBalanceInfo>>>(){}.getType());
+		if (!result.success){
+			return new ObjectListResult("return false while query member balance. URL = " + url + ", response = "+response, false);
+		}
+		return new ObjectListResult(Result.OK, true, result.data);
+	}
+	
+	@Override
+	@Transactional
+	public ObjectListResult statMemberByTime(Date startTime, Date endTime) {
+		String url = "member/statmemberbytime";
+		Map<String, String> params = new HashMap<>();
+		params.put("customerName", ServerProperties.MEMBERCUSTOMERNAME);
+		if (startTime != null){
+			params.put("startTime", ConstantValue.DFYMDHMS.format(startTime));
+		}
+		if (endTime != null){
+			params.put("endTime", ConstantValue.DFYMDHMS.format(endTime));
+		}
+		String response = HttpUtil.getJSONObjectByPost(ServerProperties.MEMBERCLOUDLOCATION + url, params);
+		if (response == null){
+			return new ObjectListResult("get null from server for query member balance. URL = " + url + ", param = "+ params, false);
+		}
+		Gson gson = new GsonBuilder().setDateFormat(ConstantValue.DATE_PATTERN_YMDHMS).create();
+		HttpResult<ArrayList<MemberStatInfo>> result = gson.fromJson(response, new TypeToken<HttpResult<ArrayList<MemberStatInfo>>>(){}.getType());
 		if (!result.success){
 			return new ObjectListResult("return false while query member balance. URL = " + url + ", response = "+response, false);
 		}

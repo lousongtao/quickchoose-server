@@ -121,8 +121,32 @@ public class MemberController extends BaseController {
 		}
 	}
 	
-	@RequestMapping(value = "/member/querymemberrecharge", method = {RequestMethod.POST})
-	public @ResponseBody ObjectListResult queryMemberRecharge(
+	@RequestMapping(value = "/member/querymemberbalancebytime", method = {RequestMethod.POST})
+	public @ResponseBody ObjectListResult queryMemberBalanceByTime(
+			@RequestParam(value = "userId", required = true) int userId,
+			@RequestParam(value = "type", required = true) String type,
+			@RequestParam(value = "startTime", required = false, defaultValue = "") String sStartTime,
+			@RequestParam(value = "endTime", required = false, defaultValue = "") String sEndTime) throws Exception{
+		if (!permissionService.checkPermission(userId, ConstantValue.PERMISSION_QUERY_MEMBER)){
+			return new ObjectListResult("no_permission", false);
+		}
+		Date startTime = null;
+		Date endTime = null;
+		if (sStartTime != null && sStartTime.length() > 0){
+			startTime = ConstantValue.DFYMDHMS.parse(sStartTime);
+		}
+		if (sEndTime != null && sEndTime.length() > 0){
+			endTime = ConstantValue.DFYMDHMS.parse(sEndTime);
+		}
+		if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
+			return memberService.queryMemberBalance(startTime, endTime, type);
+		} else {
+			return memberCloudService.queryMemberBalance(startTime, endTime, type);
+		}
+	}
+	
+	@RequestMapping(value = "/member/memberstat", method = {RequestMethod.POST})
+	public @ResponseBody ObjectListResult statMemberByTime(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "startTime", required = false, defaultValue = "") String sStartTime,
 			@RequestParam(value = "endTime", required = false, defaultValue = "") String sEndTime) throws Exception{
@@ -138,9 +162,9 @@ public class MemberController extends BaseController {
 			endTime = ConstantValue.DFYMDHMS.parse(sEndTime);
 		}
 		if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
-			return memberService.queryMemberRecharge(startTime, endTime);
+			return memberService.statMemberByTime(startTime, endTime);
 		} else {
-			return memberCloudService.queryMemberRecharge(startTime, endTime);
+			return memberCloudService.statMemberByTime(startTime, endTime);
 		}
 	}
 	
