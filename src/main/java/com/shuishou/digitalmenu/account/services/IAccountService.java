@@ -5,7 +5,6 @@
 package com.shuishou.digitalmenu.account.services;
 
 import com.shuishou.digitalmenu.account.models.UserData;
-import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
@@ -56,8 +55,6 @@ public interface IAccountService {
    * @param userId         operator user id
    * @param username       name of new record
    * @param password       password of new record
-   * @param passwordAgain  password of new record
-   * @param permGroupId    belong permission_group
    * @return
    */
   Result addAccount(long userId, String username, String password, String permission);
@@ -67,7 +64,6 @@ public interface IAccountService {
    * @param userId            target user record for changing password
    * @param oldPassword       old password
    * @param newPassword       new password
-   * @param newPasswordAgain  new password again
    * @return
    */
   ObjectResult changePassword(long userId, int accountId, String oldPassword, String newPassword);
@@ -76,9 +72,6 @@ public interface IAccountService {
    * modify user record
    * @param userId           target user 
    * @param username         new user name
-   * @param password         new password
-   * @param passwordAgain    new password again
-   * @param permGroupId      new permission group list
    * @return
    */
   Result modifyAccount(long operateUserId, long userId, String username, String permission);

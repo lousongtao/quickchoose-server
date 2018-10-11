@@ -3,7 +3,6 @@ package com.shuishou.digitalmenu.menu.models;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.shuishou.digitalmenu.models.BaseDataAccessor;

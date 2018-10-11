@@ -68,9 +68,6 @@ public class PrintThread implements InitializingBean{
 	 * 
 	 * 根据任务类型选择打印模板
 	 * 
-	 * @param missionType
-	 *            任务类型
-	 * 
 	 * @return
 	 * 
 	 * @throws IOException

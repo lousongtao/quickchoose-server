@@ -1,15 +1,9 @@
 package com.shuishou.digitalmenu.member.models;
 
-import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.google.common.collect.Lists;
 import com.shuishou.digitalmenu.models.BaseDataAccessor;
 
 @Repository

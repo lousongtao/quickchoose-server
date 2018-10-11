@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
-import com.shuishou.digitalmenu.indent.views.OperateIndentResult;
 import com.shuishou.digitalmenu.statistics.services.IStatisticsService;
 import com.shuishou.digitalmenu.views.ObjectResult;
 
@@ -23,7 +22,7 @@ public class StatisticsController {
 	@Autowired
 	private IPermissionService permissionService;
 	
-	@RequestMapping(value="/statistics/statistics", method = (RequestMethod.POST))
+	@RequestMapping(value="/statistics/statistics", method = RequestMethod.POST)
 	public @ResponseBody ObjectResult statistics(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "startDate", required = true) String sStartDate,

@@ -6,12 +6,7 @@ package com.shuishou.digitalmenu.account.services;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -21,20 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
-import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.models.IPermissionDataAccessor;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.IUserPermissionDataAccessor;
 import com.shuishou.digitalmenu.account.models.Permission;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.account.models.UserPermission;
-import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
-import com.shuishou.digitalmenu.validatelicense.models.IValidateLicenseHistoryDataAccessor;
-import com.shuishou.digitalmenu.validatelicense.models.ValidateLicenseHistory;
 import com.shuishou.digitalmenu.validatelicense.services.IValidateService;
 import com.shuishou.digitalmenu.validatelicense.view.ValidateResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;

@@ -4,8 +4,6 @@
  */
 package com.shuishou.digitalmenu.log.controllers;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -44,20 +42,6 @@ public class LogController extends BaseController {
 	 * 
 	 * @param userId
 	 *            the user id.
-	 * @param page
-	 *            the page number.
-	 * @param start
-	 *            the start index.
-	 * @param limit
-	 *            the limit count.
-	 * @param idStr
-	 *            the query user id.
-	 * @param username
-	 *            the query username.
-	 * @param permGroupName
-	 *            the query permission group name.
-	 * @param containsPermName
-	 *            the query contains permission name.
 	 * @return the account list.
 	 * @throws Exception
 	 */

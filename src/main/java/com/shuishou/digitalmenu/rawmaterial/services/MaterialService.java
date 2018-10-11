@@ -2,7 +2,6 @@ package com.shuishou.digitalmenu.rawmaterial.services;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -204,28 +203,28 @@ public class MaterialService implements IMaterialService {
 	}
 	
 	@Transactional
-	private void hibernateInitializeCategory(List<MaterialCategory> listMC){
+	public void hibernateInitializeCategory(List<MaterialCategory> listMC){
 		for (int i = 0; i < listMC.size(); i++) {
 			hibernateInitializeCategory(listMC.get(i));
 		}
 	}
 	
 	@Transactional
-	private void hibernateInitializeCategory(MaterialCategory mc){
+	public void hibernateInitializeCategory(MaterialCategory mc){
 		Hibernate.initialize(mc);
 		if (mc.getMaterials() != null)
 			hibernateInitializeMaterial(mc.getMaterials());
 	}
 
 	@Transactional
-	private void hibernateInitializeMaterial(List<Material> listM){
+	public void hibernateInitializeMaterial(List<Material> listM){
 		for (int i = 0; i < listM.size(); i++) {
 			hibernateInitializeMaterial(listM.get(i));
 		}
 	}
 	
 	@Transactional
-	private void hibernateInitializeMaterial(Material m){
+	public void hibernateInitializeMaterial(Material m){
 		Hibernate.initialize(m);
 	}
 

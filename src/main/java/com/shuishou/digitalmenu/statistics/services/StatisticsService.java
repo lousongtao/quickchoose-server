@@ -110,7 +110,7 @@ public class StatisticsService implements IStatisticsService{
 	}
 	
 	@Transactional
-	private void initDishMap(){
+	public void initDishMap(){
 		List<Dish> dishes = dishDA.getAllDish();
 		mapDish = new HashMap<>();
 		for (Dish dish : dishes) {
@@ -119,7 +119,7 @@ public class StatisticsService implements IStatisticsService{
 	}
 	
 	@Transactional
-	private void initCategory1Map(){
+	public void initCategory1Map(){
 		List<Category1> c1s = category1DA.getAllCategory1();
 		for(Category1 c1 : c1s){
 			mapCategory1.put(c1.getId(), c1);
@@ -127,7 +127,7 @@ public class StatisticsService implements IStatisticsService{
 	}
 	
 	@Transactional
-	private void initCategory2Map(){
+	public void initCategory2Map(){
 		List<Category2> c2s = category2DA.getAllCategory2();
 		for(Category2 c2 : c2s){
 			mapCategory2.put(c2.getId(), c2);
@@ -142,7 +142,7 @@ public class StatisticsService implements IStatisticsService{
 	 * @return
 	 */
 	@Transactional
-	private ArrayList<StatItem> statisticsSellByPeriod(List<Indent> indents, int sellByPeriod, @NotNull Date startDate, @NotNull Date endDate){
+	public ArrayList<StatItem> statisticsSellByPeriod(List<Indent> indents, int sellByPeriod, @NotNull Date startDate, @NotNull Date endDate){
 		ArrayList<StatItem> stats = new ArrayList<>();
 		//initial time period into map
 		HashMap<String, StatItem> mapPeriod = new HashMap<>();
@@ -277,7 +277,7 @@ public class StatisticsService implements IStatisticsService{
 	 * @return
 	 */
 	@Transactional
-	private ArrayList<StatItem> statisticsSell(List<Indent> indents, int sellGranularity){
+	public ArrayList<StatItem> statisticsSell(List<Indent> indents, int sellGranularity){
 		if (mapDish == null)
 			initDishMap();
 		ArrayList<StatItem> stats = new ArrayList<>();
@@ -346,7 +346,7 @@ public class StatisticsService implements IStatisticsService{
 	}
 	
 	@Transactional
-	private void accumulateIndentDetailInfo(StatItem ss, Dish dish, IndentDetail detail){
+	public void accumulateIndentDetailInfo(StatItem ss, Dish dish, IndentDetail detail){
 		ss.soldAmount += detail.getAmount();
 		ss.weight += detail.getWeight();
 		if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT){
@@ -357,7 +357,7 @@ public class StatisticsService implements IStatisticsService{
 	}
 	
 	@Transactional
-	private ArrayList<StatItem> statisticsPayway(List<Indent> indents){
+	public ArrayList<StatItem> statisticsPayway(List<Indent> indents){
 		ArrayList<StatItem> stats = new ArrayList<>();
 		HashMap<String, StatItem> mapPayway = new HashMap<>();
 		for(Indent indent : indents){

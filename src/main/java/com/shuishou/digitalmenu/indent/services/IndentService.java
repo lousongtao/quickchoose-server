@@ -1,13 +1,7 @@
 package com.shuishou.digitalmenu.indent.services;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -17,7 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,10 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.DataCheckException;
 import com.shuishou.digitalmenu.ServerProperties;
-import com.shuishou.digitalmenu.account.controllers.AccountController;
 import com.shuishou.digitalmenu.account.models.IUserDataAccessor;
 import com.shuishou.digitalmenu.account.models.UserData;
-import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.common.models.Configs;
 import com.shuishou.digitalmenu.common.models.Desk;
 import com.shuishou.digitalmenu.common.models.IConfigsDataAccessor;
@@ -64,9 +55,6 @@ import com.shuishou.digitalmenu.printertool.PrintQueue;
 import com.shuishou.digitalmenu.rawmaterial.models.IMaterialRecordDataAccessor;
 import com.shuishou.digitalmenu.rawmaterial.models.Material;
 import com.shuishou.digitalmenu.rawmaterial.models.MaterialRecord;
-import com.shuishou.digitalmenu.statistics.views.StatItem;
-import com.shuishou.digitalmenu.validatelicense.models.IValidateLicenseHistoryDataAccessor;
-import com.shuishou.digitalmenu.validatelicense.models.ValidateLicenseHistory;
 import com.shuishou.digitalmenu.validatelicense.services.IValidateService;
 import com.shuishou.digitalmenu.validatelicense.view.ValidateResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
@@ -329,11 +317,153 @@ public class IndentService implements IIndentService {
 		logger.debug((l2 - l1) + "ms to make indent");
 		return new ObjectResult(Result.OK, true, indents);
 	}
-	
-	
+
+    /**
+     * 固定金额的分帐, 从原账单分出来一部分菜, 行程新的订单, 但是该订单的金额由客户指定,而不是根据选出来的菜计算订单金额.
+     * 这个也导致原订单的金额数目不对, 原订单金额应该是减去"客户指定金额"之后的数目.
+     * @param userId
+     * @param confirmCode
+     * @param jsonOrder
+     * @param originIndentId
+     * @param paidPrice
+     * @param paidCash
+     * @param payWay
+     * @param discountTemplate
+     * @param memberCard
+     * @param memberPassword
+     * @return
+     * @throws DataCheckException
+     */
+    @Override
+    @Transactional(rollbackFor = DataCheckException.class)
+    public ObjectResult splitFixPriceIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId,
+                                    double paidPrice, double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException {
+        long l1 = System.currentTimeMillis();
+        Configs configs = configsDA.getConfigsByName(ConstantValue.CONFIGS_CONFIRMCODE);
+        if (!confirmCode.equals(configs.getValue()))
+            return new ObjectResult("The confirm code is wrong, cannot make order.", false, null);
+        Indent originIndent = indentDA.getIndentById(originIndentId);
+        double totalPrice_OriginIndent = originIndent.getTotalPrice();
+        if (originIndent == null)
+            return new ObjectResult("cannot find order by id "+originIndentId, false, null);
+        Desk desk = deskDA.getDeskByName(originIndent.getDeskName());
+        if (desk == null)
+            return new ObjectResult("cannot find table by name "+ originIndent.getDeskName(), false, null);
+
+        double totalprice = 0;
+        Indent indent = new Indent();
+        indent.setStartTime(Calendar.getInstance().getTime());
+        int sequence = indentDA.getMaxSequenceToday() + 1;
+        indent.setDailySequence(sequence);
+        indent.setComments(originIndent.getComments());
+        indent.setDeskName(desk.getName());
+        Date now = new Date();
+        for(int i = 0; i< jsonOrder.length(); i++){
+            JSONObject o = (JSONObject) jsonOrder.get(i);
+            int dishid = o.getInt("dishid");
+            double weight = 0;
+            if (o.has("weight")){
+                weight = o.getDouble("weight");
+            }
+            IndentDetail originDetail = null;
+            //find origin IndentDetail object by dishId and weight
+            for(IndentDetail d : originIndent.getItems()){
+                if (d.getDishId() == dishid && d.getWeight() == weight){
+                    originDetail = d;
+                    break;
+                }
+            }
+            if (originDetail == null)
+                throw new DataCheckException("cannot find IndentDetail by indentid " + originIndentId + ", dishid "+dishid + ", weight "+ weight);
+
+            Dish dish = dishDA.getDishById(dishid);
+            if (dish == null)
+                throw new DataCheckException("cannot find dish by id "+ dishid);
+            int amount = o.getInt("amount");
+            IndentDetail detail = new IndentDetail();
+            detail.setIndent(indent);
+            detail.setDishId(dishid);
+            detail.setAmount(amount);
+            detail.setTime(now);
+            detail.setDishFirstLanguageName(dish.getFirstLanguageName());
+            detail.setDishSecondLanguageName(dish.getSecondLanguageName());
+            detail.setDishPrice(o.getDouble("dishPrice"));
+            if (o.has("weight"))
+                detail.setWeight(Double.parseDouble(o.getString("weight")));
+            if (o.has("additionalRequirements"))
+                detail.setAdditionalRequirements(o.getString("additionalRequirements"));
+            if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_UNIT)
+                totalprice += detail.getAmount() * detail.getDishPrice();
+            else if (dish.getPurchaseType() == ConstantValue.DISH_PURCHASETYPE_WEIGHT)
+                totalprice += detail.getAmount() * detail.getDishPrice() * detail.getWeight();
+            indent.addItem(detail);
+            //update originIndent and originIndentDetail
+            originDetail.setAmount(originDetail.getAmount() - amount);
+            if (originDetail.getAmount() == 0){
+                originIndent.getItems().remove(originDetail);
+                indentDetailDA.delete(originDetail);
+            } else {
+                indentDetailDA.update(originDetail);
+            }
+        }
+        indent.setTotalPrice(Double.parseDouble(doubleFormat.format(totalprice)));
+        //start to pay the new indent
+        indent.setStatus(ConstantValue.INDENT_STATUS_PAID);
+        indent.setPaidPrice(Double.parseDouble(doubleFormat.format(paidPrice)));
+        indent.setPayWay(payWay);
+        indent.setDiscountTemplate(discountTemplate);
+        indent.setMemberCard(memberCard);
+        indent.setEndTime(now);
+        indentDA.save(indent);
+        originIndent.setTotalPrice(totalPrice_OriginIndent - indent.getPaidPrice()); //原订单的金额, 要根据原来的价格, 减去新订单付款的价格.
+        indentDA.update(originIndent);
+
+        UserData selfUser = userDA.getUserById(userId);
+        logService.write(selfUser, LogData.LogType.INDENT_SPLITANDPAY.toString(),
+                "User " + selfUser + " operate indent, id =" + indent.getId() + ", from originIndent id = " + originIndentId + ".");
+
+
+        //if originIndent is already null for items, then paid it
+        //if there are merge desks, clear them status
+        if (originIndent.getItems().isEmpty()){
+            doPayIndent(userId, originIndentId, 0, paidCash, ConstantValue.INDENT_PAYWAY_CASH, discountTemplate, null, null);
+            List<Desk> desks = deskDA.queryDesks();
+            for(Desk d : desks){
+                if (d.getMergeTo() != null && d.getMergeTo().getId() == desk.getId()){
+                    d.setMergeTo(null);
+                    deskDA.updateDesk(desk);
+                }
+            }
+        }
+        Hibernate.initialize(originIndent.getItems());
+
+        //record member consumption, if there are wrong, throw exception for rollback
+        if (ConstantValue.INDENT_PAYWAY_MEMBER.equals(payWay)){
+            ObjectResult result;
+            if (ServerProperties.MEMBERLOCATION_LOCAL.equals(ServerProperties.MEMBERLOCATION)){
+                result = memberService.recordMemberConsumption(memberCard, memberPassword, paidPrice);
+            } else {
+                result = memberCloudService.recordMemberConsumption(memberCard, memberPassword, paidPrice);
+            }
+            if (!result.success)
+                throw new DataCheckException(result.result);
+        }
+
+//		String tempfilePath = request.getSession().getServletContext().getRealPath("/") + ConstantValue.CATEGORY_PRINTTEMPLATE;
+//		printTicket2Counter(indent, tempfilePath + "/payorder_template.json", "对账单", paidCash);
+
+        //把原始订单和新订单一起返回
+        ArrayList<Indent> indents = new ArrayList<>();
+        indents.add(originIndent);
+        indents.add(indent);
+        long l2 = System.currentTimeMillis();
+        logger.debug((l2 - l1) + "ms to make indent");
+        return new ObjectResult(Result.OK, true, indents);
+    }
+
 	//在总台打印的单子, 包括对账单, 结账单, 客用单
 	@Transactional
-	private void printTicket2Counter(Indent indent, String tempfile, String title, double paidCash){
+	public void printTicket2Counter(Indent indent, String tempfile, String title, double paidCash){
 		List<Printer> printers = printerDA.queryPrinters();
 		if (printers == null || printers.isEmpty())
 			return;
@@ -396,7 +526,7 @@ public class IndentService implements IIndentService {
 	 * @param isAdd if the indentdetails are for adding, this is true; if these are for cancel, this is false
 	 */
 	@Transactional
-	private void printCucaigoudan2Kitchen(Indent indent, String tempfile, boolean isAdd){
+	public void printCucaigoudan2Kitchen(Indent indent, String tempfile, boolean isAdd){
 		//把indent下面的dish根据不同的打印输出, 分组
 		Map<Printer, List<IndentDetail_PrintStyle>> mapPrintDish = new HashMap<>();
 		
@@ -443,7 +573,7 @@ public class IndentService implements IIndentService {
 	 * @param isAdd, if this is a cancel order, isAdd = false, otherwise isAdd = true
 	 */
 	@Transactional
-	private void printCucaigoudan2KitchenWithPrintStyle(Map<Printer, List<IndentDetail_PrintStyle>> mapPrintDish, String tempfile, Map<String,String> keyMap, boolean isAdd){
+	public void printCucaigoudan2KitchenWithPrintStyle(Map<Printer, List<IndentDetail_PrintStyle>> mapPrintDish, String tempfile, Map<String,String> keyMap, boolean isAdd){
 		Iterator<Printer> keys = mapPrintDish.keySet().iterator();
 		while(keys.hasNext()){
 			Printer p = keys.next();
@@ -545,12 +675,10 @@ public class IndentService implements IIndentService {
 	
 	/**
 	 * print a Chucaigoudan for a special IndentDetail. it maybe for add dish, or delete dish, or change amount 
-	 * @param indent
-	 * @param tempfile
 	 * @param changedAmount maybe negative or positive; if is negative, it means this dish is canceled or change amount
 	 */
 	@Transactional
-	private void printCucaigoudan2Kitchen4ChangeAmount(IndentDetail detail, String tempfile, int changedAmount){
+	public void printCucaigoudan2Kitchen4ChangeAmount(IndentDetail detail, String tempfile, int changedAmount){
 		// 把indent下面的dish根据不同的打印输出, 分组
 		Map<Printer, IndentDetail_PrintStyle> mapPrintDish = new HashMap<>();
 		
@@ -651,7 +779,7 @@ public class IndentService implements IIndentService {
 	 * @param tempfile
 	 */
 	@Transactional
-	private void printCucaigoudan2Kitchen(ArrayList<IndentDetail> details, String tempfile) {
+	public void printCucaigoudan2Kitchen(ArrayList<IndentDetail> details, String tempfile) {
 		// 把indent下面的dish根据不同的打印输出, 分组
 		Map<Printer, List<IndentDetail_PrintStyle>> mapPrintDish = new HashMap<>();
 

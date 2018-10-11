@@ -1,7 +1,5 @@
 package com.shuishou.digitalmenu.indent.controllers;
 
-import java.util.Date;
-
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +39,7 @@ public class IndentController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/indent/makeindent", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/makeindent", method = RequestMethod.POST)
 	public @ResponseBody synchronized MakeOrderResult makeOrder(
 			@RequestParam(value="confirmCode", required = true) String confirmCode,
 			@RequestParam(value="indents", required = true) String indents,
@@ -60,11 +58,10 @@ public class IndentController extends BaseController {
 	 * split an order and pay it 
 	 * 
 	 * @param indents: a string of a JSONArray, including dishid, amount, additionalRequirements
-	 * @param deskid
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/indent/splitindentandpay", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/splitindentandpay", method = RequestMethod.POST)
 	public @ResponseBody ObjectResult splitOrderAndPay(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "confirmCode", required = true) String confirmCode,
@@ -83,8 +80,28 @@ public class IndentController extends BaseController {
 			return new OperateIndentResult(e.getMessage(), false);
 		}
 	}
-	
-	@RequestMapping(value="/indent/cleardesk", method = (RequestMethod.POST))
+
+    @RequestMapping(value="/indent/splitfixpriceindentandpay", method = RequestMethod.POST)
+    public @ResponseBody ObjectResult splitFixPriceOrderAndPay(
+            @RequestParam(value = "userId", required = true) int userId,
+            @RequestParam(value = "confirmCode", required = true) String confirmCode,
+            @RequestParam(value = "originIndentId", required = true) int originIndentId,
+            @RequestParam(value = "indents", required = true) String indents,
+            @RequestParam(value = "paidCash", required = true) double paidCash,
+            @RequestParam(value = "paidPrice", required = true) double paidPrice,
+            @RequestParam(value = "payWay", required = true) String payWay,
+            @RequestParam(value = "discountTemplate", required = false) String discountTemplate,
+            @RequestParam(value = "memberCard", required = false) String memberCard,
+            @RequestParam(value = "memberPassword", required = false) String memberPassword) throws Exception{
+        JSONArray jsonOrder = new JSONArray(indents);
+        try {
+            return indentService.splitFixPriceIndent(userId, confirmCode, jsonOrder, originIndentId, paidPrice, paidCash, payWay, discountTemplate, memberCard, memberPassword);
+        } catch(DataCheckException e){
+            return new OperateIndentResult(e.getMessage(), false);
+        }
+    }
+
+	@RequestMapping(value="/indent/cleardesk", method = RequestMethod.POST)
 	public @ResponseBody ObjectResult clearDesk(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="deskId", required = true) int deskId) throws Exception{
@@ -131,7 +148,7 @@ public class IndentController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/indent/dopayindent", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/dopayindent", method = RequestMethod.POST)
 	public @ResponseBody OperateIndentResult doPayIndent(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="id", required = true) int indentId,
@@ -159,7 +176,7 @@ public class IndentController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/indent/docancelindent", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/docancelindent", method = RequestMethod.POST)
 	public @ResponseBody OperateIndentResult doCancelIndent(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="id", required = true) int indentId) throws Exception{
@@ -170,7 +187,7 @@ public class IndentController extends BaseController {
 		return indentService.doCancelIndent(userId, indentId);
 	}
 	
-	@RequestMapping(value="/indent/dochangepaywayindent", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/dochangepaywayindent", method = RequestMethod.POST)
 	public @ResponseBody OperateIndentResult doChangeIndentPayway(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="id", required = true) int indentId,
@@ -189,7 +206,7 @@ public class IndentController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/indent/dorefundindent", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/dorefundindent", method = RequestMethod.POST)
 	public @ResponseBody OperateIndentResult doRefundIndent(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="id", required = true) int indentId) throws Exception{
@@ -210,7 +227,7 @@ public class IndentController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/indent/operateindentdetail", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/operateindentdetail", method = RequestMethod.POST)
 	public @ResponseBody OperateIndentResult operateIndentDetail(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="indentId", required = false, defaultValue = "0") int indentId,
@@ -224,7 +241,7 @@ public class IndentController extends BaseController {
 		return indentService.operateIndentDetail(userId, indentId, dishId, indentDetailId, amount, operateType);
 	}
 	
-	@RequestMapping(value="/indent/adddishtoindent", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/adddishtoindent", method = RequestMethod.POST)
 	public @ResponseBody MakeOrderResult addDishToIndent(
 			@RequestParam(value="deskid", required = true) int deskId,
 			@RequestParam(value="indents", required = true) String indents) throws Exception{
@@ -236,7 +253,7 @@ public class IndentController extends BaseController {
 		}
 	}
 	
-	@RequestMapping(value="/indent/printindent", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/printindent", method = RequestMethod.POST)
 	public @ResponseBody ObjectResult printIndent(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="indentId", required = true) int indentId) throws Exception{
@@ -246,7 +263,7 @@ public class IndentController extends BaseController {
 		return indentService.printIndent(userId, indentId);
 	}
 	
-//	@RequestMapping(value="/indent/printindentdetail", method = (RequestMethod.POST))
+//	@RequestMapping(value="/indent/printindentdetail", method = RequestMethod.POST)
 //	public @ResponseBody ObjectResult printIndentDetail(
 //			@RequestParam(value = "userId", required = true) int userId,
 //			@RequestParam(value="indentDetailId", required = true) int indentDetailId) throws Exception{
@@ -256,7 +273,7 @@ public class IndentController extends BaseController {
 //		return indentService.printIndentDetail(userId, indentDetailId);
 //	}
 	
-	@RequestMapping(value="/indent/changedesks", method = (RequestMethod.POST))
+	@RequestMapping(value="/indent/changedesks", method = RequestMethod.POST)
 	public @ResponseBody ObjectResult changeDesks(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value="deskId1", required = true) int deskId1,

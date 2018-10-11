@@ -1,7 +1,5 @@
 package com.shuishou.digitalmenu.management.services;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -148,7 +146,7 @@ public class ManagementService implements IManagementService{
 	}
 	
 	@Transactional
-	private void printShiftTicket(String tempfile, Date startTime, Date endTime, String userName){
+	public void printShiftTicket(String tempfile, Date startTime, Date endTime, String userName){
 		List<Printer> printers = printerDA.queryPrinters();
 		if (printers == null || printers.isEmpty())
 			return;

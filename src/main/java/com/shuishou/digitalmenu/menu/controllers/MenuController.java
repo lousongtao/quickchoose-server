@@ -347,7 +347,7 @@ public class MenuController extends BaseController {
 		return result;
 	}
 	
-	@RequestMapping(value="/menu/getlastmenuversion", method = (RequestMethod.POST))
+	@RequestMapping(value="/menu/getlastmenuversion", method = RequestMethod.POST)
 	public @ResponseBody SimpleValueResult getlastMenuVersion() throws Exception{
 		return menuService.getlastMenuVersion();
 	}
@@ -438,7 +438,6 @@ public class MenuController extends BaseController {
 	
 	/**
 	 * 
-	 * @param sIdList Id seperate by comma
 	 * @return
 	 * @throws Exception
 	 */
@@ -452,11 +451,11 @@ public class MenuController extends BaseController {
 	/**
 	 * 删除操作, 包括删除目录及dish
 	 * @param userId
-	 * @param objectTypeId, 由于查询菜单时拼装的ID为"type+ID", 所以前端同样范围该值, 这里需要根据type进行区分.
+	 * @param objectType, 由于查询菜单时拼装的ID为"type+ID", 所以前端同样范围该值, 这里需要根据type进行区分.
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/menu/delete", method = (RequestMethod.POST))
+	@RequestMapping(value = "/menu/delete", method = RequestMethod.POST)
 	public @ResponseBody Result deleteMenu(
 			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "objectId", required = true) String objectId,
@@ -476,7 +475,7 @@ public class MenuController extends BaseController {
 		}
 	}
 	
-	@RequestMapping(value = "/menu/deleteflavor", method = (RequestMethod.POST))
+	@RequestMapping(value = "/menu/deleteflavor", method = RequestMethod.POST)
 	public @ResponseBody Result deleteFlavor(
 			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id) throws Exception{
@@ -486,7 +485,7 @@ public class MenuController extends BaseController {
 		return menuService.deleteFlavor(userId, id);
 	}
 	
-	@RequestMapping(value = "/menu/delete_category1", method = (RequestMethod.POST))
+	@RequestMapping(value = "/menu/delete_category1", method = RequestMethod.POST)
 	public @ResponseBody Result deleteCategory1(
 			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id) throws Exception{
@@ -496,7 +495,7 @@ public class MenuController extends BaseController {
 		return menuService.deleteCategory1(userId, id);
 	}
 	
-	@RequestMapping(value = "/menu/delete_category2", method = (RequestMethod.POST))
+	@RequestMapping(value = "/menu/delete_category2", method = RequestMethod.POST)
 	public @ResponseBody Result deleteCategory2(
 			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id) throws Exception{
@@ -506,7 +505,7 @@ public class MenuController extends BaseController {
 		return menuService.deleteCategory2(userId, id);
 	}
 	
-	@RequestMapping(value = "/menu/delete_dish", method = (RequestMethod.POST))
+	@RequestMapping(value = "/menu/delete_dish", method = RequestMethod.POST)
 	public @ResponseBody Result deleteDish(
 			@RequestParam(value="userId", required = true) int userId, 
 			@RequestParam(value = "id", required = true) int id) throws Exception{

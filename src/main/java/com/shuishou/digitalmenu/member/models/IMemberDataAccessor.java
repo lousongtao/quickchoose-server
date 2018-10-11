@@ -1,6 +1,5 @@
 package com.shuishou.digitalmenu.member.models;
 
-import java.util.Date;
 import java.util.List;
 
 public interface IMemberDataAccessor {

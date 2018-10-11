@@ -18,12 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.ConstantValue;
-import com.shuishou.digitalmenu.account.models.Permission;
 import com.shuishou.digitalmenu.account.models.UserData;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
-import com.shuishou.digitalmenu.account.views.GetAccountsResult;
-import com.shuishou.digitalmenu.account.views.GetPermissionResult;
 import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
@@ -68,22 +65,6 @@ public class AccountController extends BaseController {
 	 * 
 	 * @param userId
 	 *            the user id.
-	 * @param sessionId
-	 *            the session id.
-	 * @param page
-	 *            the page number.
-	 * @param start
-	 *            the start index.
-	 * @param limit
-	 *            the limit count.
-	 * @param idStr
-	 *            the query user id.
-	 * @param username
-	 *            the query username.
-	 * @param permGroupName
-	 *            the query permission group name.
-	 * @param containsPermName
-	 *            the query contains permission name.
 	 * @return the account list.
 	 * @throws Exception
 	 */
@@ -110,14 +91,10 @@ public class AccountController extends BaseController {
 	 * 
 	 * @param userId
 	 *            the user id.
-	 * @param sessionId
-	 *            the session id.
 	 * @param oldPassword
 	 *            the old password.
 	 * @param newPassword
 	 *            the new password.
-	 * @param newPasswordAgain
-	 *            the new password again.
 	 * @return the result.
 	 * @throws Exception
 	 */
@@ -137,16 +114,8 @@ public class AccountController extends BaseController {
 	 * 
 	 * @param userId
 	 *            the user id.
-	 * @param sessionId
-	 *            the session id.
-	 * @param idStr
-	 *            the user id of add user.
 	 * @param password
 	 *            the password of add user.
-	 * @param passwordAgain
-	 *            the password again of add user.
-	 * @param permGroupIdStr
-	 *            the permission group id of add user.
 	 * @return the result.
 	 * @throws Exception
 	 */
@@ -168,16 +137,6 @@ public class AccountController extends BaseController {
 	 * modify account.
 	 * 
 	 * @param userId : the operator's id
-	 * @param sessionId
-	 *            the session id.
-	 * @param idStr
-	 *            the user id of add user.
-	 * @param password
-	 *            the password of add user.
-	 * @param passwordAgain
-	 *            the password again of add user.
-	 * @param permGroupIdStr
-	 *            the permission group id of add user.
 	 * @return the result.
 	 * @throws Exception
 	 */
@@ -200,8 +159,6 @@ public class AccountController extends BaseController {
 	 * 
 	 * @param userId
 	 *            the user id.
-	 * @param sessionId
-	 *            the session id.
 	 * @param idStr
 	 *            the user id of remove user.
 	 * @return the result.

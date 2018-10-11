@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,11 +23,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.KeyStore;
-import java.security.SecureRandom;
 
 import org.apache.log4j.Logger;
 

@@ -1,58 +1,66 @@
-20180523
-	1. add operator on indentdetail
-	
-20180525
-	1. statistics orders by WEEK & MONTH
-	
-20180529
-	1. extend the auto sync function. Sync the dish with new insert, updated, deleted and changed picture
-	
-20180603
-	1. add refund choice for paid order
+20181011
+    1. change IDE to IntelliJ IDEA, correct some warnings and add some IDEA project files
+    2. add interface for split indent with fix price
 
-20180612
-	1. dish is probably null. Add the null check for all operation, including make order, add dish, change amount, etc
-	
-20180613
-	1. correct the bug about that the REQUIREMENT in indentdetail cannot be controlled by font and bold
-	   REMEMBER: update the print template file while the restaurant do upgrade.
+20181009
+    1. add a service ValidateService, all license check use this service
+    2. Member query add TYPE param.
+    3. statistics member
+        
+20180914
+	1. change PAYWAY for paid order
 
-20180615
-	1. record consume time into log file for indent function
-	
-20180617
-	1. add log to track exception in print thread
-	
-20180624
-	1. provide a new interface for client to query the available apk files list
-	
-20180716
-	add null check for endDate when print shiftwork ticket.
-	
-20180717
-	1. add branchName for update member's balance and score;
-	2. add config param for when print ticket to kitchen
-	
-20180813
-	1. complete the synchronize function, including the operation add/update/delete/picture/soldout on Category1, Category2, Dish, DishConfigGroup, DishConfig.
-	
+20180905
+	1. add function of license validation.
+	REMEMBER: update the customer's property file, including server.properties and spring file.
+
+20180903
+	1. add function of delete member
+	2. add permission's properties of DESCRIPTION & SEQUENCE;
+	REMEMBER: run sql in database.
+
 20180901
 	1. add password for member recharge & member balance change;
 	2. print ticket twice for balance change of member;
 	3. adjust the interface for update password in config dialog. Make all change password using one interface.
 	4. add payway for member balance table;
-	5. add function for Member Recharge Query; 
+	5. add function for Member Recharge Query;
 	REMEMBER: run sql in database.
-	
-20180903
-	1. add function of delete member
-	2. add permission's properties of DESCRIPTION & SEQUENCE;
-	REMEMBER: run sql in database.
-	
-20180905
-	1. add function of license validation.
-	REMEMBER: update the customer's property file, including server.properties and spring file.
-	
-20180914
-	1. change PAYWAY for paid order
-	
+
+20180813
+	1. complete the synchronize function, including the operation add/update/delete/picture/soldout on Category1, Category2, Dish, DishConfigGroup, DishConfig.
+
+20180717
+	1. add branchName for update member's balance and score;
+	2. add config param for when print ticket to kitchen
+
+20180716
+	add null check for endDate when print shiftwork ticket.
+
+20180624
+	1. provide a new interface for client to query the available apk files list
+
+20180617
+	1. add log to track exception in print thread
+
+20180615
+	1. record consume time into log file for indent function
+
+20180613
+	1. correct the bug about that the REQUIREMENT in indentdetail cannot be controlled by font and bold
+	   REMEMBER: update the print template file while the restaurant do upgrade.
+
+20180612
+	1. dish is probably null. Add the null check for all operation, including make order, add dish, change amount, etc
+
+20180603
+	1. add refund choice for paid order
+
+20180529
+	1. extend the auto sync function. Sync the dish with new insert, updated, deleted and changed picture
+
+20180525
+	1. statistics orders by WEEK & MONTH
+
+20180523
+	1. add operator on indentdetail

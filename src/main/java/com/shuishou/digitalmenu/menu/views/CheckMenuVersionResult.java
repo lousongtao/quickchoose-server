@@ -1,7 +1,6 @@
 package com.shuishou.digitalmenu.menu.views;
 
 import java.util.List;
-import java.util.Map;
 
 import com.shuishou.digitalmenu.views.ObjectResult;
 

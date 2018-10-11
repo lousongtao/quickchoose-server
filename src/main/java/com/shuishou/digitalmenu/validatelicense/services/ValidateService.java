@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.Column;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +17,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.ServerProperties;
-import com.shuishou.digitalmenu.account.views.LoginResult;
 import com.shuishou.digitalmenu.member.services.HttpResult;
 import com.shuishou.digitalmenu.member.services.HttpUtil;
-import com.shuishou.digitalmenu.validatelicense.ValidateLicense;
 import com.shuishou.digitalmenu.validatelicense.models.IValidateLicenseHistoryDataAccessor;
 import com.shuishou.digitalmenu.validatelicense.models.ValidateLicenseHistory;
 import com.shuishou.digitalmenu.validatelicense.view.ValidateResult;
-import com.shuishou.digitalmenu.views.ObjectResult;
 
 @Service
 public class ValidateService implements IValidateService{
@@ -87,7 +82,7 @@ public class ValidateService implements IValidateService{
 	}
 	
 	@Transactional
-	private void recordErrorValidate(String reason){
+	public void recordErrorValidate(String reason){
 		ValidateLicenseHistory lastHis = vlhDA.getLastRecord();
 		ValidateLicenseHistory his = new ValidateLicenseHistory();
 		his.setValidateDate(new Date());

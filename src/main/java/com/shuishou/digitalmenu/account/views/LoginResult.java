@@ -28,8 +28,6 @@ public class LoginResult {
 	 *            the result.
 	 * @param userId
 	 *            the user id.
-	 * @param sessionId
-	 *            the session id.
 	 */
 	public LoginResult(String result, String userId, String userName, String licenseWarning) {
 		this.result = result;

@@ -10,7 +10,6 @@ public interface IValidateLicenseHistoryDataAccessor {
 	
 	/**
 	 * 插入一条记录
-	 * @param hist
 	 */
 	void insert(ValidateLicenseHistory his);
 	

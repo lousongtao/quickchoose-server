@@ -12,31 +12,21 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
-import javax.print.attribute.DocAttributeSet;
 import javax.print.attribute.HashAttributeSet;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Media;
 import javax.print.attribute.standard.MediaTray;
 import javax.print.attribute.standard.PrinterName;
-import javax.print.event.PrintServiceAttributeEvent;
-import javax.print.event.PrintServiceAttributeListener;
 import javax.swing.ImageIcon;
 
 import org.apache.log4j.Logger;
 
-import com.jfinal.kit.LogKit;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
 

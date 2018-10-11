@@ -1,8 +1,6 @@
 package com.shuishou.digitalmenu.management.controllers;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -17,12 +15,10 @@ import com.shuishou.digitalmenu.BaseController;
 import com.shuishou.digitalmenu.ConstantValue;
 import com.shuishou.digitalmenu.account.services.IAccountService;
 import com.shuishou.digitalmenu.account.services.IPermissionService;
-import com.shuishou.digitalmenu.account.views.GetAccountsResult;
 import com.shuishou.digitalmenu.management.services.IManagementService;
 import com.shuishou.digitalmenu.management.views.CurrentDutyResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
-import com.shuishou.digitalmenu.views.Result;
 
 @Controller
 public class ManagementController extends BaseController {
@@ -37,12 +33,12 @@ public class ManagementController extends BaseController {
 	@Autowired
 	private IPermissionService permissionService;
 	
-	@RequestMapping(value="/management/getcurrentduty", method = (RequestMethod.GET))
+	@RequestMapping(value="/management/getcurrentduty", method = RequestMethod.GET)
 	public @ResponseBody CurrentDutyResult getCurrentDuty() throws Exception{
 		return managementService.getCurrentDuty();
 	}
 	
-	@RequestMapping(value="/management/printshiftwork", method = (RequestMethod.POST))
+	@RequestMapping(value="/management/printshiftwork", method = RequestMethod.POST)
 	public @ResponseBody ObjectResult printShiftWork(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "shiftWorkId", required = true) int shiftWorkId) throws Exception{
@@ -79,14 +75,14 @@ public class ManagementController extends BaseController {
 		return managementService.getShiftWorkList(userId, start, limit, userName, startTime, endTime);
 	}
 	
-	@RequestMapping(value="/management/endshiftwork", method = (RequestMethod.POST))
+	@RequestMapping(value="/management/endshiftwork", method = RequestMethod.POST)
 	public @ResponseBody CurrentDutyResult endWork(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "printShiftTicket", required = true) boolean printShiftTicket) throws Exception{
 		return managementService.endShiftWork(userId, printShiftTicket);
 	}
 	
-	@RequestMapping(value="/management/startshiftwork", method = (RequestMethod.POST))
+	@RequestMapping(value="/management/startshiftwork", method = RequestMethod.POST)
 	public @ResponseBody CurrentDutyResult startWork(
 			@RequestParam(value = "userId", required = true) int userId,
 			@RequestParam(value = "printLastDutyTicket", required = true) boolean printLastDutyTicket) throws Exception{

@@ -1,7 +1,5 @@
 package com.shuishou.digitalmenu.indent.services;
 
-import java.util.Date;
-
 import org.json.JSONArray;
 
 import com.shuishou.digitalmenu.DataCheckException;
@@ -14,6 +12,8 @@ public interface IIndentService {
 	MakeOrderResult saveIndent(String confirmCode, JSONArray jsonOrder, int deskid, int customerAmount, String comments) throws DataCheckException;
 	ObjectResult splitIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId, double paidPrice, 
 			double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException;
+    ObjectResult splitFixPriceIndent(int userId, String confirmCode, JSONArray jsonOrder, int originIndentId, double paidPrice,
+                             double paidCash, String payWay, String discountTemplate, String memberCard, String memberPassword) throws DataCheckException;
 	ObjectListResult queryIndent(int start, int limit, String sstarttime, String sendtime, String status, String deskname, 
 			String orderby, String orderbydesc);
 //	GetIndentDetailResult queryIndentDetail(int indentId);

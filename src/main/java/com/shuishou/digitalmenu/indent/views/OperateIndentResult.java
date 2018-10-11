@@ -1,7 +1,6 @@
 package com.shuishou.digitalmenu.indent.views;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.shuishou.digitalmenu.views.ObjectResult;
 

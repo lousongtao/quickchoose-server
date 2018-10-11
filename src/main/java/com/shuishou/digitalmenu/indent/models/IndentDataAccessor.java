@@ -7,11 +7,9 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.shuishou.digitalmenu.ConstantValue;

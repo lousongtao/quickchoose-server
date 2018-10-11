@@ -1,10 +1,7 @@
 package com.shuishou.digitalmenu;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Properties;
 
 public class ConstantValue {
 	public static final DateFormat DFYMDHMS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

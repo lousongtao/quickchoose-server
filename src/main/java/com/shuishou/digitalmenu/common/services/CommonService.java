@@ -1,7 +1,5 @@
 package com.shuishou.digitalmenu.common.services;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -10,11 +8,8 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -22,15 +17,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.attribute.HashAttributeSet;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Media;
-import javax.print.attribute.standard.MediaTray;
 import javax.print.attribute.standard.PrinterName;
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,7 +52,6 @@ import com.shuishou.digitalmenu.indent.models.IndentDetail;
 import com.shuishou.digitalmenu.log.models.LogData;
 import com.shuishou.digitalmenu.log.services.ILogService;
 import com.shuishou.digitalmenu.menu.models.Category2;
-import com.shuishou.digitalmenu.menu.models.Category2DataAccessor;
 import com.shuishou.digitalmenu.menu.models.Category2Printer;
 import com.shuishou.digitalmenu.menu.models.ICategory2DataAccessor;
 import com.shuishou.digitalmenu.menu.models.ICategory2PrinterDataAccessor;

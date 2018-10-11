@@ -5,7 +5,6 @@ import java.util.Date;
 import com.shuishou.digitalmenu.management.views.CurrentDutyResult;
 import com.shuishou.digitalmenu.views.ObjectListResult;
 import com.shuishou.digitalmenu.views.ObjectResult;
-import com.shuishou.digitalmenu.views.Result;
 
 public interface IManagementService {
 
