@@ -32,26 +32,8 @@ CREATE TABLE `user_permission` (
 
 INSERT INTO `digitalmenu`.`user` (`id`,`hashed_password`, `username`) VALUES ('1','D033E22AE348AEB5660FC2140AEC35850C4DA997', 'admin'); 
 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('1', 'CREATE_USER'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('2', 'EDIT_MENU'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('3', 'QUERY_ORDER'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('4', 'QUERY_USER'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('5', 'CHANGE_CONFIG'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('6', 'QUERY_DESK'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('7', 'EDIT_DESK'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('8', 'EDIT_PRINTER'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('9', 'UPDATE_ORDER'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('10', 'EDIT_DISCOUNTTEMPLATE'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('11', 'QUERY_SHIFTWORK'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('12', 'EDIT_PAYWAY'); 
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('13', 'STATISTICS');
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('14', 'RAWMATERIAL');
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('15', 'QUERY_MEMBER');
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('16', 'UPDATE_MEMBER');
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('17', 'UPDATE_MEMBERSCORE');
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('18', 'UPDATE_MEMBERBALANCE');
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('19', 'UPDATE_MEMBERPASSWORD');
-INSERT INTO `digitalmenu`.`permission` (`id`, `name`) VALUES ('20', 'DELETE_MEMBER');
+INSERT INTO `permission` VALUES (1,'for create/update/delete account; for change account\'s permission','CREATE_USER',2),(2,'add/update/delete menu(including category1/category2/dish/dishconfiggroup/dishconfig), set dish SOLDOUT/PROMOTION','EDIT_MENU',2),(3,'query order data','QUERY_ORDER',3),(4,'query account','QUERY_USER',4),(5,'change the configurations of system','CHANGE_CONFIG',3),(6,'query desk data','QUERY_DESK',4),(7,'create/update/delete desk data','EDIT_DESK',5),(8,'create/update/delete printer data','EDIT_PRINTER',8),(9,'create/update/delete the order, including add dish, cancel order, checkout order, etc','UPDATE_ORDER',9),(10,'add/update/delete the discount template','EDIT_DISCOUNTTEMPLATE',7),(11,'query shift work data','QUERY_SHIFTWORK',11),(12,'add/update/delete the payway for checkout order','EDIT_PAYWAY',6),(13,'statistics the income report','STATISTICS',13),(14,'raw material','RAWMATERIAL',14),(15,'query member data, including query the member\'s score log and balance log','QUERY_MEMBER',15),(16,'create/update member, not including update the member\'s score & balance','UPDATE_MEMBER',16),(17,'update member\'s score','UPDATE_MEMBERSCORE',17),(18,'update member\'s balance, including recharge','UPDATE_MEMBERBALANCE',18),(19,'update member\'s password','UPDATE_MEMBERPASSWORD',19),(20,'delete member','DELETE_MEMBER',20);
+
 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('1', '1'); 
 INSERT INTO `digitalmenu`.`user_permission` (`permission_id`, `user_id`) VALUES ('2', '1'); 
