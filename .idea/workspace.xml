@@ -7,91 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57ba06ec-1567-43cc-8080-8da5f55c67c2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/printtemplate/ShiftWorkStat.json" beforeDir="false" afterPath="$PROJECT_DIR$/configs/printtemplate/ShiftWorkStat.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/printtemplate/newIndent_template.json" beforeDir="false" afterPath="$PROJECT_DIR$/configs/printtemplate/newIndent_template.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/printtemplate/payorder_template.json" beforeDir="false" afterPath="$PROJECT_DIR$/configs/printtemplate/payorder_template.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/updatelog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/doc/updatelog.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mylib/jfinal-2.1-bin-with-src.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/BaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/BaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/ConstantValue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/ConstantValue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/ServerProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/ServerProperties.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/controllers/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/controllers/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/Permission.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/PermissionDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/PermissionDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/UserData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/UserData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/UserPermission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/UserPermission.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/UserPermissionDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/models/UserPermissionDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/services/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/services/AccountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/services/IAccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/services/IAccountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/services/PermissionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/services/PermissionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/views/LoginResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/views/LoginResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/controllers/CommonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/controllers/CommonController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/Configs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/Configs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/Desk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/Desk.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/DiscountTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/DiscountTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/PayWay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/PayWay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/Printer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/models/Printer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/services/CommonService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/common/services/CommonService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/importtool/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/importtool/MainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/controllers/IndentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/controllers/IndentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/models/Indent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/models/Indent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/models/IndentDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/models/IndentDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/models/IndentDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/models/IndentDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/models/IndentDetailDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/models/IndentDetailDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IIndentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IIndentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IndentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IndentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/views/OperateIndentResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/views/OperateIndentResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/log/controllers/LogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/log/controllers/LogController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/log/models/LogData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/log/models/LogData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/log/services/LogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/log/services/LogService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/controllers/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/controllers/ManagementController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/models/ShiftWork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/models/ShiftWork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/services/IManagementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/services/IManagementService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/services/ManagementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/services/ManagementService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/IMemberDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/IMemberDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/IMemberScoreDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/IMemberScoreDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/MemberDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/MemberDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/MemberScore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/MemberScore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/MemberScoreDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/models/MemberScoreDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/HttpsTrustManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/HttpsTrustManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/HttpsUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/HttpsUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/MemberCloudService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/MemberCloudService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/MemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/controllers/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/controllers/MenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Category1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Category1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Category1DataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Category1DataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Category2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Category2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Category2PrinterDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Category2PrinterDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Dish.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Dish.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishChoosePopinfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishChoosePopinfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishChoosePopinfoDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishChoosePopinfoDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishConfigDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishConfigDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishConfigGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishConfigGroup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishConfigGroupDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishConfigGroupDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishMaterialConsumeDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/DishMaterialConsumeDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Flavor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/Flavor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/FlavorDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/FlavorDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/MenuVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/MenuVersion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/MenuVersionDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/models/MenuVersionDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/services/MenuService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/services/MenuService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/views/CheckMenuVersionResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/menu/views/CheckMenuVersionResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/PrintTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/PrintTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/PrintThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/PrintThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/param/Printer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/param/Printer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/Material.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/Material.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/MaterialCategoryDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/MaterialCategoryDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/MaterialDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/MaterialDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/MaterialRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/MaterialRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/MaterialRecordDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/models/MaterialRecordDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/services/MaterialService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/rawmaterial/services/MaterialService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/statistics/controllers/StatisticsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/statistics/controllers/StatisticsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/statistics/services/StatisticsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/statistics/services/StatisticsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/validatelicense/models/IValidateLicenseHistoryDataAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/validatelicense/models/IValidateLicenseHistoryDataAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/validatelicense/services/ValidateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/validatelicense/services/ValidateService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/server_config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/server_config.properties" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -104,6 +21,20 @@
   <component name="CompilerWorkspaceConfiguration">
     <option name="MAKE_PROJECT_ON_SAVE" value="true" />
   </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
   <component name="ErrorTreeViewConfiguration">
     <option name="hideWarnings" value="true" />
     <option name="HIDE_WARNINGS" value="true" />
@@ -112,13 +43,16 @@
     <session id="142591969">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="4" />
+          <entry key="project.closed" value="8" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.2" value="1" />
+          <entry key="project.open.time.14" value="1" />
+          <entry key="project.open.time.2" value="2" />
           <entry key="project.open.time.24" value="1" />
           <entry key="project.open.time.3" value="1" />
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="5" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -126,88 +60,94 @@
           <entry key="class" value="2" />
           <entry key="classpath" value="1" />
           <entry key="gitignore" value="1" />
-          <entry key="java" value="28" />
+          <entry key="java" value="32" />
           <entry key="json" value="3" />
           <entry key="log" value="1" />
           <entry key="project" value="1" />
-          <entry key="properties" value="5" />
+          <entry key="properties" value="6" />
           <entry key="springBeans" value="1" />
           <entry key="txt" value="1" />
-          <entry key="xml" value="3" />
+          <entry key="xml" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="CLASS" value="2" />
           <entry key="Eclipse" value="3" />
-          <entry key="JAVA" value="28" />
+          <entry key="JAVA" value="32" />
           <entry key="JSON" value="3" />
           <entry key="PLAIN_TEXT" value="3" />
-          <entry key="Properties" value="5" />
-          <entry key="XML" value="3" />
+          <entry key="Properties" value="6" />
+          <entry key="XML" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="360" />
-          <entry key="properties" value="14" />
-          <entry key="txt" value="308" />
-          <entry key="xml" value="2" />
+          <entry key="java" value="363" />
+          <entry key="properties" value="39" />
+          <entry key="txt" value="327" />
+          <entry key="xml" value="76" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="360" />
-          <entry key="PLAIN_TEXT" value="308" />
-          <entry key="Properties" value="14" />
-          <entry key="XML" value="2" />
+          <entry key="JAVA" value="363" />
+          <entry key="PLAIN_TEXT" value="327" />
+          <entry key="Properties" value="39" />
+          <entry key="XML" value="76" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/server_config.properties">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="14" column="31" lean-forward="true" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/controllers/IndentController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="87" column="51" lean-forward="true" selection-start-line="87" selection-start-column="51" selection-end-line="87" selection-end-column="51" />
+            <state relative-caret-position="1207">
+              <caret line="294" column="27" lean-forward="true" selection-start-line="294" selection-start-column="27" selection-end-line="294" selection-end-column="27" />
+              <folding>
+                <element signature="n#plugin#0;n#plugins#0;n#pluginManagement#0;n#build#0;n#project#0;n#!!top" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/doc/updatelog.txt">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/server_config.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+            <state relative-caret-position="66">
+              <caret line="3" column="1" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IIndentService.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/MemberCloudService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="248">
+              <caret line="200" column="8" selection-start-line="200" selection-start-column="8" selection-end-line="200" selection-end-column="93" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/PrintTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="242">
-              <caret line="17" column="48" lean-forward="true" selection-start-line="17" selection-start-column="48" selection-end-line="17" selection-end-column="48" />
+              <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IndentService.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/BaseController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="400" column="70" lean-forward="true" selection-start-line="400" selection-start-column="70" selection-end-line="400" selection-end-column="70" />
+            <state relative-caret-position="110">
+              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -218,6 +158,7 @@
     <findStrings>
       <find>log4j</find>
       <find>(RequestMethod.POST)</find>
+      <find>jetty</find>
     </findStrings>
     <replaceStrings>
       <replace>RequestMethod.POST</replace>
@@ -230,7 +171,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/BaseController.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/management/controllers/ManagementController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/account/controllers/AccountController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/log/controllers/LogController.java" />
@@ -249,11 +189,13 @@
         <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/validatelicense/services/ValidateService.java" />
         <option value="$PROJECT_DIR$/../desk/appClientModule/com/shuishou/deskmgr/ui/MainFrame.java" />
         <option value="$PROJECT_DIR$/../desk/appClientModule/log4j.properties" />
-        <option value="$PROJECT_DIR$/src/main/resources/server_config.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/controllers/IndentController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IIndentService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IndentService.java" />
         <option value="$PROJECT_DIR$/doc/updatelog.txt" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/MemberCloudService.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/server_config.properties" />
       </list>
     </option>
   </component>
@@ -286,7 +228,7 @@
           <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
           <item name="com.shuishou.digitalmenu Maven Webapp" type="9519ce18:MavenProjectsStructure$ProjectNode" />
           <item name="Plugins" type="7aea1407:MavenProjectsStructure$PluginsNode" />
-          <item name="install" type="36feed69:MavenProjectsStructure$PluginNode" />
+          <item name="jetty" type="36feed69:MavenProjectsStructure$PluginNode" />
         </path>
       </expand>
       <select />
@@ -442,8 +384,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -454,27 +394,81 @@
             <path>
               <item name="digitalmenu-server" type="b2602c69:ProjectViewProjectNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
-              <item name="doc" type="462c0819:PsiDirectoryNode" />
+              <item name="mylib" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="digitalmenu-server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="digitalmenu-server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="digitalmenu-server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="digitalmenu-server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="digitalmenu" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="digitalmenu-server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="digitalmenu" type="462c0819:PsiDirectoryNode" />
+              <item name="member" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="digitalmenu-server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="digitalmenu" type="462c0819:PsiDirectoryNode" />
+              <item name="member" type="462c0819:PsiDirectoryNode" />
+              <item name="services" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="digitalmenu-server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539268114797" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../desk/mylibs/RXTXcomm.jar!/" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539416394220" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/mylib/jfinal-2.1-bin-with-src.jar!/" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="Errors" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -488,12 +482,40 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Maven.digitalmenu [jetty:run]">
+    <configuration name="digitalmenu [jetty:run]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="jetty:run" />
+              </list>
+            </option>
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
     <configuration name="Tomcat7" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 7.0.68" ALTERNATIVE_JRE_ENABLED="false">
+      <option name="OPEN_IN_BROWSER" value="false" />
       <option name="COMMON_VM_ARGUMENTS" value="-Xmx512m -Xms256m -Dfile.encoding=UTF-8" />
-      <option name="UPDATING_POLICY" value="restart-server" />
+      <option name="UPDATE_ON_FRAME_DEACTIVATION" value="true" />
+      <option name="HOT_SWAP_CLASSES_ON_FRAME_DEACTIVATION" value="true" />
+      <option name="UPDATING_POLICY" value="hot-swap-classes" />
       <deployment>
-        <artifact name="digitalmenu:war exploded">
+        <artifact name="digitalmenu:war">
           <settings>
             <option name="CONTEXT_PATH" value="/digitalmenu" />
           </settings>
@@ -650,6 +672,15 @@
         </option>
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Tomcat Server.Tomcat7" />
+      <item itemvalue="Maven.digitalmenu [jetty:run]" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Maven.digitalmenu [jetty:run]" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -665,7 +696,11 @@
       <workItem from="1539172820644" duration="5325000" />
       <workItem from="1539235835614" duration="4033000" />
       <workItem from="1539255351598" duration="636000" />
-      <workItem from="1539256967594" duration="4304000" />
+      <workItem from="1539256967594" duration="9074000" />
+      <workItem from="1539332001420" duration="7086000" />
+      <workItem from="1539365042294" duration="3054000" />
+      <workItem from="1539380475864" duration="678000" />
+      <workItem from="1539413685308" duration="3031000" />
     </task>
     <servers />
   </component>
@@ -678,13 +713,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18890000" />
+    <option name="totallyTimeSpent" value="37509000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1672" y="-8" width="1936" height="1216" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26066098" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27132195" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -692,11 +727,10 @@
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Web" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Problems" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32986766" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.39981097" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39981097" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -709,15 +743,16 @@
       <window_info anchor="bottom" id="Java Enterprise" order="13" />
       <window_info anchor="bottom" id="Database Changes" order="14" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="15" />
+      <window_info anchor="bottom" id="Problems" order="16" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Maven Projects" order="5" weight="0.32995737" />
-      <window_info anchor="right" id="Database" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="right" id="Database" order="5" weight="0.32995737" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Theme Preview" order="7" />
+      <window_info anchor="right" id="Maven Projects" order="8" weight="0.32995737" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -743,31 +778,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/BaseController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.15/log4j-1.2.15.jar!/org/apache/log4j/Logger.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="132">
           <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/PrintTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="266" column="18" lean-forward="true" selection-start-line="266" selection-start-column="18" selection-end-line="266" selection-end-column="18" />
         </state>
       </provider>
     </entry>
@@ -953,13 +967,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/server_config.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="14" column="31" lean-forward="true" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/indent/services/IndentService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
@@ -983,8 +990,56 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/doc/updatelog.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+        <state relative-caret-position="220">
+          <caret line="10" column="35" lean-forward="true" selection-start-line="10" selection-start-column="35" selection-end-line="10" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/importtool/MainFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2764">
+          <caret line="54" column="30" lean-forward="true" selection-start-line="54" selection-start-column="30" selection-end-line="54" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1207">
+          <caret line="294" column="27" lean-forward="true" selection-start-line="294" selection-start-column="27" selection-end-line="294" selection-end-column="27" />
+          <folding>
+            <element signature="n#plugin#0;n#plugins#0;n#pluginManagement#0;n#build#0;n#project#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/printertool/PrintTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/BaseController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/shuishou/digitalmenu/member/services/MemberCloudService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="200" column="8" selection-start-line="200" selection-start-column="8" selection-end-line="200" selection-end-column="93" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/server_config.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="3" column="1" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -1007,7 +1062,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>Spring</last-edited>
+          <last-edited>Web (digitalmenu)|Web</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
