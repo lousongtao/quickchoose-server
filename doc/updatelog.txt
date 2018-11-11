@@ -1,3 +1,6 @@
+20181111
+    1. set print page height as 530. The old value is 800, there are some lines cannot print out.
+
 20181011
     1. change IDE to IntelliJ IDEA, correct some warnings and add some IDEA project files
     2. add interface for split indent with fix price
